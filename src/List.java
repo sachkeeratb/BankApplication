@@ -2,17 +2,19 @@ import java.util.Date;
 
 // Nimasy Desai
 public class List {
-    private Node head;
-//aaas
-    class Node {
-        User info;
-        Node link;
-        public Node(User i, Node l) {
-            info = i;
-            link = l;
-        }
+  // Fields
+  private Node head;
+
+  // Node class
+  class Node {
+    // Fields
+    private User client;
+    Node link;
+
+    // Constructor
+    public Node(User i, Node l) {
+      client = i;
+      link = l;
     }
-
-
-
+  }
 }
