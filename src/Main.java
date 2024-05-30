@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.Scanner;
+
 public class Main {
+  // Sachkeerat Brar
   public static void title() {
     // This method outputs the title of the application and the creators of it
     System.out.println("""
@@ -14,6 +16,7 @@ public class Main {
       """);
   }
 
+  // Nimay Desai
   public void instructions() throws IOException {
     Scanner in = new Scanner(System.in);
     System.out.println("Welcome to the Bank!");
@@ -45,30 +48,34 @@ public class Main {
     return convertedData;
   }
 
+  // Nimay Desai
   // Logins in returns whether it is valid
   public static boolean login(String password) throws IOException {
-    FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
+    FileReader fr = new FileReader("src/SuperInfo");
     BufferedReader br = new BufferedReader(fr);
     return convert(br.readLine()).equals(password);
   }
 
+  // Nimay Desai
   public static void Register() throws IOException {
-    FileWriter fw = new FileWriter("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
+    Scanner input = new Scanner(System.in);
+    FileWriter fw = new FileWriter("src/SuperInfo");
     PrintWriter pw = new PrintWriter(fw);
-    FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
-    BufferedReader br = new BufferedReader(fr);
     System.out.println("The program has detected that this is the first time you have opened this application.\nAccount creation will begin.");
 
     String password = null;
     while (password == null) {
       System.out.println("Please enter a password for security: ");
-      password = br.readLine();
+      password = input.next();
     }
     pw.println(convert(password));
+    pw.close();
+    fw.close();
   }
 
+  // Kushal Prajapati, Sachkeerat Brar, Nimay Desai
   public static void main(String[] args) throws IOException {
-    FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
+    FileReader fr = new FileReader("src/SuperInfo");
     BufferedReader br = new BufferedReader(fr);
     title();
     if (br.readLine() == null) {
