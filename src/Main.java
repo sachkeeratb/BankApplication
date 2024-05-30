@@ -1,5 +1,5 @@
-import java.util.Objects;
-
+import java.io.*;
+import java.util.Scanner;
 public class Main {
   public static void title() {
     // This method outputs the title of the application and the creators of it
@@ -14,6 +14,16 @@ public class Main {
       """);
   }
 
+  public void instructions() throws IOException {
+    Scanner in = new Scanner(System.in);
+    System.out.println("Welcome to the Bank!");
+    System.out.println("Enter Your Name: ");
+    String name = in.nextLine();
+
+    System.out.println("Please enter the Bank password.\nIf first use, please enter a new password.");
+
+  }
+
   // Nimay Desai
   public static String convert(String data) {
     /* This method acts as the encryption/decryption
@@ -22,20 +32,47 @@ public class Main {
      * Example: password123 --> kzhhdliw876
     */
     String convertedData = ""; // Store the flipped data
-    for(char c: data.toCharArray()) {
+
+    for(char c: data.toCharArray())
       // Check if the character is a number between 0 and 9
-      if((c >= '0') && (c <= '9')) {
+      if((c >= '0') && (c <= '9'))
         convertedData += (char)('0' + '9' - c);
-      } else if((c >= 'A') && (c <= 'Z')) {
+      else if((c >= 'A') && (c <= 'Z'))
         convertedData += (char)('A' + 'Z' - c);
-      } else if ((c >= 'a') && (c <= 'z')) {
+      else if ((c >= 'a') && (c <= 'z'))
         convertedData += (char)('a' + 'z' - c);
-      }
-    }
+
     return convertedData;
   }
 
-  public static void main(String[] args) {
+  // Logins in returns whether it is valid
+  public static boolean login(String password) throws IOException {
+    FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
+    BufferedReader br = new BufferedReader(fr);
+    return convert(br.readLine()).equals(password);
+  }
+
+  public static void Register() throws IOException {
+    FileWriter fw = new FileWriter("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
+    PrintWriter pw = new PrintWriter(fw);
+    FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
+    BufferedReader br = new BufferedReader(fr);
+    System.out.println("The program has detected that this is the first time you have opened this application.\nAccount creation will begin.");
+
+    String password = null;
+    while (password == null) {
+      System.out.println("Please enter a password for security: ");
+      password = br.readLine();
+    }
+    pw.println(convert(password));
+  }
+
+  public static void main(String[] args) throws IOException {
+    FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\SuperInfo");
+    BufferedReader br = new BufferedReader(fr);
     title();
+    if (br.readLine() == null) {
+      Register();
+    }
   }
 }
