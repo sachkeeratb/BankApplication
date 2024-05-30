@@ -1,4 +1,4 @@
-﻿# BankAppliction
+﻿# Bank Application
 ## By: Sachkeerat Brar, Nimay Desai, and Kushal Prajapati
 
 ### Why was this made?
