@@ -11,33 +11,46 @@ public class Client {
   private AccountList accounts = new AccountList();
 
 
-  public Client (){
+  public Client() {
     String name = "John Doe";
     dob = "2006/01/01";
     int age = calculateAge("2006/01/01");
+    accounts = new AccountList();
+
   }
-  public Client(String n, String date){
+
+  public Client(String n, String date) {
     name = n;
     dob = date;
     age = calculateAge(date);
+    accounts = new AccountList();
   }
 
-  public Client(String n,String date, Client lastClient){
+  public Client(String n, String date, Client lastClient) {
     name = n;
     dob = date;
     ID = lastClient.ID++;
-    age=calculateAge(date);
+    age = calculateAge(date);
+    accounts = new AccountList();
   }
+
 
   public void putID(int newID) {
     ID = newID;
   }
 
-  public int getID(){
+  public void putName(String newName) {
+    name = newName;
+  }
+
+  public void putDOB(String newDOB) {
+    dob = newDOB;
+  }
+
+  public int getID() {
     return ID;
   }
 
-  // Sachkeerat Brar
   private static int calculateAge(String date) {
     // Store the current values
     final int CURRENT_YEAR = 2024;
@@ -53,40 +66,57 @@ public class Client {
     int currentAge = CURRENT_YEAR - birthYear;
 
     // See if they are a year younger
-    if(((double) birthMonth + ((double) birthDay / 30)) > (double) (CURRENT_MONTH - (CURRENT_DAY / 30)))
+    if (((double) birthMonth + ((double) birthDay / 30)) > (double) (CURRENT_MONTH - (CURRENT_DAY / 30)))
       currentAge--;
 
     // Return the age
     return currentAge;
   }
 
-  // Nimay Desai
-//  public void createAccount(AccountType t) {
-//    for (int i = 0; i < accounts.length; i++) {
-//      if (accounts[i] == null) {
-//        accounts[i] = new Account(t);
-//        return;
-//      }
-//    }
-//    System.out.println("ACCOUNT LIMIT EXCEEDED");
-//  }
 
-
-  public void SaveState() throws IOException{
-  FileWriter fw = new FileWriter("C:\\Users\\Owner\\Desktop\\Coding\\School\\Bank Application\\src\\Client.java");
-  PrintWriter pw=new PrintWriter(fw);
-
+  public void saveClient() throws IOException {
+    FileWriter fw = new FileWriter("src/ClientInfo", true);
+    BufferedWriter bw = new BufferedWriter(fw);
+    bw.write(name + "\n" + ID + "\n" + age + "\n" + dob + "\n");
+    bw.close();
   }
 
-  public void LoadState(){
-
+  public void loadClient() throws IOException {
+      FileReader fr = new FileReader("src/ClientInfo");
+      BufferedReader br = new BufferedReader(fr);
+      name = br.readLine();
+      ID = Integer.parseInt(br.readLine());
+      age = Integer.parseInt(br.readLine());
+      dob = br.readLine();
+      br.close();
   }
 
 
-//  public static void Deposit(){
-//    Scanner sc = new Scanner(System.in);
-//    System.out.println("Hello,"+name +", how much money would you like to deposit");
-//
-//  }
-//  public
+  public void printInfo() {
+    System.out.println("Name: " + name);
+    System.out.println("ID: " + ID);
+    System.out.println("Age: " + age);
+    System.out.println("Date of Birth: " + dob);
+  }
+
+  public void newAccount(AccountType t) {
+    accounts.addAccount(t);
+  }
+
+  public void deleteAccount(AccountType t) {
+    accounts.deleteAccount(t);
+  }
+
+  public void deposit(double amount, int num) {
+    accounts.getAccount(num).deposit(amount);
+  }
+
+  public void withdraw(double amount, int num) {
+    accounts.getAccount(num).withdraw(amount);
+  }
+
+  public static void transfer(double amount, int num1, int num2, Client c1, Client c2) {
+    c1.accounts.getAccount(num1).transfer(amount, c2.accounts.getAccount(num2));
+  }
+
 }

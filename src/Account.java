@@ -10,14 +10,11 @@ public class Account {
     balance = 0;
   }
 
-  public void deposit(double amount) {
-    if(amount <= 0) {
-      System.out.println("Invalid deposit value.");
-      return;
-    }
-    
-    history.newTransaction(amount);
-    balance += amount;
+  public Account() {
+    type = new AccountType();
+    type.checking = true;
+    history = new TransactionHistory();
+    balance = 0;
   }
 
   public void withdraw(double amount) {
@@ -48,5 +45,15 @@ public class Account {
     other.history.newTransaction(amount);
     other.balance += amount;
     balance -= amount;
+  }
+
+  public void deposit(double amount) {
+    if (amount <= 0) {
+      System.out.println("Invalid deposit. Cannot deposit negative values!");
+      return;
+    }
+
+    history.newTransaction(amount);
+    balance += amount;
   }
 }
