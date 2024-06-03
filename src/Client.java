@@ -66,8 +66,11 @@ public class Client {
     int currentAge = CURRENT_YEAR - birthYear;
 
     // See if they are a year younger
-    if (((double) birthMonth + ((double) birthDay / 30)) > (double) (CURRENT_MONTH - (CURRENT_DAY / 30)))
+    if (CURRENT_MONTH < birthMonth) {
       currentAge--;
+    } else if (CURRENT_MONTH == birthMonth && CURRENT_DAY < birthDay) {
+      currentAge--;
+    }
 
     // Return the age
     return currentAge;
