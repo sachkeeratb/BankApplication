@@ -56,4 +56,11 @@ public class Account {
     history.newTransaction(amount);
     balance += amount;
   }
+
+  public String AccountInfo() {
+    return "Account Type: " + type + "\nBalance: $" + balance + "\nTransaction History: " + history;
+  }
+  public AccountType getAccountType(){
+    return type;
+  }
 }

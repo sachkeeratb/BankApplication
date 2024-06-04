@@ -81,6 +81,12 @@ public class Client {
     System.out.println("ID: " + ID);
     System.out.println("Age: " + age);
     System.out.println("Date of Birth: " + dob);
+    System.out.println("Accounts:");
+    for (int i = 0; i < accounts.getNumAccounts(); i++) {
+      // PRINT ACCOUNT INFO FOR EACH ACCOUNT
+        Account tempcount=accounts.getAccount(i);
+        System.out.println("Account Type: " + tempcount.AccountInfo());
+    }
   }
 
   public void newAccount(AccountType t) {
@@ -88,7 +94,7 @@ public class Client {
   }
 
   public void deleteAccount(AccountType t) {
-    accounts.deleteAccount(t);
+    accounts.removeAccount(t);
   }
 
   public void deposit(double amount, int num) {
@@ -103,5 +109,9 @@ public class Client {
     c1.accounts.getAccount(num1).transfer(amount, c2.accounts.getAccount(num2));
   }
 
+  public static void getClientInfo(Client c) {
+    c.printInfo();
+    c.accounts.printAccounts();
+  }
 
 }

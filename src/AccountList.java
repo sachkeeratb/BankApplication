@@ -11,6 +11,7 @@ public class AccountList {
         numAccounts = 0;
     }
 
+
     public void addAccount(AccountType t) {
         Account a = new Account(t);
         if (numAccounts == accounts.length) {
@@ -30,10 +31,15 @@ public class AccountList {
         return numAccounts;
     }
 
-    public void removeAccount(int index) {
-        for (int i = index; i < numAccounts - 1; i++) {
-            accounts[i] = accounts[i + 1];
-            numAccounts--;
+    public void removeAccount(AccountType t) {
+        for (int i = 0; i < numAccounts; i++) {
+            if (accounts[i].getAccountType().equals(t)) {
+                for (int j = i; j < numAccounts - 1; j++) {
+                    accounts[j] = accounts[j + 1];
+                }
+                numAccounts--;
+                return;
+            }
         }
     }
     public void printAccounts () {
