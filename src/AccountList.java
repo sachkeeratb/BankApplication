@@ -14,7 +14,7 @@ public class AccountList {
     public void addAccount(AccountType t) {
         Account a = new Account(t);
         if (numAccounts == accounts.length) {
-            Account[] temp = new Account[accounts.length * 2];
+            Account[] temp = new Account[accounts.length * 2]; //
             for (int i = 0; i < accounts.length; i++)
                 temp[i] = accounts[i];
             accounts = temp;

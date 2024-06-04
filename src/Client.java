@@ -76,55 +76,6 @@ public class Client {
     return currentAge;
   }
 
-  //store accounts all into one string
-
-  public String storeAccounts() {
-    String accountString = "";
-    // store balance and type of account
-  }
-
-  //load accounts from string
-  public void loadAccounts(String accountString) {
-    String[] accountArray = accountString.split("\n");
-    for (int i = 0; i < accountArray.length; i++) {
-      AccountType t = new AccountType();
-      if (accountArray[i].equals("Checking")) {
-        t.checking = true;
-      } else if (accountArray[i].equals("Savings")) {
-        t.savings = true;
-      } else if (accountArray[i].equals("Investment")) {
-        t.investment = true;
-      }
-      accounts.addAccount(t);
-    }
-  }
-
-  public void saveClient() throws IOException {
-
-    FileWriter fw = new FileWriter("src/ClientInfo", true);
-    BufferedWriter bw = new BufferedWriter(fw);
-    bw.write(name + "\n" + ID + "\n" + dob + "\n" + storeAccounts() + "\n");
-    bw.close();
-  }
-
-  public void loadClient(int ID) throws IOException {
-
-    FileReader fr = new FileReader("src/ClientInfo");
-    BufferedReader br = new BufferedReader(fr);
-    String line = br.readLine();
-    while (line != null) {
-      if (Integer.parseInt(line) == ID) {
-        name = br.readLine();
-        dob = br.readLine();
-        loadAccounts(br.readLine());
-        break;
-      }
-      line = br.readLine();
-    }
-    br.close();
-
-  }
-
   public void printInfo() {
     System.out.println("Name: " + name);
     System.out.println("ID: " + ID);
