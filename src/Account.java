@@ -1,18 +1,17 @@
 // Sachkeerat Brar
 public class Account {
-  private AccountType type;
+  private char type;
   private TransactionHistory history;
   private double balance;
 
-  public Account(AccountType t) {
+  public Account(char t) {
     type = t;
     history = new TransactionHistory();
     balance = 0;
   }
 
   public Account() {
-    type = new AccountType();
-    type.checking = true;
+    type = 'c';
     history = new TransactionHistory();
     balance = 0;
   }

@@ -14,7 +14,7 @@ public class Client {
   public Client() {
     String name = "John Doe";
     dob = "2006/01/01";
-    int age = calculateAge("2006/01/01");
+    age = calculateAge("2006/01/01");
     accounts = new AccountList();
 
   }
@@ -51,6 +51,16 @@ public class Client {
     return ID;
   }
 
+  public int getAge () {
+    return age;
+  }
+
+
+  public String getName() {
+    // Nimay Desai
+    return name;
+  }
+
   private static int calculateAge(String date) {
     // Store the current values
     final int CURRENT_YEAR = 2024;
@@ -58,9 +68,9 @@ public class Client {
     final int CURRENT_DAY = 1;
 
     // Store the birth values as integers
-    int birthYear = Integer.parseInt(date.substring(0, 3));
-    int birthMonth = Integer.parseInt(date.substring(5, 6));
-    int birthDay = Integer.parseInt(date.substring(8, 9));
+    int birthYear = Integer.parseInt(date.substring(0, 4));
+    int birthMonth = Integer.parseInt(date.substring(5, 7));
+    int birthDay = Integer.parseInt(date.substring(8, 10));
 
     // Store the age
     int currentAge = CURRENT_YEAR - birthYear;
@@ -81,8 +91,11 @@ public class Client {
   public String storeAccounts() {
     String accountString = "";
     // store balance and type of account
+    return "";
   }
 
+  // TODO: after finishing account (sachkeerat)
+  /*
   //load accounts from string
   public void loadAccounts(String accountString) {
     String[] accountArray = accountString.split("\n");
@@ -124,6 +137,7 @@ public class Client {
     br.close();
 
   }
+  */
 
   public void printInfo() {
     System.out.println("Name: " + name);
@@ -132,12 +146,12 @@ public class Client {
     System.out.println("Date of Birth: " + dob);
   }
 
-  public void newAccount(AccountType t) {
+  public void newAccount(char t) {
     accounts.addAccount(t);
   }
 
-  public void deleteAccount(AccountType t) {
-    accounts.deleteAccount(t);
+  public void deleteAccount(char t) {
+    accounts.removeAccount(t);
   }
 
   public void deposit(double amount, int num) {
@@ -151,6 +165,4 @@ public class Client {
   public static void transfer(double amount, int num1, int num2, Client c1, Client c2) {
     c1.accounts.getAccount(num1).transfer(amount, c2.accounts.getAccount(num2));
   }
-
-
 }
