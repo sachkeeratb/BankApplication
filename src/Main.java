@@ -28,37 +28,11 @@ public class Main {
   }
 
   // Nimay Desai
-  public static String convert(String data) {
-    /* This method acts as the encryption/decryption
-     * This method will return a string where the original string's data is altered
-     * A is flipped to Z, 0 is flipped to 9, and vice-versa
-     * Example: password123 --> kzhhdliw876
-     */
-    String convertedData = ""; // Store the flipped data
-
-    for(char c: data.toCharArray())
-      // Check if the character is a number between 0 and 9
-      if((c >= '0') && (c <= '9'))
-        convertedData += (char)('0' + '9' - c);
-        // Check if character is uppercase letter
-      else if((c >= 'A') && (c <= 'Z'))
-        convertedData += (char)('A' + 'Z' - c);
-        // Check if character is lowercase letter
-      else if ((c >= 'a') && (c <= 'z'))
-        convertedData += (char)('a' + 'z' - c);
-        // Else add just the .character
-      else
-        convertedData += c;
-
-    return convertedData;
-  }
-
-  // Nimay Desai
   // Logins in returns whether it is valid
   public static boolean checkPassword(String password) throws IOException {
     FileReader fr = new FileReader("src/SuperInfo");
     BufferedReader br = new BufferedReader(fr);
-    return convert(br.readLine()).equals(password);
+    return Values.convert(br.readLine()).equals(password);
   }
 
   // Nimay Desai
@@ -78,13 +52,13 @@ public class Main {
     }
     System.out.println("You have successfully registered. Please open the program again to login with the new password");
     pw.println(username);
-    pw.println(convert(password));
+    pw.println(Values.convert(password));
     pw.close();
     fw.close();
   }
 
   // Nimay
-  public static boolean Login () throws IOException {
+  public static boolean Login() throws IOException {
     Scanner input = new Scanner(System.in);
     System.out.println("Please enter a username ");
     String username = input.next();
@@ -105,8 +79,46 @@ public class Main {
     return true;
   }
 
+  public static boolean validDate(String date) {
+    // Sachkeerat Brar
+    int year, month, day;
+    try {
+      year = Integer.parseInt(date.substring(0, 4));
+      if(year <= 1904) {
+        System.out.println("Do not lie about your age.");
+        return false;
+      }
+
+      month = Integer.parseInt(date.substring(5, 7));
+      day = Integer.parseInt(date.substring(8, 10));
+
+      if((year > Values.getCurrentYear()) || (month < 1) || (month > 12) || (day < 1) || (day > 31)) {
+        System.out.println("Please input a valid date.");
+        return false;
+      }
+
+      int currentAge = Values.getCurrentYear() - year;
+
+      // See if they are a year younger
+      if ((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
+        currentAge--;
+
+      if(currentAge < 18) {
+        System.out.println("You must be 18 years old to use this bank.");
+        return false;
+      }
+
+    }
+    catch (Exception _) {
+      System.out.println("Invalid date format. Please input a date as yyyy/mm/dd.");
+      return false;
+    }
+
+    return true;
+  }
+  
   // Nimay Desai
-  public static void main2(String[] args) throws IOException {
+  public static void mainTesting(String[] args) throws IOException {
     FileReader fr = new FileReader("src/SuperInfo");
     BufferedReader br = new BufferedReader(fr);
     title();
@@ -119,9 +131,18 @@ public class Main {
     }
   }
   public static void main(String[] args) throws IOException {
-    ClientList clients = new ClientList(new Client[]{new Client(), new Client("Bob Doe", "2008/11/11"), new Client()});
-    clients.ageGreaterThan(16).printlist();
+    Client a = new Client();
+    Client b = new Client("Bob Doe", "2008/11/11", a);
+    Client c = new Client(b);
+    Client[] clients = {a, b, c};
+    ClientList testing = new ClientList(clients);
+    testing.addToList(b);
+    testing.addToList(c);
+    System.out.println(testing);
+
+    //Client kushal=new Client("Kushal Prajapati", "2008/11/11");
+    //Client.StoreClient(kushal);
 
   }
-
+   
 }

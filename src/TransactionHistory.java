@@ -27,6 +27,13 @@ public class TransactionHistory {
     head = newNode;
   }
 
+  public double calculateSum() {
+    double sum = 0;
+    for(Node temp = head; temp != null; temp = temp.link)
+      sum += temp.transaction;
+    return sum;
+  }
+
   public String toString() {
     // This method was created in order to have the transaction history in a simple and concise way
 

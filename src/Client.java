@@ -1,4 +1,3 @@
-// Kushal Prajapati
 import java.util.Scanner;
 import java.io.*;
 
@@ -10,13 +9,20 @@ public class Client {
   private String dob;
   private AccountList accounts = new AccountList();
 
-
   public Client() {
-    String name = "John Doe";
+    ID = 0;
+    name = "John Doe";
     dob = "2006/01/01";
     age = calculateAge("2006/01/01");
     accounts = new AccountList();
+  }
 
+  public Client(Client lastClient) {
+    name = "John Doe";
+    dob = "2006/01/01";
+    age = calculateAge("2006/01/01");
+    accounts = new AccountList();
+    ID = lastClient.getID() + 1;
   }
 
   public Client(String n, String date) {
@@ -24,6 +30,7 @@ public class Client {
     dob = date;
     age = calculateAge(date);
     accounts = new AccountList();
+    ID=0;
   }
 
   public Client(String n, String date, Client lastClient) {
@@ -51,14 +58,16 @@ public class Client {
     return ID;
   }
 
-  public int getAge () {
-    return age;
+  public String getName() {
+    return name;
   }
 
+  public String getDOB() {
+    return dob;
+  }
 
-  public String getName() {
-    // Nimay Desai
-    return name;
+  public int getAge() {
+    return age;
   }
 
   private static int calculateAge(String date) {
@@ -68,9 +77,9 @@ public class Client {
     final int CURRENT_DAY = 1;
 
     // Store the birth values as integers
-    int birthYear = Integer.parseInt(date.substring(0, 4));
-    int birthMonth = Integer.parseInt(date.substring(5, 7));
-    int birthDay = Integer.parseInt(date.substring(8, 10));
+    int birthYear = Integer.parseInt(date.substring(0, 3));
+    int birthMonth = Integer.parseInt(date.substring(5, 6));
+    int birthDay = Integer.parseInt(date.substring(8, 9));
 
     // Store the age
     int currentAge = CURRENT_YEAR - birthYear;
@@ -86,83 +95,66 @@ public class Client {
     return currentAge;
   }
 
-  //store accounts all into one string
-
-  public String storeAccounts() {
-    String accountString = "";
-    // store balance and type of account
-    return "";
-  }
-
-  // TODO: after finishing account (sachkeerat)
-  /*
-  //load accounts from string
-  public void loadAccounts(String accountString) {
-    String[] accountArray = accountString.split("\n");
-    for (int i = 0; i < accountArray.length; i++) {
-      AccountType t = new AccountType();
-      if (accountArray[i].equals("Checking")) {
-        t.checking = true;
-      } else if (accountArray[i].equals("Savings")) {
-        t.savings = true;
-      } else if (accountArray[i].equals("Investment")) {
-        t.investment = true;
-      }
-      accounts.addAccount(t);
-    }
-  }
-
-  public void saveClient() throws IOException {
-
-    FileWriter fw = new FileWriter("src/ClientInfo", true);
-    BufferedWriter bw = new BufferedWriter(fw);
-    bw.write(name + "\n" + ID + "\n" + dob + "\n" + storeAccounts() + "\n");
-    bw.close();
-  }
-
-  public void loadClient(int ID) throws IOException {
-
-    FileReader fr = new FileReader("src/ClientInfo");
-    BufferedReader br = new BufferedReader(fr);
-    String line = br.readLine();
-    while (line != null) {
-      if (Integer.parseInt(line) == ID) {
-        name = br.readLine();
-        dob = br.readLine();
-        loadAccounts(br.readLine());
-        break;
-      }
-      line = br.readLine();
-    }
-    br.close();
-
-  }
-  */
-
   public void printInfo() {
     System.out.println("Name: " + name);
     System.out.println("ID: " + ID);
     System.out.println("Age: " + age);
     System.out.println("Date of Birth: " + dob);
+    System.out.println("Accounts:");
+    for (int i = 0; i < accounts.getNumAccounts(); i++) {
+      // PRINT ACCOUNT INFO FOR EACH ACCOUNT
+      Account tempcount=accounts.getAccount(i);
+      System.out.println("Account Type: " + tempcount.AccountInfo());
+    }
   }
 
-  public void newAccount(char t) {
-    accounts.addAccount(t);
+
+
+  public static void getClientInfo(Client c) {
+    c.printInfo();
+    c.accounts.printAccounts();
   }
 
-  public void deleteAccount(char t) {
-    accounts.removeAccount(t);
+  public static void StoreClient(Client c) throws IOException {
+    FileWriter fw = new FileWriter("src/ClientInfo", true);
+    BufferedWriter bw = new BufferedWriter(fw);
+    bw.write(c.name + "\n");
+    bw.write(c.ID + "\n");
+    bw.write(c.age + "\n");
+    bw.write(c.dob + "\n");
+    bw.write(c.accounts.getNumAccounts() + "\n");
+    for (int i = 0; i < c.accounts.getNumAccounts(); i++) {
+      Account temp_account = c.accounts.getAccount(i);
+      bw.write(temp_account.getAccountType() + "\n");
+      bw.write(temp_account.getBalance() + "\n");
+    }
+    bw.close();
+    fw.close();
   }
 
-  public void deposit(double amount, int num) {
-    accounts.getAccount(num).deposit(amount);
-  }
+  /*
+  public static void LoadClient(Client c) throws IOException{
+    FileReader fr = new FileReader("src/ClientInfo");
+    BufferedReader br = new BufferedReader(fr);
 
-  public void withdraw(double amount, int num) {
-    accounts.getAccount(num).withdraw(amount);
+    c.name = br.readLine();
+    c.ID = Integer.parseInt(br.readLine());
+    c.age = Integer.parseInt(br.readLine());
+    c.dob = br.readLine();
+    c.accounts = new AccountList();
+    int numAccounts = Integer.parseInt(br.readLine());
+    for (int i = 0; i < numAccounts; i++) {
+      AccountType t = AccountType.valueOf(br.readLine());
+      double balance = Double.parseDouble(br.readLine());
+      TransactionHistory h = new TransactionHistory();
+      String[] transactions = br.readLine().split(" ");
+      for (int j = 0; j < transactions.length; j++) {
+        h.newTransaction(Double.parseDouble(transactions[j]));
+      }
+      Account a = new Account(t, balance, h);
+      c.accounts.addAccount(a);
+    }
   }
+  */
 
-  public static void transfer(double amount, int num1, int num2, Client c1, Client c2) {
-    c1.accounts.getAccount(num1).transfer(amount, c2.accounts.getAccount(num2));
-  }
 }

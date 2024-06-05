@@ -1,3 +1,5 @@
+import java.io.*;
+
 // Nimay Desai
 public class ClientList {
   private Node head;
@@ -126,7 +128,7 @@ public class ClientList {
     while (bottom <= top) {
       int mid = (bottom + top) / 2;
       if (((findNodeByIndex(mid).client).getName()).equals(name)) {
-        return m
+        return mid;
       } else if (bottom <= mid) {
         bottom++;
       } else {
@@ -167,6 +169,7 @@ public class ClientList {
   }
 
   public ClientList ageGreaterThan (int age) {
+    // Nimay Desai
     Node temp = head;
     ClientList clients = null;
 
@@ -185,6 +188,7 @@ public class ClientList {
   }
 
   public ClientList ageLessThan (int age) {
+    // Nimay Desai
     Node temp = head;
     ClientList clients = null;
 
@@ -203,6 +207,7 @@ public class ClientList {
   }
 
   public ClientList ageEqualTo (int age) {
+    // Nimay Desai
     Node temp = head;
     ClientList clients = null;
 
@@ -226,5 +231,44 @@ public class ClientList {
       temp.client.printInfo();
       temp = temp.link;
     }
+  }
+  
+  public String toString() {
+    // Nimay Desai
+    String currentStr = "[";
+    Node temp = head;
+    while (temp != null) {
+      currentStr += String.valueOf(temp.client.getID());
+      currentStr += ".";
+      currentStr += temp.client.getName();
+      currentStr += ".";
+      currentStr += temp.client.getDOB();
+      currentStr += ".";
+      currentStr += String.valueOf(temp.client.getAge());
+      currentStr += ".";
+      // currentStr += temp.client.getAccounts().toString();
+      temp = temp.link;
+      if (temp != null) {
+        currentStr += ",";
+      }
+    }
+    currentStr += "]";
+    return currentStr;
+  }
+
+  public void WriteToFile (String location) throws IOException {
+    // Nimay Desai
+    FileWriter fw = new FileWriter(location);
+    PrintWriter pw = new PrintWriter(fw);
+    clearFile(location);
+    pw.println(this.toString());
+  }
+
+  public void clearFile(String location) throws IOException {
+    // Sachkeerat Brar
+    FileWriter fw = new FileWriter(location);
+    PrintWriter pw = new PrintWriter(fw);
+
+    pw.println();
   }
 }

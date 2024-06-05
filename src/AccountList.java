@@ -21,6 +21,20 @@ public class AccountList {
     accounts[numAccounts++] = a;
   }
 
+  public void addAccount(Account a) {
+    if (numAccounts == accounts.length) {
+      Account[] temp = new Account[accounts.length * 2];
+      for (int i = 0; i < numAccounts; i++) {
+        temp[i] = accounts[i];
+      }
+      accounts = temp;
+    }
+    accounts[numAccounts] = a;
+    numAccounts++;
+  }
+
+
+
   public Account getAccount(int index) {
     return accounts[index];
   }
@@ -35,9 +49,31 @@ public class AccountList {
       numAccounts--;
     }
   }
+  // Kushal Prajapati and Nimay Desai
   public void printAccounts () {
+    System.out.print("[");
     for (int i = 0; i < numAccounts; i++) {
-      System.out.println(accounts[i]);
+      System.out.print(accounts[i]);
+      if (accounts[i+1] != null) {
+        System.out.print(",");
+      }
+      System.out.println("]");
     }
   }
+
+  // Nimay Desai
+  public String toString() {
+    String currentStr = "[";
+    for (int i = 0; i < numAccounts; i++) {
+      currentStr += accounts[i].toString();
+      if (accounts[i+1] != null) {
+        currentStr += ",";
+      }
+    }
+
+
+    currentStr += "]";
+    return currentStr;
+  }
 }
+

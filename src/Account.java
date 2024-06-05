@@ -16,6 +16,18 @@ public class Account {
     balance = 0;
   }
 
+  public char getAccountType(){
+    return type;
+  }
+
+  public double getBalance(){
+    return balance;
+  }
+
+  public TransactionHistory getHistory(){
+    return history;
+  }
+
   public void withdraw(double amount) {
     if(amount > balance) {
       System.out.println("Invalid withdrawl: Inadequate Funds!");
@@ -56,10 +68,18 @@ public class Account {
     balance += amount;
   }
 
+  // Nimay Desai
+  public String toString () {
+    String currentStr = "";
+    currentStr += type;
+    currentStr += ".";
+    currentStr += balance;
+    currentStr += history.toString();
+    return currentStr;
+  }
+
+  // Sachkeerat Brar
   public String AccountInfo() {
     return "Account Type: " + type + "\nBalance: $" + balance + "\nTransaction History: " + history;
-  }
-  public AccountType getAccountType(){
-    return type;
   }
 }
