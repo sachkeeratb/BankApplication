@@ -16,6 +16,12 @@ public class Account {
     balance = 0;
   }
 
+  public Account(char t, double b) {
+    type = t;
+    history = new TransactionHistory();
+    balance = b;
+  }
+
   public char getAccountType(){
     return type;
   }

@@ -140,8 +140,17 @@ public class Main {
     testing.addToList(c);
     System.out.println(testing);
 
-    //Client kushal=new Client("Kushal Prajapati", "2008/11/11");
-    //Client.StoreClient(kushal);
+
+
+    Client Sach = new Client("Sachkeerat Brar", "2003/11/11", a);
+    Sach.addAccount('b', 100);
+    Sach.addAccount('c', 200);
+    Sach.addAccount('s', 300);
+    Client.StoreClient(Sach);
+    Client.LoadClient("Sachkeerat Brar");
+
+
+
 
   }
    

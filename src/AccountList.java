@@ -75,5 +75,16 @@ public class AccountList {
     currentStr += "]";
     return currentStr;
   }
+
+  public void addAccount(char accountType, double balance) {
+    Account a = new Account(accountType, balance);
+    if (numAccounts == accounts.length) {
+      Account[] temp = new Account[accounts.length * 2];
+      for (int i = 0; i < accounts.length; i++)
+        temp[i] = accounts[i];
+      accounts = temp;
+    }
+    accounts[numAccounts++] = a;
+  }
 }
 

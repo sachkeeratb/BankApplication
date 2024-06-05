@@ -70,6 +70,10 @@ public class Client {
     return age;
   }
 
+  public void addAccount(char type, double balance) {
+    accounts.addAccount(type, balance);
+  }
+
   private static int calculateAge(String date) {
     // Store the current values
     final int CURRENT_YEAR = 2024;
@@ -77,7 +81,7 @@ public class Client {
     final int CURRENT_DAY = 1;
 
     // Store the birth values as integers
-    int birthYear = Integer.parseInt(date.substring(0, 3));
+    int birthYear = Integer.parseInt(date.substring(0, 4));
     int birthMonth = Integer.parseInt(date.substring(5, 6));
     int birthDay = Integer.parseInt(date.substring(8, 9));
 
@@ -98,13 +102,13 @@ public class Client {
   public void printInfo() {
     System.out.println("Name: " + name);
     System.out.println("ID: " + ID);
-    System.out.println("Age: " + age);
+    System.out.println("Age: " + calculateAge(dob));
     System.out.println("Date of Birth: " + dob);
     System.out.println("Accounts:");
     for (int i = 0; i < accounts.getNumAccounts(); i++) {
       // PRINT ACCOUNT INFO FOR EACH ACCOUNT
       Account tempcount=accounts.getAccount(i);
-      System.out.println("Account Type: " + tempcount.AccountInfo());
+      System.out.println(tempcount.AccountInfo());
     }
   }
 
@@ -120,7 +124,6 @@ public class Client {
     BufferedWriter bw = new BufferedWriter(fw);
     bw.write(c.name + "\n");
     bw.write(c.ID + "\n");
-    bw.write(c.age + "\n");
     bw.write(c.dob + "\n");
     bw.write(c.accounts.getNumAccounts() + "\n");
     for (int i = 0; i < c.accounts.getNumAccounts(); i++) {
@@ -132,29 +135,27 @@ public class Client {
     fw.close();
   }
 
-  /*
-  public static void LoadClient(Client c) throws IOException{
-    FileReader fr = new FileReader("src/ClientInfo");
-    BufferedReader br = new BufferedReader(fr);
+  public static void LoadClient(String s) throws IOException {
 
-    c.name = br.readLine();
-    c.ID = Integer.parseInt(br.readLine());
-    c.age = Integer.parseInt(br.readLine());
-    c.dob = br.readLine();
-    c.accounts = new AccountList();
-    int numAccounts = Integer.parseInt(br.readLine());
-    for (int i = 0; i < numAccounts; i++) {
-      AccountType t = AccountType.valueOf(br.readLine());
-      double balance = Double.parseDouble(br.readLine());
-      TransactionHistory h = new TransactionHistory();
-      String[] transactions = br.readLine().split(" ");
-      for (int j = 0; j < transactions.length; j++) {
-        h.newTransaction(Double.parseDouble(transactions[j]));
+    FileReader fr= new FileReader("src/ClientInfo");
+    BufferedReader br = new BufferedReader(fr);
+    String line;
+    while ((line = br.readLine()) != null) {
+      if (line.equals(s)) {
+        Client c = new Client();
+        c.putName(line);
+        c.putID(Integer.parseInt(br.readLine()));
+        c.putDOB(br.readLine());
+        int numAccounts = Integer.parseInt(br.readLine());
+        for (int i = 0; i < numAccounts; i++) {
+          char accountType = br.readLine().charAt(0);
+          double balance = Double.parseDouble(br.readLine());
+          c.accounts.addAccount(accountType, balance);
+        }
+        getClientInfo(c);
+        break;
       }
-      Account a = new Account(t, balance, h);
-      c.accounts.addAccount(a);
     }
   }
-  */
 
 }
