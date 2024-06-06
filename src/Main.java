@@ -91,7 +91,42 @@ public class Main {
     return date;
   }
 
+  // Sachkeerat Brar
+  public static void updateDate(String date) throws IOException {
+    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
+    BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
 
+    if((brOld.readLine()).substring(0, 9).equals((brNew.readLine()).substring(0, 9)))
+      updateDateNew(date);
+    else
+      updateDateBoth(date);
+  }
+
+  // Sachkeerat Brar
+  public static void updateDateNew(String date) throws IOException {
+    PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
+    BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
+
+    String data = (br.readLine()).substring(10);
+    pw.println(Values.convert(date) + "." + data);
+  }
+
+  // Sachkeerat Brar
+  public static void updateDateBoth(String date) throws IOException {
+    PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
+    PrintWriter pwNew = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
+    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
+    BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
+
+    String oldData = brNew.readLine();
+    String olderData = brOld.readLine();
+
+    String updatedOldData = oldData.substring(0, 9) + olderData.substring(10);
+    pwOld.println(updatedOldData);
+
+    String newData = Values.convert(date) + oldData.substring(10);
+    pwNew.println(newData);
+  }
 
   // Sachkeerat Brar
   public static boolean validDate(String date) {
@@ -176,7 +211,7 @@ public class Main {
     System.out.println("2 -->  Change Password");
   }
 
-  public void HandleClients(){
+  public void HandleClients() throws IOException {
     Scanner in = new Scanner(System.in);
     System.out.println("Enter your option: ");
     int opt;
@@ -206,26 +241,6 @@ public class Main {
   public void ViewBal(){}
 
   public void ChangeInfo(){}
-
-
-
-
-
-
-
-  // Nimay Desai
-  public static void mainTesting(String[] args) throws IOException {
-    FileReader fr = new FileReader(Values.getClientInfoLocation());
-    BufferedReader br = new BufferedReader(fr);
-    title();
-    if (br.readLine() == null) {
-      Register(Values.getClientInfoLocation());
-    } else {
-      if (Login(Values.getClientInfoLocation())) {
-
-      }
-    }
-  }
 
   public static void main(String[] args) throws IOException {
     Client a = new Client();

@@ -1,5 +1,3 @@
-import java.io.*;
-
 // Kushal Prajapati
 public class AccountList {
   private Account[] accounts;
@@ -60,16 +58,15 @@ public class AccountList {
 
   // Nimay Desai
   public String toString() {
-    String currentStr = "[";
+    String currentStr = "[ ";
     for (int i = 0; i < numAccounts; i++) {
       currentStr += accounts[i].toString();
       if (accounts[i+1] != null) {
-        currentStr += ",";
+        currentStr += ", ";
       }
     }
 
-
-    currentStr += "]";
+    currentStr += " ]";
     return currentStr;
   }
 

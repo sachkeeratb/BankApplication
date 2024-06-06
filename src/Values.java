@@ -1,13 +1,22 @@
 // Sachkeerat Brar
 public class Values {
+  /* This class was made in order to store or modify values which would be accessed by multiple files.
+     This is so we can have cleaner code and a better development experience
+  */
+
+  // Dates
   private static int currentYear = 2024;
   private static int currentMonth = 6;
   private static int currentDay = 6;
 
+  // Interest
   private static double checkingInterestRate = 0.04; /// 4%
   private static double savingsInterestRate = 0.065; // 6.5%
+
+  // Directory
   private static String dir = "src/";
-  
+
+  // Getting file locations
   public static String getClientInfoLocation() {
     return dir + "ClientInfo";
   }
@@ -21,6 +30,7 @@ public class Values {
     return dir + "SuperInfoOld";
   }
 
+  // Getting dates
   public static int getCurrentYear() {
     return currentYear;
   }
@@ -31,13 +41,35 @@ public class Values {
     return currentDay;
   }
 
+  // Getting and updating the interest rates
   public static double getCheckingInterestRate() {
     return checkingInterestRate;
   }
   public static double getSavingsInterestRate() {
     return savingsInterestRate;
   }
+  public static void putCheckingInterestRate(double rate) {
+    if(rate <= 0) {
+      System.out.println("Invalid rate: Must be positive.");
+      return;
+    }
+    // TODO: read & use password to change this
+    // if(rate >= 0.1)
 
+    checkingInterestRate = rate;
+  }
+  public static void putSavingsInterestRate(double rate) {
+    if(rate <= 0) {
+      System.out.println("Invalid rate: Must be positive.");
+      return;
+    }
+    // TODO: read & use password to change this
+    // if(rate >= 0.1)
+
+    savingsInterestRate = rate;
+  }
+
+  // Update the date
   public static void putCurrentYear(int year) {
     if(year > currentYear)
       currentYear = year;
@@ -74,6 +106,7 @@ public class Values {
     }
   }
 
+  // Check if the year is a leap year (day validation for february)
   private static boolean isLeapYear(int year) {
     if((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0))
       return true;
@@ -92,13 +125,13 @@ public class Values {
     for(char c: data.toCharArray())
       // Check if the character is a number between 0 and 9
       if((c >= '0') && (c <= '9'))
-        convertedData += (char)('0' + '9' - c);
+        convertedData += (char) ('0' + '9' - c);
         // Check if character is uppercase letter
       else if((c >= 'A') && (c <= 'Z'))
-        convertedData += (char)('A' + 'Z' - c);
+        convertedData += (char) ('A' + 'Z' - c);
         // Check if character is lowercase letter
       else if ((c >= 'a') && (c <= 'z'))
-        convertedData += (char)('a' + 'z' - c);
+        convertedData += (char) ('a' + 'z' - c);
         // Else add just the .character
       else
         convertedData += c;

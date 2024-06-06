@@ -96,7 +96,7 @@ public class Client {
     System.out.println("ID: " + ID);
     System.out.println("Age: " + calculateAge(dob));
     System.out.println("Date of Birth: " + dob);
-    System.out.println("Accounts:");
+    System.out.println("Accounts: ");
     for (int i = 0; i < accounts.getNumAccounts(); i++) {
       // PRINT ACCOUNT INFO FOR EACH ACCOUNT
       Account tempcount = accounts.getAccount(i);
