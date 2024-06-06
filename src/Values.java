@@ -1,20 +1,83 @@
 // Sachkeerat Brar
 public class Values {
-  public static int CURRENT_YEAR = 2024;
-  public static int CURRENT_MONTH = 6;
-  public static int CURRENT_DAY = 5;
+  private static int currentYear = 2024;
+  private static int currentMonth = 6;
+  private static int currentDay = 6;
 
-  public static double CHECKING_INTEREST_RATE = 0.05; /// 4%
-  public static double SAVINGS_INTEREST_RATE = 0.065; // 6.5%
+  private static double checkingInterestRate = 0.04; /// 4%
+  private static double savingsInterestRate = 0.065; // 6.5%
+  private static String dir = "src/";
+  
+  public static String getClientInfoLocation() {
+    return dir + "ClientInfo";
+  }
+  public static String getClientInfoOldLocation() {
+    return dir + "ClientInfoOld";
+  }
+  public static String getSuperInfoLocation() {
+    return dir + "SuperInfo";
+  }
+  public static String getSuperInfoOldLocation() {
+    return dir + "SuperInfoOld";
+  }
 
   public static int getCurrentYear() {
-    return CURRENT_YEAR;
+    return currentYear;
   }
   public static int getCurrentMonth() {
-    return CURRENT_MONTH;
+    return currentMonth;
   }
   public static int getCurrentDay() {
-    return CURRENT_DAY;
+    return currentDay;
+  }
+
+  public static double getCheckingInterestRate() {
+    return checkingInterestRate;
+  }
+  public static double getSavingsInterestRate() {
+    return savingsInterestRate;
+  }
+
+  public static void putCurrentYear(int year) {
+    if(year > currentYear)
+      currentYear = year;
+  }
+  public static void putCurrentMonth(int month) {
+    if((month >= 1) && (month <= 12))
+      currentMonth = month;
+  }
+  public void putCurrentDay(int day) {
+    switch(currentMonth) {
+      case 1, 3, 5, 7, 8, 10, 12:
+        if((day >= 1) && (day <= 31))
+          currentDay = day;
+        break;
+
+      case 4, 6, 9, 11:
+        if((day >= 1) && (day <= 30))
+          currentDay = day;
+        break;
+
+      case 2:
+        if(isLeapYear(currentYear) && (day >= 1)) {
+          if(day <= 29)
+            currentDay = day;
+        }
+        else
+          if(day <= 28)
+            currentDay = day;
+        break;
+
+      default:
+        System.out.println("Invalid day.");
+        break;
+    }
+  }
+
+  private static boolean isLeapYear(int year) {
+    if((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0))
+      return true;
+    return false;
   }
 
   // Nimay Desai

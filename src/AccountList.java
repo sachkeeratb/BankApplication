@@ -11,26 +11,23 @@ public class AccountList {
   }
 
   public void addAccount(char t) {
-    Account a = new Account(t);
-    if (numAccounts == accounts.length) {
-      Account[] temp = new Account[accounts.length * 2];
-      for (int i = 0; i < accounts.length; i++)
-        temp[i] = accounts[i];
-      accounts = temp;
+    if (numAccounts==accounts.length) {
+      System.out.println("You have too many accounts. Please delete one of your accounts before adding a new one");
+    } else {
+      Account a = new Account(t);
+      accounts[numAccounts] = a;
+      numAccounts++;
     }
-    accounts[numAccounts++] = a;
   }
 
   public void addAccount(Account a) {
-    if (numAccounts == accounts.length) {
-      Account[] temp = new Account[accounts.length * 2];
-      for (int i = 0; i < numAccounts; i++) {
-        temp[i] = accounts[i];
-      }
-      accounts = temp;
+    if (numAccounts==accounts.length) {
+      System.out.println("You have too many accounts. Please delete one of your accounts before adding a new one");
     }
-    accounts[numAccounts] = a;
-    numAccounts++;
+    else{
+      accounts[numAccounts] = a;
+      numAccounts++;
+    }
   }
 
 

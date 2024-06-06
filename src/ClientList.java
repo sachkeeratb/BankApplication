@@ -54,7 +54,7 @@ public class ClientList {
       temp = temp.link;
     }
     temp.link = new Node(item, null);
-    temp.link.client.putID(temp.client.getID());
+    temp.link.client.putID(temp.client.getID()+1);
   }
 
   public void delete (Client item) {
@@ -260,15 +260,8 @@ public class ClientList {
     // Nimay Desai
     FileWriter fw = new FileWriter(location);
     PrintWriter pw = new PrintWriter(fw);
-    clearFile(location);
+    pw.println();
     pw.println(this.toString());
   }
 
-  public void clearFile(String location) throws IOException {
-    // Sachkeerat Brar
-    FileWriter fw = new FileWriter(location);
-    PrintWriter pw = new PrintWriter(fw);
-
-    pw.println();
-  }
 }

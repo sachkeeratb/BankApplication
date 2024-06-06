@@ -11,6 +11,11 @@ public class TransactionHistory {
       link = newLink;
     }
 
+    public Node(Node newLink){
+      transaction = 0;
+      link = newLink;
+    }
+
     public double getTransaction() {
       return transaction;
     }
@@ -27,13 +32,27 @@ public class TransactionHistory {
     head = newNode;
   }
 
-  public double calculateSum() {
+  public double calculateBalance() {
     double sum = 0;
     for(Node temp = head; temp != null; temp = temp.link)
       sum += temp.transaction;
     return sum;
   }
 
+  public void arrayToList(double[] values) {
+    Node temp = head;
+    if(temp == null)
+      temp = new Node(null);
+    temp.transaction = values[0];
+    for(int i = 0; i < values.length; i++) {
+      if(temp.link == null)
+        temp.link = new Node(null);
+      temp.transaction = values[i];
+      temp = temp.link;
+    }
+  }
+
+  // Nimay Desai
   public String toString() {
     // This method was created in order to have the transaction history in a simple and concise way
 

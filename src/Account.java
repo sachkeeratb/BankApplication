@@ -5,15 +5,33 @@ public class Account {
   private double balance;
 
   public Account(char t) {
-    type = t;
+    switch(t) {
+      case 's':
+      case 'c':
+        type = t;
+        break;
+      default:
+        System.out.println("A account type must be either 's' or 'c' for a savings or checking accounts, respectfully.\nAccount created as a checking account.");
+        type = 'c';
+        break;
+    }
     history = new TransactionHistory();
     balance = 0;
   }
-
-  public Account() {
-    type = 'c';
+  public Account(char t, double[] transactions) {
+    switch(t) {
+      case 's':
+      case 'c':
+        type = t;
+        break;
+      default:
+        System.out.println("A account type must be either 's' or 'c' for a savings or checking accounts, respectfully.\nAccount created as a checking account.");
+        type = 'c';
+        break;
+    }
     history = new TransactionHistory();
-    balance = 0;
+    history.arrayToList(transactions);
+    balance = history.calculateBalance();
   }
 
   public Account(char t, double b) {
@@ -36,11 +54,11 @@ public class Account {
 
   public void withdraw(double amount) {
     if(amount > balance) {
-      System.out.println("Invalid withdrawl: Inadequate Funds!");
+      System.out.println("Invalid withdrawal: Inadequate Funds!");
       return;
     }
     if (amount <= 0) {
-      System.out.println("Invalid withdraw. Cannot withdraw negative values!");
+      System.out.println("Invalid withdrawal: Cannot withdraw negative values!");
       return;
     }
 
@@ -72,6 +90,21 @@ public class Account {
 
     history.newTransaction(amount);
     balance += amount;
+  }
+
+  public void addInterest(int oldYear) {
+    if(oldYear >= Values.getCurrentYear())
+      return;
+
+    int time = Values.getCurrentYear() - oldYear;
+    double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+
+    balance = compoundInterest(balance, interestRate, 1, time);
+  }
+
+  public static double compoundInterest(double P, double r, int n, int t) {
+    // Nimay Desai and Sachkeerat Brar
+    return Math.pow(P * (1 + r / n), t * n);
   }
 
   // Nimay Desai

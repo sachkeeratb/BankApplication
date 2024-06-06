@@ -7,10 +7,10 @@ public class Client {
   private int ID;
   private int age;
   private String dob;
-  private AccountList accounts = new AccountList();
+  private AccountList accounts;
 
   public Client() {
-    ID = 0;
+    ID = 1;
     name = "John Doe";
     dob = "2006/01/01";
     age = calculateAge("2006/01/01");
@@ -30,7 +30,7 @@ public class Client {
     dob = date;
     age = calculateAge(date);
     accounts = new AccountList();
-    ID=0;
+    ID = 1;
   }
 
   public Client(String n, String date, Client lastClient) {
@@ -75,25 +75,17 @@ public class Client {
   }
 
   private static int calculateAge(String date) {
-    // Store the current values
-    final int CURRENT_YEAR = 2024;
-    final int CURRENT_MONTH = 6;
-    final int CURRENT_DAY = 1;
-
     // Store the birth values as integers
     int birthYear = Integer.parseInt(date.substring(0, 4));
     int birthMonth = Integer.parseInt(date.substring(5, 6));
     int birthDay = Integer.parseInt(date.substring(8, 9));
 
     // Store the age
-    int currentAge = CURRENT_YEAR - birthYear;
+    int currentAge = Values.getCurrentYear() - birthYear;
 
     // See if they are a year younger
-    if (CURRENT_MONTH < birthMonth) {
+    if ((Values.getCurrentMonth() < birthMonth) || ((Values.getCurrentMonth() == birthMonth) && (Values.getCurrentDay() < birthDay)))
       currentAge--;
-    } else if (CURRENT_MONTH == birthMonth && CURRENT_DAY < birthDay) {
-      currentAge--;
-    }
 
     // Return the age
     return currentAge;
@@ -107,7 +99,7 @@ public class Client {
     System.out.println("Accounts:");
     for (int i = 0; i < accounts.getNumAccounts(); i++) {
       // PRINT ACCOUNT INFO FOR EACH ACCOUNT
-      Account tempcount=accounts.getAccount(i);
+      Account tempcount = accounts.getAccount(i);
       System.out.println(tempcount.AccountInfo());
     }
   }
@@ -118,7 +110,7 @@ public class Client {
     c.printInfo();
     c.accounts.printAccounts();
   }
-
+  // method to store all information into a client using the FileWriter library
   public static void StoreClient(Client c) throws IOException {
     FileWriter fw = new FileWriter("src/ClientInfo", true);
     BufferedWriter bw = new BufferedWriter(fw);
@@ -134,7 +126,7 @@ public class Client {
     bw.close();
     fw.close();
   }
-
+// method to load all information into a client using the FileReader library
   public static void LoadClient(String s) throws IOException {
 
     FileReader fr= new FileReader("src/ClientInfo");

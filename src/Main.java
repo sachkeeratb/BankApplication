@@ -29,16 +29,16 @@ public class Main {
 
   // Nimay Desai
   // Logins in returns whether it is valid
-  public static boolean checkPassword(String password) throws IOException {
-    FileReader fr = new FileReader("src/SuperInfo");
+  public static boolean checkPassword(String password, String location) throws IOException {
+    FileReader fr = new FileReader(location);
     BufferedReader br = new BufferedReader(fr);
     return Values.convert(br.readLine()).equals(password);
   }
 
   // Nimay Desai
-  public static void Register() throws IOException {
+  public static void Register(String location) throws IOException {
     Scanner input = new Scanner(System.in);
-    FileWriter fw = new FileWriter("src/SuperInfo");
+    FileWriter fw = new FileWriter(location);
     PrintWriter pw = new PrintWriter(fw);
     System.out.println("The program has detected that this is the first time you have opened this application.\nAccount creation will begin.");
 
@@ -57,7 +57,7 @@ public class Main {
     fw.close();
   }
 
-  // Nimay
+  // Nimay Desai
   public static boolean Login() throws IOException {
     Scanner input = new Scanner(System.in);
     System.out.println("Please enter a username ");
@@ -65,7 +65,7 @@ public class Main {
     System.out.println("Please enter a password for security: ");
     String password = input.next();
     int t = 1;
-    while (!checkPassword(password)) {
+    while (!checkPassword(password, Values.getSuperInfoLocation())) {
       if (t >= 5) {
         System.out.println("Wrong password entered 5 times. Exiting...");
         return false;
@@ -79,9 +79,24 @@ public class Main {
     return true;
   }
 
+  // Sachkeerat Brar
+  public static String getDate() {
+    Scanner in = new Scanner(System.in);
+    String date;
+    do {
+      System.out.println("Enter the current date as yyyy/mm/dd: ");
+      date = in.next();
+    } while(!validDate(date) || !validAge(date));
+
+    return date;
+  }
+
+
+
+  // Sachkeerat Brar
   public static boolean validDate(String date) {
     // Sachkeerat Brar
-    int year, month, day;
+    int year,  month, day;
     try {
       year = Integer.parseInt(date.substring(0, 4));
       if(year <= 1904) {
@@ -96,18 +111,6 @@ public class Main {
         System.out.println("Please input a valid date.");
         return false;
       }
-
-      int currentAge = Values.getCurrentYear() - year;
-
-      // See if they are a year younger
-      if ((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
-        currentAge--;
-
-      if(currentAge < 18) {
-        System.out.println("You must be 18 years old to use this bank.");
-        return false;
-      }
-
     }
     catch (Exception _) {
       System.out.println("Invalid date format. Please input a date as yyyy/mm/dd.");
@@ -116,20 +119,114 @@ public class Main {
 
     return true;
   }
-  
+
+  // Sachkeerat Brar
+  public static boolean validAge(String date) {
+    // Sachkeerat Brar
+    int year, month, day;
+
+    year = Integer.parseInt(date.substring(0, 4));
+
+    if(year <= 1904) {
+      System.out.println("Do not lie about your age.");
+      System.exit(0);
+    }
+
+    month = Integer.parseInt(date.substring(5, 7));
+    day = Integer.parseInt(date.substring(8, 10));
+
+    int currentAge = Values.getCurrentYear() - year;
+
+    // See if they are a year younger
+    if ((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
+      currentAge--;
+
+    if(currentAge < 18) {
+      System.out.println("You must be 18 years old to use this bank.");
+      return false;
+    }
+
+    return true;
+  }
+
+
+  public void MainMenu() throws IOException {
+    System.out.println("Welcome to the Bank!");
+    System.out.println("What would you like to do?");
+
+    System.out.println("1 --> Handle Clients");
+    System.out.println("2 --> Modify Bank");
+    System.out.println("3 --> Log Out");
+    System.out.println("4 -> Exit program");
+
+    Scanner in = new Scanner(System.in);
+    System.out.println("Enter your option: ");
+    int opt = in.nextInt();
+    switch (opt) {
+      case 1 -> HandleClients();
+      case 2 -> ModifyBank();
+      case 3 -> Login();
+    }
+
+  }
+
+  public void ModifyBank() {
+    System.out.println("Select your option ");
+    System.out.println("1 -->  Change Password");
+    System.out.println("2 -->  Change Password");
+  }
+
+  public void HandleClients(){
+    Scanner in = new Scanner(System.in);
+    System.out.println("Enter your option: ");
+    int opt;
+    do {
+      System.out.println("1 --> Withdraw or Deposit Money");
+      System.out.println("2 --> Transfer Money");
+      System.out.println("3 --> View Balance");
+      System.out.println("4 --> Change User Information");
+      System.out.println("5 --> Back");
+      opt = in.nextInt();
+    } while ((opt < 1) || (opt > 5));
+
+
+    switch(opt){
+      case 1 -> WithDepo();
+      case 2 -> Transfer();
+      case 3 -> ViewBal();
+      case 4 -> ChangeInfo();
+      case 5 -> MainMenu();
+    }
+  }
+
+  public void WithDepo(){}
+
+  public void Transfer(){}
+
+  public void ViewBal(){}
+
+  public void ChangeInfo(){}
+
+
+
+
+
+
+
   // Nimay Desai
   public static void mainTesting(String[] args) throws IOException {
-    FileReader fr = new FileReader("src/SuperInfo");
+    FileReader fr = new FileReader(Values.getClientInfoLocation());
     BufferedReader br = new BufferedReader(fr);
     title();
     if (br.readLine() == null) {
-      Register();
+      Register(Values.getClientInfoLocation());
     } else {
-      if (Login()) {
-        System.out.println("WELCOME TO THE MAIN PROGRAM ");
+      if (Login(Values.getClientInfoLocation())) {
+
       }
     }
   }
+
   public static void main(String[] args) throws IOException {
     Client a = new Client();
     Client b = new Client("Bob Doe", "2008/11/11", a);
@@ -141,17 +238,12 @@ public class Main {
     System.out.println(testing);
 
 
-
     Client Sach = new Client("Sachkeerat Brar", "2003/11/11", a);
     Sach.addAccount('b', 100);
     Sach.addAccount('c', 200);
     Sach.addAccount('s', 300);
     Client.StoreClient(Sach);
     Client.LoadClient("Sachkeerat Brar");
-
-
-
-
   }
    
 }
