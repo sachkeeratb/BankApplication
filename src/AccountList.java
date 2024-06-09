@@ -9,7 +9,7 @@ public class AccountList {
   }
 
   public void addAccount(char t) {
-    if (numAccounts==accounts.length) {
+    if (numAccounts == accounts.length) {
       System.out.println("You have too many accounts. Please delete one of your accounts before adding a new one");
     } else {
       Account a = new Account(t);
@@ -19,15 +19,13 @@ public class AccountList {
   }
 
   public void addAccount(Account a) {
-    if (numAccounts==accounts.length) {
+    if (numAccounts == accounts.length) {
       System.out.println("You have too many accounts. Please delete one of your accounts before adding a new one");
-    }
-    else{
+    } else {
       accounts[numAccounts] = a;
       numAccounts++;
     }
   }
-
 
 
   public Account getAccount(int index) {
@@ -44,12 +42,13 @@ public class AccountList {
       numAccounts--;
     }
   }
+
   // Kushal Prajapati and Nimay Desai
-  public void printAccounts () {
+  public void printAccounts() {
     System.out.print("[");
     for (int i = 0; i < numAccounts; i++) {
       System.out.print(accounts[i]);
-      if (accounts[i+1] != null) {
+      if (accounts[i + 1] != null) {
         System.out.print(",");
       }
       System.out.println("]");
@@ -61,7 +60,7 @@ public class AccountList {
     String currentStr = "[ ";
     for (int i = 0; i < numAccounts; i++) {
       currentStr += accounts[i].toString();
-      if (accounts[i+1] != null) {
+      if (accounts[i + 1] != null) {
         currentStr += ", ";
       }
     }
@@ -74,8 +73,7 @@ public class AccountList {
     Account a = new Account(accountType, balance);
     if (numAccounts == accounts.length) {
       Account[] temp = new Account[accounts.length * 2];
-      for (int i = 0; i < accounts.length; i++)
-        temp[i] = accounts[i];
+      System.arraycopy(accounts, 0, temp, 0, accounts.length);
       accounts = temp;
     }
     accounts[numAccounts++] = a;

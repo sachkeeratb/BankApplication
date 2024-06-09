@@ -1,11 +1,12 @@
 // Sachkeerat Brar
 public class Account {
-  private char type;
-  private TransactionHistory history;
+  int n;
+  private final char type;
+  private final TransactionHistory history;
   private double balance;
 
   public Account(char t) {
-    switch(t) {
+    switch (t) {
       case 's':
       case 'c':
         type = t;
@@ -17,9 +18,11 @@ public class Account {
     }
     history = new TransactionHistory();
     balance = 0;
+    n = 1;
   }
+
   public Account(char t, double[] transactions) {
-    switch(t) {
+    switch (t) {
       case 's':
       case 'c':
         type = t;
@@ -32,6 +35,7 @@ public class Account {
     history = new TransactionHistory();
     history.arrayToList(transactions);
     balance = history.calculateBalance();
+    n = 1;
   }
 
   public Account(char t, double b) {
@@ -40,20 +44,20 @@ public class Account {
     balance = b;
   }
 
-  public char getAccountType(){
+  public char getAccountType() {
     return type;
   }
 
-  public double getBalance(){
+  public double getBalance() {
     return balance;
   }
 
-  public TransactionHistory getHistory(){
+  public TransactionHistory getHistory() {
     return history;
   }
 
   public void withdraw(double amount) {
-    if(amount > balance) {
+    if (amount > balance) {
       System.out.println("Invalid withdrawal: Inadequate Funds!");
       return;
     }
@@ -67,7 +71,7 @@ public class Account {
   }
 
   public void transfer(double amount, Account other) {
-    if(amount > balance) {
+    if (amount > balance) {
       System.out.println("Invalid withdrawal. Inadequate Funds.");
       return;
     }
@@ -92,33 +96,76 @@ public class Account {
     balance += amount;
   }
 
-  public void addInterest(int oldYear) {
-    if(oldYear >= Values.getCurrentYear())
-      return;
+  public void addInterest() {
+    switch (n) {
+      case 1: {
+        if (Values.getCurrentYear() >= Values.getPreviousYear())
+          return;
 
-    int time = Values.getCurrentYear() - oldYear;
-    double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+        int time = Values.getCurrentYear() - Values.getPreviousYear();
+        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
 
-    balance = compoundInterest(balance, interestRate, 1, time);
+        balance = compoundInterest(balance, interestRate, time);
+        break;
+      }
+
+      case 2: {
+        if (Values.getCurrentYear() + 6 >= Values.getPreviousYear())
+          return;
+
+        double time = (double) (Values.getCurrentMonth() - Values.getPreviousMonth()) / 12;
+        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+
+        balance = compoundInterest(balance, interestRate, time);
+        break;
+      }
+
+      case 4: {
+        if (Values.getPreviousMonth() + 3 >= Values.getPreviousMonth())
+          return;
+
+        double time = (double) (Values.getCurrentMonth() - Values.getPreviousMonth()) / 12;
+        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+
+        balance = compoundInterest(balance, interestRate, time);
+        break;
+      }
+
+      case 12: {
+        if (Values.getPreviousMonth() >= Values.getPreviousMonth())
+          return;
+
+        double time = (double) (Values.getCurrentMonth() - Values.getPreviousMonth()) / 12;
+        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+
+        balance = compoundInterest(balance, interestRate, time);
+        break;
+      }
+    }
   }
 
-  public static double compoundInterest(double P, double r, int n, int t) {
+  private double compoundInterest(double P, double r, double t) {
     // Nimay Desai and Sachkeerat Brar
-    return Math.pow(P * (1 + r / n), t * n);
+    return Math.pow(P * (1 + r / (double) n), (double) n * t);
   }
 
   // Nimay Desai
-  public String toString () {
-    String currentStr = "";
-    currentStr += type;
-    currentStr += ".";
-    currentStr += balance;
-    currentStr += history.toString();
-    return currentStr;
+  public String toString() {
+    return type + "." + balance + "." + n + "." + history.toString();
+  }
+
+  private String compoundedByN() {
+    return switch (n) {
+      case 1 -> "annually";
+      case 2 -> "semi-annually";
+      case 4 -> "quarterly";
+      case 12 -> "monthly";
+      default -> "";
+    };
   }
 
   // Sachkeerat Brar
-  public String AccountInfo() {
-    return "Account Type: " + type + "\nBalance: $" + balance + "\nTransaction History: " + history;
+  public String accountInfo() {
+    return "Account Type: " + type + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: " + history;
   }
 }

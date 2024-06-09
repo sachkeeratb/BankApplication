@@ -17,7 +17,7 @@ public class Main {
   }
 
   // Nimay Desai
-  public void instructions() throws IOException {
+  public void instructions() {
     Scanner in = new Scanner(System.in);
     System.out.println("Welcome to the Bank!");
     System.out.println("Enter Your Name: ");
@@ -102,8 +102,8 @@ public class Main {
         return false;
       }
 
-      month = Integer.parseInt(date.substring(5, 7));
-      day = Integer.parseInt(date.substring(8, 10));
+      month = Integer.parseInt(date.substring(5, date.substring(5).indexOf("/")));
+      day = Integer.parseInt(date.substring(date.substring(5).indexOf("/") + 1, date.indexOf(".")));
 
       if((year > Values.getCurrentYear()) || (month < 1) || (month > 12) || (day < 1) || (day > 31)) {
         System.out.println("Please input a valid date.");
@@ -152,7 +152,7 @@ public class Main {
     for(ClientList.Node temp = clients.getHead(); temp != null; temp = temp.link)
       for(int i = 0; i < 5; i++)
         if(temp.client.getAccounts().getAccount(i) != null)
-          temp.client.getAccounts().getAccount(i).addInterest(Values.getPreviousYear());
+          temp.client.getAccounts().getAccount(i).addInterest();
 
   }
 
@@ -222,9 +222,10 @@ public class Main {
     Client c = new Client(b);
     Client[] clients = {a, b, c};
     ClientList testing = new ClientList(clients);
+    testing.WriteToFile("src/ClientInfo");
 //    testing.addToList(b);
 //    testing.addToList(c);
-    System.out.println(testing.toString());
+    System.out.println(ClientList.toClientList());
 
 
 //    Client Sach = new Client("Sachkeerat Brar", "2003/11/11", a);

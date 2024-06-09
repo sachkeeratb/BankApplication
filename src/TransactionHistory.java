@@ -11,7 +11,7 @@ public class TransactionHistory {
       link = newLink;
     }
 
-    public Node(Node newLink){
+    public Node(Node newLink) {
       transaction = 0;
       link = newLink;
     }
@@ -19,6 +19,7 @@ public class TransactionHistory {
     public double getTransaction() {
       return transaction;
     }
+
     public String toString() {
       return "$" + transaction;
     }
@@ -37,18 +38,18 @@ public class TransactionHistory {
 
   public double calculateBalance() {
     double sum = 0;
-    for(Node temp = head; temp != null; temp = temp.link)
+    for (Node temp = head; temp != null; temp = temp.link)
       sum += temp.transaction;
     return sum;
   }
 
   public void arrayToList(double[] values) {
     Node temp = head;
-    if(temp == null)
+    if (temp == null)
       temp = new Node(null);
     temp.transaction = values[0];
-    for(int i = 0; i < values.length; i++) {
-      if(temp.link == null)
+    for (int i = 0; i < values.length; i++) {
+      if (temp.link == null)
         temp.link = new Node(null);
       temp.transaction = values[i];
       temp = temp.link;
@@ -60,18 +61,18 @@ public class TransactionHistory {
     // This method was created in order to have the transaction history in a simple and concise way
 
     // If there are no transactions
-    if(head == null) {
+    if (head == null) {
       return "[ ]";
     }
     // If there is only one transaction
-    if(head.link == null) {
+    if (head.link == null) {
       return "[ $" + head.transaction + " ]";
     }
 
     // Build a string of all the values of the transactions from most recent to oldest
     String info = "[ ";
     Node temp;
-    for(temp = head; temp.link != null; temp = temp.link)
+    for (temp = head; temp.link != null; temp = temp.link)
       info += "$" + temp.transaction + ", ";
     info += "$" + temp.transaction + " ]";
 
