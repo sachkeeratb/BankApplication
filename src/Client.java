@@ -70,6 +70,10 @@ public class Client {
     return age;
   }
 
+  public AccountList getAccounts() {
+    return accounts;
+  }
+
   public void addAccount(char type, double balance) {
     accounts.addAccount(type, balance);
   }

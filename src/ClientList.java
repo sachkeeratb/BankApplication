@@ -14,6 +14,10 @@ public class ClientList {
     }
   }
 
+  public Node getHead() {
+    return head;
+  }
+
   // Converts an array of clients to a linked list of clients easily and effetively for multiple clients
 
   public ClientList (Client[] items) {

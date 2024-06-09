@@ -3,10 +3,10 @@ public class TransactionHistory {
   Node head; // The head of the list
 
   public class Node {
-    private double transaction; // The transaction as a double
     Node link;
+    private double transaction; // The transaction as a double
 
-    public Node(double newTransaction, Node newLink){
+    public Node(double newTransaction, Node newLink) {
       transaction = newTransaction;
       link = newLink;
     }
@@ -18,6 +18,9 @@ public class TransactionHistory {
 
     public double getTransaction() {
       return transaction;
+    }
+    public String toString() {
+      return "$" + transaction;
     }
   }
 
