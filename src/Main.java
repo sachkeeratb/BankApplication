@@ -92,43 +92,6 @@ public class Main {
   }
 
   // Sachkeerat Brar
-  public static void updateDate(String date) throws IOException {
-    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
-    BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
-
-    if((brOld.readLine()).substring(0, 9).equals((brNew.readLine()).substring(0, 9)))
-      updateDateNew(date);
-    else
-      updateDateBoth(date);
-  }
-
-  // Sachkeerat Brar
-  public static void updateDateNew(String date) throws IOException {
-    PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
-    BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
-
-    String data = (br.readLine()).substring(10);
-    pw.println(Values.convert(date) + "." + data);
-  }
-
-  // Sachkeerat Brar
-  public static void updateDateBoth(String date) throws IOException {
-    PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
-    PrintWriter pwNew = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
-    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
-    BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
-
-    String oldData = brNew.readLine();
-    String olderData = brOld.readLine();
-
-    String updatedOldData = oldData.substring(0, 9) + olderData.substring(10);
-    pwOld.println(updatedOldData);
-
-    String newData = Values.convert(date) + oldData.substring(10);
-    pwNew.println(newData);
-  }
-
-  // Sachkeerat Brar
   public static boolean validDate(String date) {
     // Sachkeerat Brar
     int year,  month, day;
@@ -182,6 +145,15 @@ public class Main {
     }
 
     return true;
+  }
+
+  // Sachkeerat Brar
+  public static void updateBalance(ClientList clients) {
+    for(ClientList.Node temp = clients.getHead(); temp != null; temp = temp.link)
+      for(int i = 0; i < 5; i++)
+        if(temp.client.getAccounts().getAccount(i) != null)
+          temp.client.getAccounts().getAccount(i).addInterest(Values.getPreviousYear());
+
   }
 
 
