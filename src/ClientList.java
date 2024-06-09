@@ -256,6 +256,18 @@ public class ClientList {
     return currentStr;
   }
 
+  public ClientList toClientList () throws IOException {
+    FileReader fr = new FileReader(Values.getClientInfoLocation());
+    BufferedReader br = new BufferedReader(fr);
+    if (br.readLine().isEmpty()) {
+      System.out.println("No data. Please make sure you have added a client list");
+      return null;
+    }
+    String data = br.readLine();
+    return null;
+
+  }
+
   public void WriteToFile (String location) throws IOException {
     // Nimay Desai
     FileWriter fw = new FileWriter(location);

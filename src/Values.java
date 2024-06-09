@@ -14,20 +14,21 @@ public class Values {
   private static double savingsInterestRate = 0.065; // 6.5%
 
   // Directory
-  private static String dir = "src/";
+  // Nimay Desai
+  private static final String DIR = "src/";
 
   // Getting file locations
   public static String getClientInfoLocation() {
-    return dir + "ClientInfo";
+    return DIR + "ClientInfo";
   }
   public static String getClientInfoOldLocation() {
-    return dir + "ClientInfoOld";
+    return DIR + "ClientInfoOld";
   }
   public static String getSuperInfoLocation() {
-    return dir + "SuperInfo";
+    return DIR + "SuperInfo";
   }
   public static String getSuperInfoOldLocation() {
-    return dir + "SuperInfoOld";
+    return DIR + "SuperInfoOld";
   }
 
   // Getting dates

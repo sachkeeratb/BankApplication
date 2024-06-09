@@ -234,7 +234,9 @@ public class Main {
     }
   }
 
-  public void WithDepo(){}
+  public void WithDepo(){
+
+  }
 
   public void Transfer(){}
 
@@ -248,17 +250,17 @@ public class Main {
     Client c = new Client(b);
     Client[] clients = {a, b, c};
     ClientList testing = new ClientList(clients);
-    testing.addToList(b);
-    testing.addToList(c);
-    System.out.println(testing);
+//    testing.addToList(b);
+//    testing.addToList(c);
+    System.out.println(testing.toString());
 
 
-    Client Sach = new Client("Sachkeerat Brar", "2003/11/11", a);
-    Sach.addAccount('b', 100);
-    Sach.addAccount('c', 200);
-    Sach.addAccount('s', 300);
-    Client.StoreClient(Sach);
-    Client.LoadClient("Sachkeerat Brar");
+//    Client Sach = new Client("Sachkeerat Brar", "2003/11/11", a);
+//    Sach.addAccount('b', 100);
+//    Sach.addAccount('c', 200);
+//    Sach.addAccount('s', 300);
+//    Client.StoreClient(Sach);
+//    Client.LoadClient("Sachkeerat Brar");
   }
    
 }
