@@ -1,51 +1,136 @@
-import java.util.Scanner;
 import java.io.*;
 
+// Kushal Prajapati
+// This is the client object for the clients associated with the bank
 public class Client {
+  // Fields
+  private int ID; // Client ID (starts at 1)
+  private String name; // Full name
+  private String dob; // Date
+  private int age; // Age (calculated from date of birth)
+  private AccountList accounts; // Accounts the user holds
 
-  private String name;
-  private int ID;
-  private final int age;
-  private String dob;
-  private final AccountList accounts;
-
+  // Constructors
   public Client() {
+    // The default user
     ID = 1;
     name = "John Doe";
     dob = "2006/01/01";
-    age = calculateAge("2006/01/01");
+    age = calculateAge(dob);
     accounts = new AccountList();
   }
-
   public Client(Client lastClient) {
+    // This constructor makes a default client with the last client's ID incremented
+    ID = lastClient.ID + 1;
     name = "John Doe";
     dob = "2006/01/01";
-    age = calculateAge("2006/01/01");
+    age = calculateAge(dob);
     accounts = new AccountList();
-    ID = lastClient.getID() + 1;
   }
-
   public Client(String n, String date) {
-    name = n;
-    dob = date;
-    age = calculateAge(date);
-    accounts = new AccountList();
+    // Create a client with the inputted name and date
     ID = 1;
-  }
-
-  public Client(String n, String date, Client lastClient) {
     name = n;
     dob = date;
-    ID = lastClient.ID++;
+    age = calculateAge(date);
+    accounts = new AccountList();
+  }
+  public Client(String n, String date, Client lastClient) {
+    // Create a client with the name, date, and the last client's ID incremented
+    ID = lastClient.ID + 1;
+    name = n;
+    dob = date;
     age = calculateAge(date);
     accounts = new AccountList();
   }
 
+
+  // Sachkeerat Brar
+  public static void storeClient(Client client) throws IOException {
+    // This method writes a file into the client info
+
+    FileWriter fw = new FileWriter("src/ClientInfo");
+    PrintWriter pw = new PrintWriter(fw);
+    FileReader fr = new FileReader("src/ClientInfo");
+    BufferedReader br = new BufferedReader(fr);
+
+    String data = br.readLine();
+    data = data.substring(0, data.length() - 2) + ", " + client.toString() + " ]";
+
+    pw.println(data);
+
+    fw.flush();
+    pw.flush();
+  }
+
+  // Sachkeerat Brar
+  public static Client fromString(String data) {
+    // This method creates a client out of a string
+    int clientID = Integer.parseInt(data.substring(0, data.indexOf(".")));
+    String clientName = data.substring(data.indexOf(".") + 1, data.indexOf(".", data.indexOf(".") + 1));
+    String clientDOB = data.substring(data.indexOf(".", data.indexOf(".") + 1), data.indexOf(".", data.indexOf(".", data.indexOf(".") + 1) + 1));
+    String clientAccounts = data.substring(data.indexOf("[", 1));
+    AccountList accounts = new AccountList();
+
+    // TODO: finish making this method
+
+  }
+
+
+  // Accessors
+  public int getID() {
+    return ID;
+  }
+  public String getName() {
+    return name;
+  }
+  public String getDOB() {
+    return dob;
+  }
+  public int getAge() {
+    return age;
+  }
+  public AccountList getAccounts() {
+    return accounts;
+  }
+
+  // Mutators
+  public void putID(int newID) {
+    ID = newID;
+  }
+  public void putName(String newName) {
+    name = newName;
+  }
+  public void putDOB(String newDOB) {
+    dob = newDOB;
+  }
+
+  // Sachkeerat Brar
+  public void printInfo() {
+    // Output regular client info
+    System.out.println("ID: " + ID + "\nName: " + name + "\nDate of Birth: " + dob + "\nAge: " + age + "\nAccounts: ");
+
+    // Output account info
+    for (int i = 0; i < accounts.getNumAccounts(); i++) {
+      System.out.println("Account " + (i + 1) + ": ");
+      accounts.getAccount(i).accountInfo();
+    }
+  }
+
+  // Sachkeerat Brar
+  public String toString() {
+    // This method turns the object into a string when used to print to the console
+    return "[ " + ID + ", " + name + ", " + dob + ", " + accounts.toString() + " ]";
+  }
+
+  // Sachkeerat Brar
   private static int calculateAge(String date) {
+    // This method calculates an age from a date formatted as "yyyy/mm/dd"
+
     // Store the birth values as integers
     int birthYear = Integer.parseInt(date.substring(0, 4));
-    int birthMonth = Integer.parseInt(date.substring(5, 6));
-    int birthDay = Integer.parseInt(date.substring(8, 9));
+    int birthMonth = Integer.parseInt(date.substring(5, date.indexOf("/")));
+    int birthDay = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
 
     // Store the age
     int currentAge = Values.getCurrentYear() - birthYear;
@@ -56,100 +141,5 @@ public class Client {
 
     // Return the age
     return currentAge;
-  }
-
-  public static void getClientInfo(Client c) {
-    c.printInfo();
-    c.accounts.printAccounts();
-  }
-
-  // method to store all information into a client using the FileWriter library
-  public static void StoreClient(Client c) throws IOException {
-    FileWriter fw = new FileWriter("src/ClientInfo", true);
-    BufferedWriter bw = new BufferedWriter(fw);
-    bw.write(c.name + "\n");
-    bw.write(c.ID + "\n");
-    bw.write(c.dob + "\n");
-    bw.write(c.accounts.getNumAccounts() + "\n");
-    for (int i = 0; i < c.accounts.getNumAccounts(); i++) {
-      Account temp_account = c.accounts.getAccount(i);
-      bw.write(temp_account.getAccountType() + "\n");
-      bw.write(temp_account.getBalance() + "\n");
-    }
-    bw.close();
-    fw.close();
-  }
-
-  // method to load all information into a client using the FileReader library
-  public static void LoadClient(String s) throws IOException {
-
-    FileReader fr = new FileReader("src/ClientInfo");
-    BufferedReader br = new BufferedReader(fr);
-    String line;
-    while ((line = br.readLine()) != null) {
-      if (line.equals(s)) {
-        Client c = new Client();
-        c.putName(line);
-        c.putID(Integer.parseInt(br.readLine()));
-        c.putDOB(br.readLine());
-        int numAccounts = Integer.parseInt(br.readLine());
-        for (int i = 0; i < numAccounts; i++) {
-          char accountType = br.readLine().charAt(0);
-          double balance = Double.parseDouble(br.readLine());
-          c.accounts.addAccount(accountType, balance);
-        }
-        getClientInfo(c);
-        break;
-      }
-    }
-  }
-
-  public void putID(int newID) {
-    ID = newID;
-  }
-
-  public void putName(String newName) {
-    name = newName;
-  }
-
-  public void putDOB(String newDOB) {
-    dob = newDOB;
-  }
-
-  public int getID() {
-    return ID;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getDOB() {
-    return dob;
-  }
-
-  public int getAge() {
-    return age;
-  }
-
-  public AccountList getAccounts() {
-    return accounts;
-  }
-
-  public void addAccount(char type, double balance) {
-    accounts.addAccount(type, balance);
-  }
-
-  public void printInfo() {
-    System.out.println("Name: " + name);
-    System.out.println("ID: " + ID);
-    System.out.println("Age: " + calculateAge(dob));
-    System.out.println("Date of Birth: " + dob);
-    System.out.println("Accounts: ");
-    for (int i = 0; i < accounts.getNumAccounts(); i++) {
-      // PRINT ACCOUNT INFO FOR EACH ACCOUNT
-      Account tempcount = accounts.getAccount(i);
-      System.out.println(tempcount.accountInfo());
-    }
   }
 }

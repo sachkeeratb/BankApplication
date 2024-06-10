@@ -1,71 +1,63 @@
 import java.io.*;
 
 // Nimay Desai
+// This is the main linked list of the program which stores all the clients
 public class ClientList {
-  private Node head;
+  // Field
+  private Node head; // The head node
 
+
+  // The node class
   class Node {
-    Client client;
-    Node link;
+    // Fields
+    Client client; // This hold the client object
+    Node link; // This holds the next object
 
+    // Constructor
     public Node(Client c, Node l) {
       client = c;
       link = l;
     }
   }
 
-  public ClientList(Client[] items) {
-    // Nimay Desai
-    head = new Node(items[0], null);
-    Node curentItm = head;
-    for (int i = 1; i < items.length; i++) {
-      curentItm.link = new Node(items[i], null);
-      curentItm = curentItm.link;
-    }
-  }
 
-  public ClientList(Client item) {
-    // Nimay Desai
-    head = new Node(item, null);
-  }
-
-  // Converts an array of clients to a linked list of clients easily and effectively for multiple clients
-
+  // Constructors
   public ClientList() {
-    // Nimay Desai
-    head = new Node(new Client(), null);
+    // Create a list
+    head = null;
+  }
+  public ClientList(Client client) {
+    // Create a list starting with a client
+    head = new Node(client, null);
+  }
+  public ClientList(Client[] clients) {
+    // This creates a client list using an array of clients
+    head = new Node(clients[0], null); // Set the head
+    Node current = head; // Hold the current node
+
+    // Iterate through the array
+    for (int i = 1; i < clients.length; i++) {
+      // Create a new node and put it into the list
+      current.link = new Node(clients[i], null);
+      current = current.link;
+    }
   }
 
-  public static ClientList toClientList() throws IOException {
-    FileReader fr = new FileReader(Values.getClientInfoLocation());
-    BufferedReader br = new BufferedReader(fr);
 
-    String data = br.readLine();
-    if (data == null) {
-      System.out.println("No data. Please make sure you have added a client list");
-      return null;
-    }
-    System.out.println(data);
-    ClientList clients = new ClientList();
-    String str = data.substring(data.indexOf('[') + 2, data.indexOf(','));
-
-    System.out.println(str);
-    while (str != null) {
-
-    }
-    return null;
-
-  }
-
+  // Accessor method for the head
   public Node getHead() {
     return head;
   }
 
-  // Adds a new item to the list
-  // Takes in an item which represents the new client added
-  // ALl elements are copied from item instead of ID which is retrieved
+
+  // Mutator methods
+
+  // Nimay Desai
   public void addToList(Client item) {
-    // Nimay Desai
+    // Adds a new item to the list
+    // Takes in an item which represents the new client added
+    // ALl elements are copied from item instead of ID which is retrieved
+
     if (head == null) {
       head = new Node(item, null);
       head.client.putID(1);
@@ -79,8 +71,9 @@ public class ClientList {
     temp.link.client.putID(temp.client.getID() + 1);
   }
 
+  // Nimay Desai
   public void delete(Client item) {
-    // Nimay Desai
+
     Node current = head;
     Node previous = null;
     boolean found = false;
@@ -107,61 +100,13 @@ public class ClientList {
     }
   }
 
-  public int length() {
-    // Sachkeerat Brar
-    // This method counts the amount of clients and returns it
-
-    // Store the length
-    int len = 0;
-
-    // Go through and count each node
-    for (Node temp = head; temp != null; temp = temp.link)
-      len++;
-
-    // Return the length
-    return len;
-  }
-
-  public Node findNodeByIndex(int i) {
-    // Sachkeerat Brar
-    // This method finds the node which corresponds to the index given
-
-    // If the index is invalid, a null Node is returned
-    if ((i < 0) || (i >= this.length()))
-      return null;
-
-    Node node = head; // Store the Node
-
-    // Go through the list until the index is found
-    for (int c = 0; node != null && c <= i; c++)
-      node = node.link; // Go to the next Node
-
-    // Return the Node
-    return node;
-  }
 
   // Searches
-  public int searchByName(String name) {
-    // Nimay Desai
-    int top = length() - 1;
-    int bottom = 0;
-    while (bottom <= top) {
-      int mid = (bottom + top) / 2;
-      if (((findNodeByIndex(mid).client).getName()).equals(name)) {
-        return mid;
-      } else if (bottom <= mid) {
-        bottom++;
-      } else {
-        top++;
-      }
-    }
 
-    return -1;
-  }
-
+  // Sachkeerat Brar
   public int searchByID(int ID) {
-    // Sachkeerat Brar
     // This method searches the client list to find the index of the client who matches the given ID
+    // Binary search
 
     int top = this.length() - 1; // Store the highest index of the sublist
     int bottom = 0; // Store the lowest index of the sublist
@@ -177,10 +122,10 @@ public class ClientList {
       // If we have found the client, return its index
       if (((findNodeByIndex(mid).client).getID()) == ID)
         return mid;
-        // Move the subarray up
+      // Move the subarray up
       else if (bottom <= mid)
         bottom++;
-        // Move the subarray down
+      // Move the subarray down
       else
         top++;
     }
@@ -189,27 +134,122 @@ public class ClientList {
     return -1;
   }
 
+  // Nimay Desai
+  public int searchByName(String name) {
+    int top = length() - 1; // The top of the subarray
+    int bottom = 0; // The bottom of the subarray
+
+
+    while (bottom <= top) {
+      int mid = (bottom + top) / 2; // Calculate the middle value
+
+      // If the client is found, return
+      if (((findNodeByIndex(mid).client).getName()).equals(name)) {
+        return mid;
+      }
+      // Move the subarray up
+      else if (bottom <= mid) {
+        bottom++;
+      }
+      // Otherwise, move the subarray down
+      else {
+        top++;
+      }
+    }
+
+    // Return -1 if the name is not used by any user
+    return -1;
+  }
+
+  // Sachkeerat Brar
+  public Node findNodeByIndex(int i) {
+    // This method finds the node which corresponds to the index given
+
+    // If the index is invalid, a null Node is returned
+    if ((i < 0) || (i >= length())) {
+      System.out.println("Invalid Index: No node found.");
+      return null;
+    }
+
+    Node node = head; // Store the Node
+
+    // Go through the list until the index is found
+    for (int c = 0; node != null && c <= i; c++)
+      node = node.link; // Go to the next Node
+
+    // Return the Node
+    return node;
+  }
+
+
+  // Instance methods
+  public ClientList toClientList() throws IOException {
+    FileReader fr = new FileReader(Values.getClientInfoLocation());
+    BufferedReader br = new BufferedReader(fr);
+
+    String data = br.readLine();
+    if (data == null) {
+      System.out.println("No data. Please make sure you have added a client list");
+      return null;
+    }
+    System.out.println(data);
+
+    int prevIdx = 2;
+    int nextIdx = data.indexOf(',');
+    int temp;
+    String str = data.substring(prevIdx, nextIdx);
+    while (prevIdx != -1) {
+      System.out.println(str);
+      System.out.println(prevIdx);
+      prevIdx = nextIdx;
+      nextIdx = data.indexOf(',', nextIdx+1);
+      if (nextIdx == -1) {
+        nextIdx = data.indexOf(']');
+        str = data.substring(prevIdx, nextIdx);
+        break;
+      }
+      str = data.substring(prevIdx, nextIdx);
+    }
+    return null;
+
+  }
+
+  // Sachkeerat Brar
+  public int length() {
+    // This method counts the amount of clients and returns it
+
+    // Store the length
+    int len = 0;
+
+    // Go through and count each node
+    for (Node temp = head; temp != null; temp = temp.link)
+      len++;
+
+    // Return the length
+    return len;
+  }
+
+  // Nimay Desai
   public ClientList ageGreaterThan(int age) {
-    // Nimay Desai
+    // This method returns a client list which stores people with ages greater than the given age
     Node temp = head;
     ClientList clients = null;
 
-
     while (temp != null) {
       if (temp.client.getAge() > age) {
-        if (clients == null) {
+        if (clients == null)
           clients = new ClientList(temp.client);
-        } else {
+        else
           clients.addToList(temp.client);
-        }
       }
       temp = temp.link;
     }
     return clients;
   }
 
+  // Nimay Desai
   public ClientList ageLessThan(int age) {
-    // Nimay Desai
+    // This method returns a client list which stores people with ages less than the given age
     Node temp = head;
     ClientList clients = null;
 
@@ -227,8 +267,10 @@ public class ClientList {
     return clients;
   }
 
+  // Nimay Desai
   public ClientList ageEqualTo(int age) {
-    // Nimay Desai
+    // This method returns a client list which stores people with ages less than the given age
+
     Node temp = head;
     ClientList clients = null;
 
@@ -246,35 +288,41 @@ public class ClientList {
     return clients;
   }
 
-  public void printlist() {
+  public void printList() {
+    // This method goes through the list and outputs each client
     Node temp = head;
+
     while (temp != null) {
       temp.client.printInfo();
       temp = temp.link;
     }
   }
 
+  // Nimay Desai
   public String toString() {
-    // Nimay Desai
-    String currentStr = "[";
+    String currentStr = "[ ";
     Node temp = head;
     while (temp != null) {
       currentStr += temp.client.getID() + "." + temp.client.getDOB() + "." + temp.client.getAge() + ".";
-      // currentStr += temp.client.getAccounts().toString();
+      currentStr += temp.client.getAccounts().toString();
       temp = temp.link;
-      if (temp != null) {
-        currentStr += ",";
+
+      if (temp.link != null) {
+        currentStr += ", ";
       }
     }
-    currentStr += "]";
+    currentStr += " ]";
     return currentStr;
   }
 
-  public void WriteToFile(String location) throws IOException {
-    // Nimay Desai
-    FileWriter fw = new FileWriter(location);
+  // Nimay Desai
+  public void writeToFile() throws IOException {
+    FileWriter fw = new FileWriter(Values.getClientInfoLocation());
     PrintWriter pw = new PrintWriter(fw);
+
     pw.println(this);
     pw.flush();
   }
+
+  // TODO: make a from string
 }

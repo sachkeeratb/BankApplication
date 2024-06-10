@@ -1,160 +1,279 @@
 // Sachkeerat Brar
-public class Account {
-  int n;
-  private final char type;
-  private final TransactionHistory history;
-  private double balance;
 
+// This object was made to shape a client's account
+public class Account {
+  // Fields
+  byte n; // This represents the compounding period in A = P(1 + r/n)^(nt)
+  private char type; // This represents if the account is a savings account or checking account
+  private TransactionHistory history; // This stores the transaction history of the account
+  private double balance; // This stores the client's balance in their account
+
+  // Constructors
+  public Account() {
+    type = 'c'; // Set the type to checking
+    history = new TransactionHistory(); // Make a new transaction history list
+    balance = 0; // Set the balance to 0
+    n = 1; // Make it compound yearly
+  }
   public Account(char t) {
     switch (t) {
-      case 's':
-      case 'c':
+      // A case where the type is valid
+      case 's', 'c':
         type = t;
         break;
+
+      // If the type is invalid, set it automatically to checking
       default:
         System.out.println("A account type must be either 's' or 'c' for a savings or checking accounts, respectfully.\nAccount created as a checking account.");
         type = 'c';
         break;
     }
-    history = new TransactionHistory();
-    balance = 0;
-    n = 1;
+    history = new TransactionHistory(); // Make a new transaction history list
+    balance = 0; // Set the balance to 0
+    n = 1; // Make it compound yearly
   }
-
-  public Account(char t, double[] transactions) {
+  public Account(char t, byte compounding) {
     switch (t) {
-      case 's':
-      case 'c':
+      // A case where the type is valid
+      case 's', 'c':
         type = t;
         break;
+
+      // If the type is invalid, set it automatically to checking
       default:
         System.out.println("A account type must be either 's' or 'c' for a savings or checking accounts, respectfully.\nAccount created as a checking account.");
         type = 'c';
         break;
     }
-    history = new TransactionHistory();
-    history.arrayToList(transactions);
-    balance = history.calculateBalance();
-    n = 1;
+    history = new TransactionHistory(); // Make a new transaction history list
+    balance = 0; // Store the balance as 0
+    switch (compounding) {
+      // If it compounds either annually, semi-annually, quarterly, or monthly
+      case 1, 2, 4, 12:
+        n = compounding;
+        break;
+
+        // If it doesn't, inform the user and compound annually
+      default:
+        System.out.println("Invalid compounding rate. Setting to compound yearly.");
+        n = 1;
+        break;
+    }
+  }
+  public Account(char t, byte compounding, TransactionHistory transactions) {
+    switch (t) {
+      // A case where the type is valid
+      case 's', 'c':
+        type = t;
+        break;
+
+      // If the type is invalid, set it automatically to checking
+      default:
+        System.out.println("A account type must be either 's' or 'c' for a savings or checking accounts, respectfully.\nAccount created as a checking account.");
+        type = 'c';
+        break;
+    }
+    history = transactions; // Set the history to the given transactions
+    balance = history.calculateBalance(); // Recalibrate the balance
+    switch (compounding) {
+      // If it compounds either annually, semi-annually, quarterly, or monthly
+      case 1, 2, 4, 12:
+        n = compounding;
+        break;
+
+      // If it doesn't, inform the user and compound annually
+      default:
+        System.out.println("Invalid compounding rate. Setting to compound yearly.");
+        n = 1;
+        break;
+    }
+  }
+  public Account(char t, byte compounding, double[] transactions) {
+    switch (t) {
+      // A case where the type is valid
+      case 's', 'c':
+        type = t;
+        break;
+
+      // If the type is invalid, set it automatically to checking
+      default:
+        System.out.println("A account type must be either 's' or 'c' for a savings or checking accounts, respectfully.\nAccount created as a checking account.");
+        type = 'c';
+        break;
+    }
+    history = new TransactionHistory(); // Make a new transaction history list
+    history.arrayToList(transactions); // Put the array of transactions into the linked list
+    balance = history.calculateBalance(); // Recalibrate the balance
+    switch (compounding) {
+      // If it compounds either annually, semi-annually, quarterly, or monthly
+      case 1, 2, 4, 12:
+        n = compounding;
+        break;
+
+      // If it doesn't, inform the user and compound annually
+      default:
+        System.out.println("Invalid compounding rate. Setting to compound yearly.");
+        n = 1;
+        break;
+    }
   }
 
-  public Account(char t, double b) {
-    type = t;
-    history = new TransactionHistory();
-    balance = b;
-  }
-
+  // Accessors
   public char getAccountType() {
     return type;
   }
-
   public double getBalance() {
     return balance;
   }
-
   public TransactionHistory getHistory() {
     return history;
   }
 
+  // Mutators
   public void withdraw(double amount) {
+    // This method withdraws money from the account
+    // It updates the balance and transaction history as well
+
+    // If the amount to withdraw is more than the current balance
     if (amount > balance) {
       System.out.println("Invalid withdrawal: Inadequate Funds!");
-      return;
     }
-    if (amount <= 0) {
+    // If the amount to withdraw is negative
+    else if (amount <= 0) {
       System.out.println("Invalid withdrawal: Cannot withdraw negative values!");
-      return;
     }
-
-    history.newTransaction(-amount);
-    balance -= amount;
+    // Otherwise, withdraw
+    else {
+      history.newTransaction(-amount);
+      balance -= amount;
+    }
   }
-
-  public void transfer(double amount, Account other) {
-    if (amount > balance) {
-      System.out.println("Invalid withdrawal. Inadequate Funds.");
-      return;
-    }
-    if (amount <= 0) {
-      System.out.println("Invalid withdrawal. Cannot withdraw negative values!");
-      return;
-    }
-
-    history.newTransaction(-amount);
-    other.history.newTransaction(amount);
-    other.balance += amount;
-    balance -= amount;
-  }
-
   public void deposit(double amount) {
+    // This method withdraws money from the account
+    // It updates the balance and transaction history as well
+
+    // If the deposit is negative, inform the user
     if (amount <= 0) {
-      System.out.println("Invalid deposit. Cannot deposit negative values!");
-      return;
+      System.out.println("Invalid deposit: Cannot deposit negative values!");
     }
-
-    history.newTransaction(amount);
-    balance += amount;
+    // Otherwise, deposit
+    else {
+      history.newTransaction(amount);
+      balance += amount;
+    }
   }
+  public void transfer(double amount, Account other) {
+    // This method transfers money from one account to another.
+    // It updates the balance and transaction history as well
 
+    // If the amount to withdraw is greater than the balance, inform the user
+    if (amount > balance) {
+      System.out.println("Invalid transfer: Inadequate Funds.");
+    }
+    // If the amount to withdraw is negative
+    else if (amount <= 0) {
+      System.out.println("Invalid transfer: Cannot withdraw negative values!");
+    }
+    // Otherwise, transfer
+    else {
+      history.newTransaction(-amount);
+      other.history.newTransaction(amount);
+      other.balance += amount;
+      balance -= amount;
+    }
+  }
   public void addInterest() {
+    // This method calculates the interest earnt based on compounding periods
+
+    // Get and store the interest rate
+    double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+
+    // Go through each case of the compounding periods
     switch (n) {
+      // Annually
       case 1: {
-        if (Values.getCurrentYear() >= Values.getPreviousYear())
+        // If the current year isn't greater than the previous year, exit
+        if (Values.getCurrentYear() <= Values.getPreviousYear())
           return;
 
+
+        // Calculate the year(s) passed and get the interest rate
         int time = Values.getCurrentYear() - Values.getPreviousYear();
-        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
 
-        balance = compoundInterest(balance, interestRate, time);
+        // Calculate the new balance and interest
+        double newBalance = compoundInterest(balance, interestRate, time);
+        double interest = newBalance - balance;
+
+        // Store the interest gained and set the new balance
+        history.newTransaction(interest);
+        balance = newBalance;
+
         break;
       }
 
+      // Semi-annually
       case 2: {
-        if (Values.getCurrentYear() + 6 >= Values.getPreviousYear())
+        // If the current month is not at least 6 months ahead of the last month (within the same year)
+        if ((Values.getPreviousMonth() + 6 < Values.getCurrentMonth()) && (Values.getCurrentYear() == Values.getPreviousYear()))
           return;
 
-        double time = (double) (Values.getCurrentMonth() - Values.getPreviousMonth()) / 12;
-        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+        // Calculate the distance of the months and get the interest rate
+        double time = Math.abs(((double) Values.getCurrentMonth() - Values.getPreviousMonth()) / 12);
 
-        balance = compoundInterest(balance, interestRate, time);
+        // Calculate the new balance and interest
+        double newBalance = compoundInterest(balance, interestRate, time);
+        double interest = newBalance - balance;
+
+        // Store the interest gained and set the new balance
+        history.newTransaction(interest);
+        balance = newBalance;
         break;
       }
 
+      // Quarterly
       case 4: {
-        if (Values.getPreviousMonth() + 3 >= Values.getPreviousMonth())
+        // If at least 3 months haven't passed
+        if (Values.getPreviousMonth() + 3 < Values.getCurrentMonth())
           return;
 
-        double time = (double) (Values.getCurrentMonth() - Values.getPreviousMonth()) / 12;
-        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+        // Calculate the distance of the months and get the interest rate
+        double time = Math.abs(((double) Values.getCurrentMonth() - Values.getPreviousMonth()) / 12);
 
-        balance = compoundInterest(balance, interestRate, time);
+        // Calculate the new balance and interest
+        double newBalance = compoundInterest(balance, interestRate, time);
+        double interest = newBalance - balance;
+
+        // Store the interest gained and set the new balance
+        history.newTransaction(interest);
+        balance = newBalance;
+
         break;
       }
 
+      // Monthly
       case 12: {
-        if (Values.getPreviousMonth() >= Values.getPreviousMonth())
+        // If at least a month hasn't passed, leave
+        if ((Values.getCurrentMonth() <= Values.getPreviousMonth()))
           return;
 
-        double time = (double) (Values.getCurrentMonth() - Values.getPreviousMonth()) / 12;
-        double interestRate = type == 's' ? Values.getSavingsInterestRate() : Values.getCheckingInterestRate();
+        // Calculate the distance of the months and get the interest rate
+        double time = Math.abs(((double) Values.getCurrentMonth() - Values.getPreviousMonth()) / 12);
 
-        balance = compoundInterest(balance, interestRate, time);
+        // Calculate the new balance and interest
+        double newBalance = compoundInterest(balance, interestRate, time);
+        double interest = newBalance - balance;
+
+        // Store the interest gained and set the new balance
+        history.newTransaction(interest);
+        balance = newBalance;
+
         break;
       }
     }
   }
-
-  private double compoundInterest(double P, double r, double t) {
-    // Nimay Desai and Sachkeerat Brar
-    return Math.pow(P * (1 + r / (double) n), (double) n * t);
-  }
-
-  // Nimay Desai
-  public String toString() {
-    return type + "." + balance + "." + n + "." + history.toString();
-  }
-
+  
   private String compoundedByN() {
+    // This method returns a string for the account info method for how the account compounds
     return switch (n) {
       case 1 -> "annually";
       case 2 -> "semi-annually";
@@ -164,8 +283,44 @@ public class Account {
     };
   }
 
+  // Nimay Desai and Sachkeerat Brar
+  private double compoundInterest(double P, double r, double t) {
+    // This method calculated compound interest to add interest to the account
+    return Math.pow(P * (1 + r / (double) n), (double) n * t);
+  }
+
   // Sachkeerat Brar
-  public String accountInfo() {
-    return "Account Type: " + type + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: " + history;
+  public void accountInfo() {
+    // This method outputs the account's info in a readable way
+    System.out.println("Account Type: " + type + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: " + history.toString());
+  }
+
+  // Sachkeerat Brar
+  public void copy(Account other) {
+    // This method returns an account which has a copy of another account's values
+    n = other.n;
+    type = other.type;
+    history = new TransactionHistory();
+    history.copy(other.history);
+    balance = other.balance;
+  }
+
+  public static Account fromString(String data) {
+    // This method creates an account from a string of data
+    char accType = data.charAt(2);
+    String accBalance = data.substring(3, data.indexOf(","));
+    byte accCompounding = Byte.parseByte(data.substring(data.indexOf(",") + 1, data.indexOf(",", data.indexOf(">") + 1)));
+    String accHistory = data.substring(data.indexOf("[") + 2, data.indexOf("]") - 1);
+    TransactionHistory newHistory = TransactionHistory.stringToList(accHistory);
+
+    Account account = new Account(accType, accCompounding, newHistory);
+
+    return account;
+  }
+
+  // Nimay Desai
+  public String toString() {
+    // This method turns the account into a string
+    return "[ " + type + ", " + balance + ", " + n + ", " + history.toString() + " ]";
   }
 }

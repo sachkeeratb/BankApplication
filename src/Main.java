@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main {
+
+
   // Sachkeerat Brar
   public static void title() {
     // This method outputs the title of the application and the creators of it
@@ -11,7 +13,7 @@ public class Main {
        | _ \\/ _` | ' \\| / /  / _ \\| '_ \\ '_ \\ | / _/ _` |  _| / _ \\ ' \\
        |___/\\__,_|_||_|_\\_\\ /_/ \\_\\ .__/ .__/_|_\\__\\__,_|\\__|_\\___/_||_|
                                   |_|  |_|                             
-      
+            
       By: Sachkeerat Brar, Nimay Desai, and Kushal Prajapati
       """);
   }
@@ -35,6 +37,7 @@ public class Main {
     return Values.convert(br.readLine()).equals(password);
   }
 
+
   // Nimay Desai
   public static void Register(String location) throws IOException {
     Scanner input = new Scanner(System.in);
@@ -44,7 +47,7 @@ public class Main {
 
     String password = null;
     String username = null;
-    while (password == null || username == null) {
+    while(password == null || username == null) {
       System.out.println("Please enter a username ");
       username = input.next();
       System.out.println("Please enter a password for security: ");
@@ -65,12 +68,12 @@ public class Main {
     System.out.println("Please enter a password for security: ");
     String password = input.next();
     int t = 1;
-    while (!checkPassword(password, Values.getSuperInfoLocation())) {
-      if (t >= 5) {
+    while(!checkPassword(password, Values.getSuperInfoLocation())) {
+      if(t >= 5) {
         System.out.println("Wrong password entered 5 times. Exiting...");
         return false;
       }
-      System.out.println("Wrong password entered, please try again. Program will exit in " + (5-t) + " failed " + (t == 4 ? "attempt":"attempts")+".");
+      System.out.println("Wrong password entered, please try again. Program will exit in " + (5 - t) + " failed " + (t == 4 ? "attempt" : "attempts") + ".");
       password = input.next();
       t++;
 
@@ -94,7 +97,7 @@ public class Main {
   // Sachkeerat Brar
   public static boolean validDate(String date) {
     // Sachkeerat Brar
-    int year,  month, day;
+    int year, month, day;
     try {
       year = Integer.parseInt(date.substring(0, 4));
       if(year <= 1904) {
@@ -110,7 +113,7 @@ public class Main {
         return false;
       }
     }
-    catch (Exception _) {
+    catch(Exception _) {
       System.out.println("Invalid date format. Please input a date as yyyy/mm/dd.");
       return false;
     }
@@ -136,7 +139,7 @@ public class Main {
     int currentAge = Values.getCurrentYear() - year;
 
     // See if they are a year younger
-    if ((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
+    if((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
       currentAge--;
 
     if(currentAge < 18) {
@@ -169,7 +172,7 @@ public class Main {
     Scanner in = new Scanner(System.in);
     System.out.println("Enter your option: ");
     int opt = in.nextInt();
-    switch (opt) {
+    switch(opt) {
       case 1 -> HandleClients();
       case 2 -> ModifyBank();
       case 3 -> Login();
@@ -194,10 +197,10 @@ public class Main {
       System.out.println("4 --> Change User Information");
       System.out.println("5 --> Back");
       opt = in.nextInt();
-    } while ((opt < 1) || (opt > 5));
+    } while((opt < 1) || (opt > 5));
 
 
-    switch(opt){
+    switch(opt) {
       case 1 -> WithDepo();
       case 2 -> Transfer();
       case 3 -> ViewBal();
@@ -206,34 +209,58 @@ public class Main {
     }
   }
 
-  public void WithDepo(){
+  public void WithDepo() {
 
   }
 
-  public void Transfer(){}
+  public void Transfer() throws IOException {
+    ClientList clients = ClientList.toClientList();
+    Scanner in = new Scanner(System.in);
+    System.out.println("Enter your name: ");
+    String name1 = in.nextLine();
+    ClientList.Node temp1 = clients.getHead();
+    while (temp1 != null && !temp1.client.getName().equals(name1)) {
+      temp1 = temp1.link;
+    }
+    System.out.println("How much would you like to transfer: ");
+    double amount = in.nextDouble();
+    System.out.println("What account would you like to transfer from:");
+    temp1.client.getAccounts().printAccounts();
+    char accountType1 = in.next().charAt(0);
+    System.out.println("Enter the user you would like to transfer to: ");
+    String name2 = in.nextLine();
+    ClientList.Node temp2 = clients.getHead();
+    while (temp2 != null && !temp2.client.getName().equals(name2)) {
+      temp2 = temp2.link;
+    }
+    System.out.println("What account would you like to transfer to:");
+    temp2.client.getAccounts().printAccounts();
+    char accountType2 = in.next().charAt(0);
+    if (temp2.client.getAccounts().getAccount(0).getBalance() < amount) {
+      System.out.println("You do not have enough balance to transfer this amount.");
+      return;
+    } else {
+      temp2.client.getAccounts().getAccount(accountType2).deposit(amount);
+      temp1.client.getAccounts().getAccount(accountType1).withdraw(amount);
+      System.out.println("Transfer successful.");
+      Client.StoreClient(temp1.client);
+      Client.StoreClient(temp2.client);
+    }
+  }
 
-  public void ViewBal(){}
+  public void ViewBal() {
+  }
 
-  public void ChangeInfo(){}
+  public void ChangeInfo() {
+  }
 
   public static void main(String[] args) throws IOException {
-    Client a = new Client();
-    Client b = new Client("Bob Doe", "2008/11/11", a);
-    Client c = new Client(b);
-    Client[] clients = {a, b, c};
-    ClientList testing = new ClientList(clients);
-    testing.WriteToFile("src/ClientInfo");
-//    testing.addToList(b);
-//    testing.addToList(c);
     System.out.println(ClientList.toClientList());
 
 
-//    Client Sach = new Client("Sachkeerat Brar", "2003/11/11", a);
-//    Sach.addAccount('b', 100);
-//    Sach.addAccount('c', 200);
-//    Sach.addAccount('s', 300);
-//    Client.StoreClient(Sach);
-//    Client.LoadClient("Sachkeerat Brar");
   }
-   
 }
+//
+//class user{
+//  user=
+//}
