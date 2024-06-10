@@ -224,7 +224,7 @@ public class Values {
     return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
   }
 
-  public static String getPassword() throws IOException {
+  private static String getPassword() throws IOException {
     // This method gives the encrypted password stored in the file
     BufferedReader br = new BufferedReader(new FileReader(getSuperInfoLocation()));
 
@@ -233,6 +233,17 @@ public class Values {
     String password = data.substring(data.substring(8).indexOf('>')); // The encrypted password is after the . after the date
 
     return password;
+  }
+
+  public static boolean comparePassword(String password) throws IOException {
+    // This method compares the inputted password with the stored password
+    return password.equals(convert(getPassword()));
+  }
+
+  public static boolean checkIfEmpty(String location) throws IOException {
+    // This method checks if the file is empty
+    BufferedReader br = new BufferedReader(new FileReader(location));
+    return br.readLine() == null;
   }
 
   // Nimay Desai
@@ -254,7 +265,7 @@ public class Values {
         // Check if character is lowercase letter
       else if ((c >= 'a') && (c <= 'z'))
         convertedData += (char) ('a' + 'z' - c);
-        // Else add just the .character
+        // Else add the special character
       else
         convertedData += c;
 

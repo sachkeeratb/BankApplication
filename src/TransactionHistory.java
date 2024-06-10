@@ -48,7 +48,7 @@ public class TransactionHistory {
     return sum;
   }
 
-  public static TransactionHistory stringToList(String data) {
+  public static TransactionHistory fromString(String data) {
     // This method takes in a string and converts it into a list
 
     if (data.equals("[ ]"))

@@ -311,7 +311,7 @@ public class Account {
     String accBalance = data.substring(3, data.indexOf(","));
     byte accCompounding = Byte.parseByte(data.substring(data.indexOf(",") + 1, data.indexOf(",", data.indexOf(">") + 1)));
     String accHistory = data.substring(data.indexOf("[") + 2, data.indexOf("]") - 1);
-    TransactionHistory newHistory = TransactionHistory.stringToList(accHistory);
+    TransactionHistory newHistory = TransactionHistory.fromString(accHistory);
 
     Account account = new Account(accType, accCompounding, newHistory);
 

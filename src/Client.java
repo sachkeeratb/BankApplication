@@ -43,6 +43,17 @@ public class Client {
     age = calculateAge(date);
     accounts = new AccountList();
   }
+  public Client(String n, String date, AccountList accs) {
+    // Create a client with the name, date, and the last client's ID incremented
+    ID = 1;
+    name = n;
+    dob = date;
+    age = calculateAge(date);
+    if(accs == null)
+      accounts = new AccountList();
+    else
+      accounts = accs;
+  }
 
 
   // Sachkeerat Brar
@@ -66,15 +77,19 @@ public class Client {
   // Sachkeerat Brar
   public static Client fromString(String data) {
     // This method creates a client out of a string
-    int clientID = Integer.parseInt(data.substring(0, data.indexOf(".")));
-    String clientName = data.substring(data.indexOf(".") + 1, data.indexOf(".", data.indexOf(".") + 1));
-    String clientDOB = data.substring(data.indexOf(".", data.indexOf(".") + 1), data.indexOf(".", data.indexOf(".", data.indexOf(".") + 1) + 1));
-    String clientAccounts = data.substring(data.indexOf("[", 1));
-    AccountList accounts = new AccountList();
+    int clientID = Integer.parseInt(data.substring(0, data.indexOf(",")));
+    String clientName = data.substring(data.indexOf(",") + 1, data.indexOf(",", data.indexOf(",") + 1));
+    String clientDOB = data.substring(data.indexOf(",", data.indexOf(",") + 1) + 2, data.indexOf(",", data.indexOf(",", data.indexOf(",") + 1) + 1));    String clientAccounts = data.substring(data.indexOf("[", 1));
+    String clientAccs = data.substring(data.indexOf("[", 1) , data.indexOf("]") + 1);
+    AccountList accounts = AccountList.fromString(clientAccs);
 
-    // TODO: finish making this method
+    Client client = new Client(clientName, clientDOB, accounts);
+    client.putID(clientID);
 
+    return client;
   }
+
+
 
 
   // Accessors
@@ -120,7 +135,7 @@ public class Client {
   // Sachkeerat Brar
   public String toString() {
     // This method turns the object into a string when used to print to the console
-    return "[ " + ID + ", " + name + ", " + dob + ", " + accounts.toString() + " ]";
+    return "( " + ID + ", " + name + ", " + dob + ", " + accounts.toString() + " )";
   }
 
   // Sachkeerat Brar
@@ -129,7 +144,7 @@ public class Client {
 
     // Store the birth values as integers
     int birthYear = Integer.parseInt(date.substring(0, 4));
-    int birthMonth = Integer.parseInt(date.substring(5, date.indexOf("/")));
+    int birthMonth = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
     int birthDay = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
 
     // Store the age

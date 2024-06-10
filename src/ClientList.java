@@ -182,36 +182,50 @@ public class ClientList {
   }
 
 
+  public static ClientList fromString(String data) {
+    int prevIdx = 0; // Start from the beginning of the string
+    int nextIdx = data.indexOf('(', prevIdx); // Find the index of the first '('
+    String str;
+    ClientList clients = new ClientList();
+    while (nextIdx != -1) {
+      prevIdx = nextIdx + 2; // Move to the first character after '('
+      nextIdx = data.indexOf(')', prevIdx); // Find the index of the next ')'
+      str = data.substring(prevIdx, nextIdx); // Extract the substring between '(' and ')'
+      clients.addToList(Client.fromString(str));
+      prevIdx = nextIdx + 1; // Move to the next character after ')'
+      nextIdx = data.indexOf('(', prevIdx); // Find the index of the next '('
+    }
+    return clients;
+  }
+
+
   // Instance methods
-  public ClientList toClientList() throws IOException {
+  // Nimay Desai
+  public static ClientList loadClientList() throws IOException {
     FileReader fr = new FileReader(Values.getClientInfoLocation());
     BufferedReader br = new BufferedReader(fr);
 
     String data = br.readLine();
+
     if (data == null) {
       System.out.println("No data. Please make sure you have added a client list");
       return null;
     }
-    System.out.println(data);
+    return ClientList.fromString(data);
+  }
 
-    int prevIdx = 2;
-    int nextIdx = data.indexOf(',');
-    int temp;
-    String str = data.substring(prevIdx, nextIdx);
-    while (prevIdx != -1) {
-      System.out.println(str);
-      System.out.println(prevIdx);
-      prevIdx = nextIdx;
-      nextIdx = data.indexOf(',', nextIdx+1);
-      if (nextIdx == -1) {
-        nextIdx = data.indexOf(']');
-        str = data.substring(prevIdx, nextIdx);
-        break;
-      }
-      str = data.substring(prevIdx, nextIdx);
-    }
-    return null;
+  // Kushal Prajapati
+  public void storeClientList() throws IOException {
+      // This method writes the client list to the file
+      // This method is called when the program is closed
 
+      FileWriter fw = new FileWriter(Values.getClientInfoLocation());
+      PrintWriter pw = new PrintWriter(fw);
+
+      pw.println(Values.convert(this.toString()));
+
+      // Flush the writer
+      pw.flush();
   }
 
   // Sachkeerat Brar
@@ -300,18 +314,18 @@ public class ClientList {
 
   // Nimay Desai
   public String toString() {
-    String currentStr = "[ ";
+    String currentStr = "{ ";
     Node temp = head;
     while (temp != null) {
-      currentStr += temp.client.getID() + "." + temp.client.getDOB() + "." + temp.client.getAge() + ".";
-      currentStr += temp.client.getAccounts().toString();
+      currentStr += temp.client.toString();
+
       temp = temp.link;
 
-      if (temp.link != null) {
+      if (temp != null) {
         currentStr += ", ";
       }
     }
-    currentStr += " ]";
+    currentStr += " }";
     return currentStr;
   }
 

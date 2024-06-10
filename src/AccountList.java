@@ -78,26 +78,57 @@ public class AccountList {
     }
   }
 
-  // Sachkeerat Brar
-  public AccountList fromString(String data) {
-    if(data.equals("[ ]"))
+  // Sachkeerat Brar w/ Nimay Desai
+  public static AccountList fromString(String data) {
+    if (data.equals("[ ]"))
       return null;
 
-    int count = 0;
-    for (int i = 0; i <= data.length() && count <= 3; i++)
-      if (data.charAt(i) == 'c')
+    int count = 1;
+    for (int i = 1; i < data.length(); i++)
+      if (data.charAt(i) == '[')
         count++;
 
-    if (count == 3) {
-      String accountData = data.substring(data.indexOf("[" + 1), data.lastIndexOf("]" - 1));
-      Account acc = Account.fromString(accountData);
-      AccountList accList = new AccountList();
+    AccountList accList = new AccountList();
+
+    String firstData = data.substring(
+      data.indexOf("["),
+      data.indexOf("]") + 1);
+    Account firstAcc = Account.fromString(firstData);
+    accList.addAccount(firstAcc);
+
+    if (count > 1) {
+      String accData = data.substring(
+        data.indexOf(
+          "[", data.indexOf("[") + 1
+        ),
+        data.indexOf(
+          "]",
+          data.indexOf("]") + 1) + 1
+      );
+      Account acc = Account.fromString(accData);
       accList.addAccount(acc);
-      return accList;
+    }
+    if (count > 2) {
+      String accData = data.substring(
+        data.indexOf(
+          "[", data.indexOf("[", data.indexOf("[") + 1)),
+        data.indexOf(
+          "]", data.indexOf("]", data.indexOf("]") + 1) + 1) + 1
+      );
+      Account acc = Account.fromString(accData);
+      accList.addAccount(acc);
+    }
+    if (count > 3) {
+      String accData = data.substring(data.indexOf("[", data.indexOf("[", data.indexOf("[", data.indexOf("[") + 1))), data.indexOf("]", data.indexOf("]", data.indexOf("]", data.indexOf("]") + 1) + 1) + 1) + 1);
+      Account acc = Account.fromString(accData);
+      accList.addAccount(acc);
+    }
+    if (count > 4) {
+      Account finalAcc = Account.fromString(data.substring(data.lastIndexOf("["), data.lastIndexOf("]") - 2));
+      accList.addAccount(finalAcc);
     }
 
-
-
+    return accList;
   }
 
   // Nimay Desai & Sachkeerat Brar
@@ -113,7 +144,7 @@ public class AccountList {
       return "[ " + accounts[0].toString() + " ]";
     }
 
-    // Otherwise, make a string which resembles an array and return it (Example: [ 1, 2, 3 ])
+    // Otherwise, make a string which resembles an array and return it (Example: [ [ 1, 2, 3 ], [ 2, 3, 4 ] ])
     String currentStr = "[ ";
     for (int i = 0; i < numAccounts - 1; i++) {
       currentStr += "[ " + accounts[i].toString() + ", ";
@@ -122,5 +153,18 @@ public class AccountList {
 
     return currentStr;
   }
+
+  // Kushal Prajapati
+  public void printAccounts() {
+    System.out.print("[");
+    for (int i = 0; i < numAccounts; i++) {
+      System.out.print(accounts[i]);
+      if (accounts[i + 1] != null) {
+        System.out.print(",");
+      }
+      System.out.println("]");
+    }
+  }
+
 }
 
