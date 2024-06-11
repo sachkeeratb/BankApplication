@@ -1,4 +1,9 @@
-import java.io.*;
+// Imported objects used
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 // Nimay Desai
 // This is the main linked list of the program which stores all the clients
@@ -56,7 +61,7 @@ public class ClientList {
   public void addToList(Client item) {
     // Adds a new item to the list
     // Takes in an item which represents the new client added
-    // ALl elements are copied from item instead of ID which is retrieved
+    // All elements are copied from item instead of ID which is retrieved
 
     if (head == null) {
       head = new Node(item, null);
@@ -73,25 +78,31 @@ public class ClientList {
 
   // Nimay Desai
   public void delete(Client item) {
+    // This method removes a client from the list and shifts the IDs of the clients after it
 
-    Node current = head;
-    Node previous = null;
-    boolean found = false;
-    while (current != null) {
-      if (item == current.client) {
-        found = true;
-        break;
+    Node current = head; // Sets the current node equal to the head
+    Node previous = null; // Sets the previous value equal to null at the start
+    boolean found = false; // Represents if the item is found
+
+    while (current != null) { // Are we not at the end of list
+      if (item == current.client) { // If the item is equal to the current value
+        found = true; // We have found the object
+        break; // Exit the loop
       } else {
-        previous = current;
+        previous = current; // Else shift previous and current by one
         current = current.link;
       }
     }
+    // If the item is found
     if (found) {
+      // If the current is the first element
       if (current == head) {
-        head = head.link;
+        head = head.link; // Bypass the first element
       } else {
+        // Else bypass previous
         previous.link = current.link;
         Node temp = current.link;
+        // Go through each value and make sure the ID is correct
         while (temp != null) {
           temp.client.putID(temp.client.getID() - 1);
           temp = temp.link;
@@ -104,24 +115,24 @@ public class ClientList {
   // Searches
 
   // Sachkeerat Brar
-  public int searchByID(int ID) {
-    // This method searches the client list to find the index of the client who matches the given ID
+  public Client searchByID(int ID) {
+    // This method searches the client list to find the client who matches the given ID
     // Binary search
 
-    int top = this.length() - 1; // Store the highest index of the sublist
+    int top = this.length(); // Store the highest index of the sublist
     int bottom = 0; // Store the lowest index of the sublist
 
-    // Return -1 if the ID given is invalid
+    // Return null if the ID given is invalid
     if ((ID < 1) || (ID > top))
-      return -1;
+      return null;
 
     // Go through the list
     while (bottom <= top) {
       int mid = (bottom + top) / 2; // Store the middle index
 
       // If we have found the client, return its index
-      if (((findNodeByIndex(mid).client).getID()) == ID)
-        return mid;
+      if (((findNodeByIndex(mid).client.getID())) == ID)
+        return findNodeByIndex(mid).client;
       // Move the subarray up
       else if (bottom <= mid)
         bottom++;
@@ -130,8 +141,8 @@ public class ClientList {
         top++;
     }
 
-    // Return -1 if the client was not found
-    return -1;
+    // Return null if the client was not found
+    return null;
   }
 
   // Nimay Desai
@@ -166,7 +177,7 @@ public class ClientList {
     // This method finds the node which corresponds to the index given
 
     // If the index is invalid, a null Node is returned
-    if ((i < 0) || (i >= length())) {
+    if ((i < 0) || (i >= this.length())) {
       System.out.println("Invalid Index: No node found.");
       return null;
     }
@@ -174,7 +185,7 @@ public class ClientList {
     Node node = head; // Store the Node
 
     // Go through the list until the index is found
-    for (int c = 0; node != null && c <= i; c++)
+    for (int c = 0; node.link != null && c <= i; c++)
       node = node.link; // Go to the next Node
 
     // Return the Node
@@ -182,6 +193,7 @@ public class ClientList {
   }
 
 
+  // Nimay Desai
   public static ClientList fromString(String data) {
     int prevIdx = 0; // Start from the beginning of the string
     int nextIdx = data.indexOf('(', prevIdx); // Find the index of the first '('
@@ -200,12 +212,14 @@ public class ClientList {
 
 
   // Instance methods
-  // Nimay Desai
+
+  // Kushal Prajapati
+  // Load the Clientlist from the location and if there is no client list return null
   public static ClientList loadClientList() throws IOException {
     FileReader fr = new FileReader(Values.getClientInfoLocation());
     BufferedReader br = new BufferedReader(fr);
 
-    String data = br.readLine();
+    String data = Values.convert(br.readLine());
 
     if (data == null) {
       System.out.println("No data. Please make sure you have added a client list");
@@ -214,7 +228,7 @@ public class ClientList {
     return ClientList.fromString(data);
   }
 
-  // Kushal Prajapati
+  /// Store the client lis by converting the client information to a string
   public void storeClientList() throws IOException {
       // This method writes the client list to the file
       // This method is called when the program is closed
@@ -241,6 +255,20 @@ public class ClientList {
 
     // Return the length
     return len;
+  }
+
+  // Sachkeerat Brar
+  public Node lastNode() {
+    // This method returns the last node in the list
+    Node temp;
+
+    // Go through the list until the last node is found
+    for(temp = head; temp != null; temp = temp.link)
+      if(temp.link == null)
+        return temp;
+
+    // Otherwise return null
+    return null;
   }
 
   // Nimay Desai
@@ -302,12 +330,13 @@ public class ClientList {
     return clients;
   }
 
-  public void printList() {
+  // Nimay Desai
+  public void display() {
     // This method goes through the list and outputs each client
     Node temp = head;
 
     while (temp != null) {
-      temp.client.printInfo();
+      temp.client.display();
       temp = temp.link;
     }
   }
@@ -328,15 +357,4 @@ public class ClientList {
     currentStr += " }";
     return currentStr;
   }
-
-  // Nimay Desai
-  public void writeToFile() throws IOException {
-    FileWriter fw = new FileWriter(Values.getClientInfoLocation());
-    PrintWriter pw = new PrintWriter(fw);
-
-    pw.println(this);
-    pw.flush();
-  }
-
-  // TODO: make a from string
 }

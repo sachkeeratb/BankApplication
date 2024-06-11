@@ -1,8 +1,13 @@
-import java.io.*;
+// Imported objects used
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 // Kushal Prajapati
 
-// utilizes  overloading for different ways to construct a client
+// Utilizes  overloading for different ways to construct a client
 // This is the client object for the clients associated with the bank
 public class Client {
   // Fields
@@ -57,8 +62,7 @@ public class Client {
       accounts = accs;
   }
 
-
-  // Sachkeerat Brar
+  // Stores client by putting the client into string
   public static void storeClient(Client client) throws IOException {
     // This method writes a file into the client info
 
@@ -76,7 +80,7 @@ public class Client {
     pw.flush();
   }
 
-  // Sachkeerat Brar
+  // Sachkeerat Brar & Kushal Prajapati
   public static Client fromString(String data) {
     // This method creates a client out of a string
     int clientID = Integer.parseInt(data.substring(0, data.indexOf(",")));
@@ -92,7 +96,7 @@ public class Client {
   }
 
 
-  // Kushal Prajapati
+  // Kushal Prajapati and Nimay Desai
   // Accessors
   public int getID() {
     return ID;
@@ -121,23 +125,24 @@ public class Client {
     dob = newDOB;
   }
 
-  public void printInfo() {
+  public void display() {
     // Output regular client info
     System.out.println("ID: " + ID + "\nName: " + name + "\nDate of Birth: " + dob + "\nAge: " + age + "\nAccounts: ");
 
     // Output account info
     for (int i = 0; i < accounts.getNumAccounts(); i++) {
       System.out.println("Account " + (i + 1) + ": ");
-      accounts.getAccount(i).accountInfo();
+      accounts.getAccount(i).display();
     }
   }
 
+  // converts each account to the string
   public String toString() {
     // This method turns the object into a string when used to print to the console
     return "( " + ID + ", " + name + ", " + dob + ", " + accounts.toString() + " )";
   }
 
-  // Sachkeerat Brar
+  // Calculate the age of the user from the date
   private static int calculateAge(String date) {
     // This method calculates an age from a date formatted as "yyyy/mm/dd"
 

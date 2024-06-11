@@ -130,7 +130,7 @@ public class Account {
   }
 
   // Mutators
-  public void setN (byte compounding) {
+  public void putN (byte compounding) {
     // If the new n value compounds annually, semi-annually, quarterly, or monthly, you can change it
     switch(compounding) {
       case 1, 2, 4, 12:
@@ -312,9 +312,10 @@ public class Account {
   }
 
   // Sachkeerat Brar
-  public void accountInfo() {
+  public void display() {
     // This method outputs the account's info in a readable way
-    System.out.println("Account Type: " + type + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: " + history.toString());
+    System.out.println("Account Type: " + type + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: ");
+    history.display();
   }
 
   // Sachkeerat Brar
@@ -326,13 +327,13 @@ public class Account {
     history.copy(other.history);
     balance = other.balance;
   }
-// Kushal Prajapati
+
+  // Kushal Prajapati
   public static Account fromString(String data) {
     // This method creates an account from a string of data
-    char accType = data.charAt(2);
-    String accBalance = data.substring(3, data.indexOf(","));
-    byte accCompounding = Byte.parseByte(data.substring(data.indexOf(",") + 1, data.indexOf(",", data.indexOf(">") + 1)));
-    String accHistory = data.substring(data.indexOf("[") + 2, data.indexOf("]") - 1);
+    char accType = data.charAt(4);
+    byte accCompounding = Byte.parseByte(data.substring(7, data.indexOf(",", 7)));
+    String accHistory = data.substring(data.indexOf(">"), data.indexOf("<") + 1);
     TransactionHistory newHistory = TransactionHistory.fromString(accHistory);
 
     Account account = new Account(accType, accCompounding, newHistory);
@@ -343,6 +344,6 @@ public class Account {
   // Nimay Desai
   public String toString() {
     // This method turns the account into a string
-    return "[ " + type + ", " + balance + ", " + n + ", " + history.toString() + " ]";
+    return "@ " + type + ", " + n + ", " + history.toString() + " #";
   }
 }

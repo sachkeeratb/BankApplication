@@ -9,4 +9,5 @@ This project serves as our mark for the Linked Lists unit.
 This application serves as an application where the user is the bank and this application helps manage the user's clients and fulfill their 
 
 
-# HOW TO LAUNCH 
+# HOW TO LAUNCH
+Go to src/main.java and run it with your preferred java

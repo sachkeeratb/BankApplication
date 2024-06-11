@@ -1,4 +1,9 @@
-import java.io.*;
+// Imported objects used
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 /* Sachkeerat Brar
@@ -181,37 +186,33 @@ public class Values {
     }
   }
 
+  // Update the date values in the text files
   public static void updateDateValues() throws IOException {
-    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
     BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
+    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
 
     String oldData = brOld.readLine();
     String newData = brNew.readLine();
 
     if (oldData.substring(0, oldData.indexOf(".")).equals(newData.substring(0, newData.indexOf("."))))
-      updateDateNew();
+      updateDateNew(oldData);
     else
-      updateDateBoth();
+      updateDateBoth(newData, oldData);
   }
-  private static void updateDateNew() throws IOException {
+  private static void updateDateNew(String oldData) throws IOException {
     PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
     BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
 
-    String oldData = br.readLine();
-    String data = oldData.substring(10);
-    String date = currentYear + "/" + currentMonth + "/" + currentDay;
-    pw.println(convert(date) + "." + data);
+    String data = oldData.substring(oldData.indexOf("."));
+    String date = convert(currentYear + "/" + currentMonth + "/" + currentDay);
+    data = date + data;
+    pw.println(data);
 
     pw.flush();
   }
-  private static void updateDateBoth() throws IOException {
+  private static void updateDateBoth(String oldData, String olderData) throws IOException {
     PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
     PrintWriter pwNew = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
-    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
-    BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
-
-    String oldData = brNew.readLine();
-    String olderData = brOld.readLine();
 
     String newDate = currentYear + "/" + currentMonth + "/" + currentDay;
     String oldDate = previousYear + "/" + previousMonth + "/" + previousDay;

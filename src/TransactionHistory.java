@@ -1,5 +1,5 @@
 // Sachkeerat Brar
-// Every ank should know what their clients have done, which is why we have a transaction history
+// Every bank should know what their clients have done, which is why we have a transaction history
 public class TransactionHistory {
   Node head; // The head of the list
 
@@ -51,11 +51,11 @@ public class TransactionHistory {
   public static TransactionHistory fromString(String data) {
     // This method takes in a string and converts it into a list
 
-    if (data.equals("[ ]"))
+    if (data.equals("> <"))
       return null;
     if (!data.contains(",")) {
       TransactionHistory newHistory = new TransactionHistory();
-      newHistory.newTransaction(Double.parseDouble(data.substring(2, data.indexOf("]") -1)));
+      newHistory.newTransaction(Double.parseDouble(data.substring(2, data.indexOf("<") -1)));
       return newHistory;
     }
 
@@ -72,7 +72,7 @@ public class TransactionHistory {
       newHistory.newTransaction(Double.parseDouble(data.substring(i, data.indexOf(",", i))));
       i = data.indexOf(",", i) + 1;
     }
-    newHistory.newTransaction(Double.parseDouble(data.substring(data.lastIndexOf(",") + 1, data.indexOf("]") - 1)));
+    newHistory.newTransaction(Double.parseDouble(data.substring(data.lastIndexOf(",") + 1, data.indexOf("<") - 1)));
 
     return newHistory;
   }
@@ -122,7 +122,7 @@ public class TransactionHistory {
     head = newHead;
   }
 
-  public void historyInfo() {
+  public void display() {
     // This method outputs the transaction history in a clean way
 
     int count = 1;
@@ -141,19 +141,19 @@ public class TransactionHistory {
 
     // If there are no transactions
     if (head == null) {
-      return "[ ]";
+      return "> <";
     }
     // If there is only one transaction
     if (head.link == null) {
-      return "[ " + head.transaction + " ]";
+      return "> " + head.transaction + " <";
     }
 
     // Build a string of all the values of the transactions from most recent to oldest
-    String info = "[ ";
+    String info = "> ";
     Node temp;
     for (temp = head; temp.link != null; temp = temp.link)
       info += temp.transaction + ", ";
-    info += temp.transaction + " ]";
+    info += temp.transaction + " <";
 
     return info; // Return the list as a string
   }

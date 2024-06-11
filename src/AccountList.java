@@ -43,7 +43,7 @@ public class AccountList {
     }
   }
   
-  // Sachkeerat Brar
+  // Remove an account
   public void removeAccount(int index) {
     // This method is a type of sort which takes in an index and goes through the list until that account is found
     // Then, it sets it to null and moves the accounts remaining left to fill the space
@@ -79,25 +79,29 @@ public class AccountList {
   }
 
   // Sachkeerat Brar w/ Nimay Desai & Kushal
-
-  // a method that takes data in string format into an account list
+  // A method that takes data in string format into an account list
   public static AccountList fromString(String data) {
+    // If the data is empty, return null
     if (data.equals("[ ]"))
       return null;
 
+    // Count the accounts
     int count = 1;
     for (int i = 1; i < data.length(); i++)
       if (data.charAt(i) == '[')
         count++;
 
+    // Create the list
     AccountList accList = new AccountList();
 
+    // Get the first account
     String firstData = data.substring(
       data.indexOf("["),
       data.indexOf("]") + 1);
     Account firstAcc = Account.fromString(firstData);
     accList.addAccount(firstAcc);
 
+    // Get the rest of the accounts
     if (count > 1) {
       String accData = data.substring(
         data.indexOf(
@@ -113,7 +117,7 @@ public class AccountList {
     if (count > 2) {
       String accData = data.substring(
         data.indexOf(
-          "[", data.indexOf("[", data.indexOf("[") + 1)),
+          "[" + 2, data.indexOf("[", data.indexOf("[") + 1)),
         data.indexOf(
           "]", data.indexOf("]", data.indexOf("]") + 1) + 1) + 1
       );
@@ -121,19 +125,19 @@ public class AccountList {
       accList.addAccount(acc);
     }
     if (count > 3) {
-      String accData = data.substring(data.indexOf("[", data.indexOf("[", data.indexOf("[", data.indexOf("[") + 1))), data.indexOf("]", data.indexOf("]", data.indexOf("]", data.indexOf("]") + 1) + 1) + 1) + 1);
+      String accData = data.substring(data.indexOf("[" + 2, data.indexOf("[", data.indexOf("[", data.indexOf("[") + 1))), data.indexOf("]", data.indexOf("]", data.indexOf("]", data.indexOf("]") + 1) + 1) + 1) + 1);
       Account acc = Account.fromString(accData);
       accList.addAccount(acc);
     }
     if (count > 4) {
-      Account finalAcc = Account.fromString(data.substring(data.lastIndexOf("["), data.lastIndexOf("]") - 2));
+      Account finalAcc = Account.fromString(data.substring(data.lastIndexOf("[") + 2, data.lastIndexOf("]") - 2));
       accList.addAccount(finalAcc);
     }
 
     return accList;
   }
 
-  // converts a account list into a string
+  // Converts an account list into a string
   public String toString() {
     // This method makes the account list into a string
 
@@ -156,17 +160,12 @@ public class AccountList {
     return currentStr;
   }
 
-  // Kushal Prajapati
-  public void printAccounts() {
-    System.out.print("[");
-    for (int i = 0; i < numAccounts; i++) {
-      System.out.print(accounts[i]);
-      if (accounts[i + 1] != null) {
-        System.out.print(",");
-      }
-      System.out.println("]");
+  // This method displays the accounts in the list in a formatted manner
+  public void display() {
+    for(int i = 0; i < numAccounts; i++){
+      System.out.println("\nAccount " + (i + 1) + ": ");
+      accounts[i].display();
     }
   }
-
 }
 
