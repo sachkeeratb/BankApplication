@@ -1,9 +1,5 @@
 // Imported objects used
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 // Nimay Desai
 // This is the main linked list of the program which stores all the clients
@@ -214,10 +210,8 @@ public class ClientList {
   // Kushal Prajapati
   // Load the Clientlist from the location and if there is no client list return null
   public static ClientList loadClientList() throws IOException {
-    FileReader fr = new FileReader(Values.getClientInfoLocation()); // Create a filereader for ClientINfo
-    BufferedReader br = new BufferedReader(fr); // Create a bufferereader
 
-    String data = Values.convert(br.readLine()); //
+    String data = Values.convert(Values.getClientInfo());
 
     if (data == null) {
       System.out.println("No data. Please make sure you have added a client list");
@@ -230,14 +224,7 @@ public class ClientList {
   public void storeClientList() throws IOException {
       // This method writes the client list to the file
       // This method is called when the program is closed
-
-      FileWriter fw = new FileWriter(Values.getClientInfoLocation());
-      PrintWriter pw = new PrintWriter(fw);
-
-      pw.println(Values.convert(this.toString()));
-
-      // Close the writer
-      pw.close();
+      Values.writeToClients(Values.convert(this.toString()));
   }
 
   // Sachkeerat Brar

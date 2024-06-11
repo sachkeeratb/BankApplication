@@ -1,10 +1,3 @@
-// Imported objects used
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 // Kushal Prajapati
 
 // Utilizes  overloading for different ways to construct a client
@@ -64,30 +57,12 @@ public class Client {
       accounts = accs;
   }
 
-  // Stores client by putting the client into string
-  public static void storeClient(Client client) throws IOException {
-    // This method writes a file into the client info
-
-    FileWriter fw = new FileWriter("src/ClientInfo");
-    PrintWriter pw = new PrintWriter(fw);
-    FileReader fr = new FileReader("src/ClientInfo");
-    BufferedReader br = new BufferedReader(fr);
-
-    String data = br.readLine();
-    data = data.substring(0, data.length() - 2) + ", " + client.toString() + " ]";
-
-    pw.println(data);
-
-    fw.close();
-    pw.close();
-  }
-
   // Sachkeerat Brar & Kushal Prajapati
   public static Client fromString(String data) {
     // Loads current state
     // This method creates a client out of a string
     int clientID = Integer.parseInt(data.substring(0, data.indexOf(",")));
-    String clientName = data.substring(data.indexOf(",") + 1, data.indexOf(",", data.indexOf(",") + 1));
+    String clientName = data.substring(data.indexOf(",") + 2, data.indexOf(",", data.indexOf(",") + 1));
     String clientDOB = data.substring(data.indexOf(",", data.indexOf(",") + 1) + 2, data.indexOf(",", data.indexOf(",", data.indexOf(",") + 1) + 1));    String clientAccounts = data.substring(data.indexOf("[", 1));
     String clientAccs = data.substring(data.indexOf("[", 1) , data.indexOf("]") + 1);
     AccountList accounts = AccountList.fromString(clientAccs);
@@ -128,15 +103,13 @@ public class Client {
     dob = newDOB;
   }
 
+  // This function outputs client info
+  // This function does not ake in anything as all data is retrieved from the class itself
+  // This function does not return anytbing as it outputted
   public void display() {
     // Output regular client info
     System.out.println("ID: " + ID + "\nName: " + name + "\nDate of Birth: " + dob + "\nAge: " + age + "\nAccounts: ");
-
-    // Output account info
-    for (int i = 0; i < accounts.getNumAccounts(); i++) {
-      System.out.println("Account " + (i + 1) + ": ");
-      accounts.getAccount(i).display();
-    }
+    accounts.display(); // Display accounts
   }
 
   // converts each account to the string

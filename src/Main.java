@@ -1,9 +1,5 @@
 // Imported objects used
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Scanner;
 
 // This is the main file of the program
@@ -48,8 +44,7 @@ public class Main {
     Scanner in = new Scanner(System.in); // Creates a new scanner
 
     // Create writers to write to the files
-    PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation())); // Creates a PrintWriter of SuperInfo
-    PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation())); // Creates a PrintWriter for SuperInfoOld
+    // Creates a PrintWriter for SuperInfoOld
 
     // Inform the user about their registration
     System.out.println("The program has detected that this is the first time you have opened this application.\nAccount creation will begin.");
@@ -68,16 +63,13 @@ public class Main {
     String password = in.next();
 
     System.out.println("You have successfully registered.");
-    // Add the encrypted password and the current date to SuperInfo
-    pw.println(Values.convert(date + "." + password));
-    // Add the encrypted password and the current date to SuperInfoOld
-    pwOld.println(Values.convert(date + "." + password));
 
-    // close all PrintWriters so all data is written
-    pw.flush();
-    pwOld.flush();
-    pw.close();
-    pwOld.close();
+    // Add the encrypted password and the current date to SuperInfo
+    // Add the encrypted password and the current date to SuperInfoOld
+    Values.writeToSuperInfo(Values.convert(date + "." + password));
+    Values.writeToSuperInfoOld(Values.convert(date + "." + password));
+
+    Values.loadDates();
   }
 
   // Nimay Desai
@@ -92,7 +84,7 @@ public class Main {
 
     // Prompts the user for the password
     System.out.println("Please enter your password to verify: ");
-    
+
     // Stores the password in a variable
     String password = in.next();
 
@@ -130,8 +122,13 @@ public class Main {
 
     // Gets the date from the database
     String date = getDate();
-    // Changes the date to the new date
+    // Changes the date to the new date and puts it into memory
+    System.out.println(date);
+
+    Values.loadDates();
     Values.putCurrentDate(date);
+    Values.loadDates();
+
     // Updates the interest for the clients
     Values.updateInterestRate();
     updateInterest(clients);
@@ -174,7 +171,7 @@ public class Main {
 
       // If the date is in the past, the date is not valid
       if(year < Values.getPreviousYear()) {
-        System.out.println("Do not lie about the date.");
+        System.out.println("Do not about the date.");
         return false;
       }
       if((month < Values.getPreviousMonth()) && (year == Values.getPreviousYear())) {
@@ -263,30 +260,30 @@ public class Main {
   public static void modifyBank(ClientList clients) throws IOException{
     // This method allows the user to modify the bank's information stored
     System.out.println("Select your option: ");
-    // System.out.println("1 --> Change Password");
-    System.out.println("1 --> Change Checking Interest");
-    System.out.println("2 --> Change Savings Interest");
-    System.out.println("3 --> Go back");
+    System.out.println("1 --> Change Password");
+    System.out.println("2 --> Change Checking Interest");
+    System.out.println("3 --> Change Savings Interest");
+    System.out.println("4 --> Go back");
     System.out.println("More coming soon!");
     Scanner in = new Scanner(System.in);
     int opt = in.nextInt();
 
     // Redirects to each of the methods to modify the bank information
     switch(opt) {
-//      case 1:
-//        changePassword(clients);
-//        break;
-      case 1: {
+      case 1:
+        changePassword(clients);
+        break;
+      case 2: {
         System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
         double rate = in.nextDouble() / 100.0;
         Values.putCheckingInterestRate(rate);
       }
-      case 2: {
+      case 3: {
         System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
         double rate = in.nextDouble() / 100.0;
         Values.putSavingsInterestRate(rate);
       }
-      case 3:
+      case 4:
         mainMenu(clients);
         break;
 
@@ -296,17 +293,12 @@ public class Main {
     }
   }
 
-  /* Kushal Prajapati & Sachkeerat Brar
-  public static void changePassword(ClientList clients) throws IOException {
+  // Kushal Prajapati & Sachkeerat Brar
+  public static void  changePassword(ClientList clients) throws IOException {
     // This method allows the user to change the password of the bank
     Scanner in = new Scanner(System.in);
 
     // Have readers and writers to update the files
-    PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
-    PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
-    BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
-    BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
-
 
     // Verify is the user knows their password to change the password
     if(!verifyPassword()) {
@@ -317,25 +309,21 @@ public class Main {
     // Get the user's new password
     System.out.println("Enter your new password: ");
     String newPassword = in.next();
+    System.out.println(newPassword);
 
     // Get the data of each file
-    String dataOld = brOld.readLine();
-    String data = br.readLine();
+    String data = Values.getSuperInfo();
+    String dataOld = Values.getSuperInfoOld();
 
     String newInfoOld = dataOld.substring(0, dataOld.indexOf(".") + 1) + Values.convert(newPassword);
     String newInfo = data.substring(0, data.indexOf(".") + 1) + Values.convert(newPassword);
+    System.out.println(newInfo);
+    System.out.println(newInfoOld);
 
     // Take old data, and add the new password encrypted
-    pwOld.println(newInfoOld);
-    pw.println(newInfo);
-
-    // Write the data to the file for SuperInfo and SuperInfoOld
-    pw.flush();
-    pwOld.flush();
-    pwOld.close();
-    pw.close();
+    Values.writeToSuperInfo(newInfo);
+    Values.writeToSuperInfoOld(newInfoOld);
   }
-  */
 
   // Kushal & Nimay Desai
   // deals with withdrawing and handling the clients such as withdraw and depositing money
