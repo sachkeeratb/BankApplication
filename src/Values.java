@@ -70,12 +70,12 @@ public class Values {
     PrintWriter pw = new PrintWriter(new PrintWriter(getInterestLocation()));
     BufferedReader br = new BufferedReader(new FileReader(getInterestLocation()));
 
-
+   // If the rate is invalid if it is positive warn the users
     if (rate <= 0) {
       System.out.println("Invalid rate: Must be positive.");
       return;
     }
-
+    // If the rate is greater than 10% revalidate the password
     if (rate >= 0.1) {
       System.out.println("The rate you have inputted is greater than 10%. Please input your password to confirm this change.");
 
@@ -96,22 +96,25 @@ public class Values {
         return;
       }
     }
-
+    // Update the Interest rate for checkings and write to file
     checkingInterestRate = rate;
     String data = br.readLine();
     pw.println(convert(String.valueOf(checkingInterestRate)) + data.substring(data.indexOf(",")));
-
-    pw.flush();
+    pw.close();
   }
+
+  // Putting a constant rate for all savings accounts
   public static void putSavingsInterestRate(double rate) throws IOException {
     PrintWriter pw = new PrintWriter(new PrintWriter(getInterestLocation()));
     BufferedReader br = new BufferedReader(new FileReader(getInterestLocation()));
 
+    // If the rate is invalid, warn the user
     if (rate <= 0) {
       System.out.println("Invalid rate: Must be positive.");
       return;
     }
 
+    // If the rate is greater than 10%, make the user re-enter your password
     if (rate >= 0.1) {
       System.out.println("The rate you have inputted is greater than 10%. Please input your password to confirm this change.");
 
@@ -132,12 +135,14 @@ public class Values {
         return;
       }
     }
-
+    // update the interest rate of the savings account and write to file
     savingsInterestRate = rate;
     String data = br.readLine();
     pw.println(data.substring(0, data.indexOf(",") + 1) + convert(String.valueOf(savingsInterestRate)));
-    pw.flush();
+    pw.close();
   }
+
+
   public static void updateInterestRate() throws IOException {
     BufferedReader br = new BufferedReader(new FileReader(getInterestLocation()));
 
@@ -152,13 +157,15 @@ public class Values {
     }
   }
 
-  // Update the date
+  // Update the date provided by user input in format YYYY/MM/DD
   public static void putCurrentDate(String date) throws IOException {
+    // each of the substrings of the date string will update the date in separate methods
     putCurrentYear(Integer.parseInt(date.substring(0, 4)));
     putCurrentMonth(Integer.parseInt(date.substring(5, date.indexOf("/", 5))));
     putCurrentDay(Integer.parseInt(date.substring(date.indexOf("/", 5) + 1)));
     updateDateValues();
   }
+  // Update the year from the input
   public static void putCurrentYear(int year) throws IOException {
     if (year > currentYear) {
       previousDay = currentYear;
@@ -166,6 +173,8 @@ public class Values {
       updateDateValues();
     }
   }
+
+  // Update the month from the input
   public static void putCurrentMonth(int month) throws IOException {
     if ((month >= 1) && (month <= 12)) {
       previousMonth = currentMonth;
@@ -173,6 +182,8 @@ public class Values {
       updateDateValues();
     }
   }
+
+  // Update the currentday from the input
   public static void putCurrentDay(int day) throws IOException {
     switch (currentMonth) {
       case 1, 3, 5, 7, 8, 10, 12:
@@ -212,20 +223,23 @@ public class Values {
     }
   }
 
-  // Update the date values in the text files
+  // Update all the date values in the text files
   public static void updateDateValues() throws IOException {
     BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
     BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
 
+    // Read from old and new Data
     String oldData = brOld.readLine();
     String newData = brNew.readLine();
-
+    // If old date matches the new date, update the new date as the same data
     if (oldData.substring(0, oldData.indexOf(".")).equals(newData.substring(0, newData.indexOf("."))))
       updateDateNew(oldData);
+    // If the old date does not match the new date, go to update both old and new data
     else
       updateDateBoth(newData, oldData);
   }
   private static void updateDateNew(String oldData) throws IOException {
+    // Update the new date in superinfo from the old superinfo to the new superinfo
     PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
     BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
 
@@ -234,8 +248,10 @@ public class Values {
     data = date + data;
     pw.println(data);
 
-    pw.flush();
+    pw.close();
   }
+
+  // Puts superinfo into superinfo old and put the new data into superinfo
   private static void updateDateBoth(String oldData, String olderData) throws IOException {
     PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
     PrintWriter pwNew = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
@@ -243,14 +259,16 @@ public class Values {
     String newDate = currentYear + "/" + currentMonth + "/" + currentDay;
     String oldDate = previousYear + "/" + previousMonth + "/" + previousDay;
 
+    // Take the old date, combine it with the older data substring, and write to the superinfold file
     String updatedOldData = convert(oldDate) + olderData.substring(olderData.indexOf("."));
     pwOld.println(updatedOldData);
-
+    
+    // Take the new date, combine it with the old data and write to superinfo file
     String newData = convert(newDate) + oldData.substring(oldData.indexOf('.'));
     pwNew.println(newData);
 
-    pwOld.flush();
-    pwNew.flush();
+    pwOld.close();
+    pwNew.close();
   }
 
   private static boolean isLeapYear(int year) {
@@ -264,9 +282,7 @@ public class Values {
 
     String data = br.readLine(); // Store the data
 
-    String password = data.substring(data.indexOf('.') + 1); // The encrypted password is after the . after the date
-
-    return password;
+    return data.substring(data.indexOf('.') + 1);
   }
 
   public static boolean comparePassword(String password) throws IOException {
@@ -282,10 +298,12 @@ public class Values {
 
   // Nimay Desai
   public static String convert(String data) {
-    /* This method acts as the encryption/decryption
+
+    /* This method acts as the main encryption/decryption of the entire program
      * This method will return a string where the original string's data is altered
      * A is flipped to Z, 0 is flipped to 9, and vice-versa
      * Example: password123 --> kzhhdliw876
+     * Example: kzhhdliw876 --> password123
      */
     String convertedData = ""; // Store the flipped data
 

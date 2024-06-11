@@ -156,16 +156,16 @@ public class Account {
     // It updates the balance and transaction history as well
 
     // If the amount to withdraw is more than the current balance
-    if (amount > balance) {
+    if (amount > balance)
       System.out.println("Invalid withdrawal: Inadequate Funds!");
-    }
+
     // If the amount to withdraw is negative
-    else if (amount <= 0) {
+    else if (amount <= 0)
       System.out.println("Invalid withdrawal: Cannot withdraw negative values!");
-    }
+
     // Otherwise, withdraw
     else {
-      history.newTransaction(-amount);
+      history.newTransaction(-1 * amount);
       balance -= amount;
     }
   }
@@ -174,35 +174,16 @@ public class Account {
     // It updates the balance and transaction history as well
 
     // If the deposit is negative, inform the user
-    if (amount <= 0) {
+    if (amount <= 0)
       System.out.println("Invalid deposit: Cannot deposit negative values!");
-    }
+
     // Otherwise, deposit
     else {
       history.newTransaction(amount);
       balance += amount;
     }
   }
-  public void transfer(double amount, Account other) {
-    // This method transfers money from one account to another.
-    // It updates the balance and transaction history as well
 
-    // If the amount to withdraw is greater than the balance, inform the user
-    if (amount > balance) {
-      System.out.println("Invalid transfer: Inadequate Funds.");
-    }
-    // If the amount to withdraw is negative
-    else if (amount <= 0) {
-      System.out.println("Invalid transfer: Cannot withdraw negative values!");
-    }
-    // Otherwise, transfer
-    else {
-      history.newTransaction(-amount);
-      other.history.newTransaction(amount);
-      other.balance += amount;
-      balance -= amount;
-    }
-  }
   public void addInterest() {
     // This method calculates the interest earnt based on compounding periods
 

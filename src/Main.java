@@ -24,14 +24,18 @@ public class Main {
 
   // Sachkeerat Brar
   public static void exit(ClientList clients) throws IOException {
-    // This function exits the program and writes the data to the file
-    // This function takes in a ClientList clients which represents the current list of clients
-    // This function does not return anything as it directly calls System.exit();
+    // This method exits the program and writes the data to the file
+    // This method takes in a ClientList clients which represents the current list of clients
+    // This method does not return anything as it directly calls System.exit();
 
-    // Stores the client list to ClientInfo
+    // Update the interest rate and their values
+    Values.updateInterestRate();
+
+    // Write the client list to the files
     clients.storeClientList();
+
+    // Thanks the user and exits the program with no errors
     System.out.println("Thank you for using this program.");
-    // Exits the program with no errors
     System.exit(0);
   }
 
@@ -40,14 +44,17 @@ public class Main {
     // Registers a new user to the program
     // It does not take in any argument as all data is retrieved from user in
     // It does not return anything as everything is written to a file
+
     Scanner in = new Scanner(System.in); // Creates a new scanner
-    FileWriter fw = new FileWriter(Values.getSuperInfoLocation()); // Creates a FileWrite of SuperInfo
-    FileWriter fwOld = new FileWriter(Values.getSuperInfoOldLocation()); // Creates a FileWriter of SuperInfoOld
-    PrintWriter pw = new PrintWriter(fw); // Creates a PrintWriter of SuperInfo
-    PrintWriter pwOld = new PrintWriter(fwOld); // Creates a PrintWriter for SuperInfoOld
+
+    // Create writers to write to the files
+    PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation())); // Creates a PrintWriter of SuperInfo
+    PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation())); // Creates a PrintWriter for SuperInfoOld
+
+    // Inform the user about their registration
     System.out.println("The program has detected that this is the first time you have opened this application.\nAccount creation will begin.");
 
-    String date; // Create a data
+    String date; // Create a date
     do {
       // Ask the user for the date
       System.out.println("Enter the date as yyyy/mm/dd: ");
@@ -66,48 +73,54 @@ public class Main {
     // Add the encrypted password and the current date to SuperInfoOld
     pwOld.println(Values.convert(date + "." + password));
 
-    // Flush all PrintWriters and FileWriters so all data is written
-    fw.flush();
-    fwOld.flush();
+    // close all PrintWriters so all data is written
     pw.flush();
     pwOld.flush();
+    pw.close();
+    pwOld.close();
   }
 
   // Nimay Desai
-  // Verifies the current password with the password stored in the file
-  // It does not take in anything as all data is directly from user in
-  // Returns a boolean on whether the password is valid
   public static boolean verifyPassword() throws IOException {
+    // Verifies the current password with the password stored in the file
+    // It does not take in anything as all data is directly from user in
+    // Returns a boolean on whether the password is valid
+    // This is secure as it calls a public method to compare passwords, while getting the password itself is private and encrypted
+
     // Create a scanner
     Scanner in = new Scanner(System.in);
 
     // Prompts the user for the password
     System.out.println("Please enter your password to verify: ");
+    
     // Stores the password in a variable
     String password = in.next();
+
     // Represents the number of attempts
     int numberOfAttempts = 1;
+
     // Asks the user 5 times for the password
     while(!Values.comparePassword(password)) {
-      if(numberOfAttempts >= 5) { // If more then five attempts exit the login menu
+      // If more than five attempts exit the login menu
+      if(numberOfAttempts >= 5)
         return false;
-      }
 
-      // Say how many attempts they have left based on the number of attemps they have already done
+      // Say how many attempts they have left based on the number of attempts they have already done
       System.out.println("Wrong password entered, please try again. Program will exit in " + (5 - numberOfAttempts) + " failed " + (numberOfAttempts == 4 ? "attempt" : "attempts") + ".");
       password = in.next(); // Stores the password
       numberOfAttempts++; // Increase the number of attempts by one
     }
 
-    // Sucessful Login
+    // Sucessful login
     return true;
   }
 
   // Nimay Desai
-  // Logins into the application
-  // Takes in a ClientList clients which represent the list of clients passed down into the exit
-  // This function returns a boolean on whether the login was valid or not
   public static boolean login(ClientList clients) throws IOException {
+    // Logins into the application
+    // Takes in a ClientList clients which represent the list of clients passed down into the exit
+    // This method returns a boolean on whether the login was valid or not
+
     // If password is invalid
     if(!verifyPassword()) {
       // Exit the program
@@ -130,10 +143,11 @@ public class Main {
   }
 
   // Sachkeerat Brar
-  // Gets the current date
-  // Does not take in any argument as the data is retrieved from the user
-  // Returns a String representing the current date
   public static String getDate() {
+    // Gets the current date
+    // Does not take in any argument as the data is retrieved from the user
+    // Returns a String representing the current date
+
     // Create a Scanner
     Scanner in = new Scanner(System.in);
     String date;
@@ -149,6 +163,8 @@ public class Main {
 
   // Sachkeerat Brar
   public static boolean validDate(String date) {
+    // This method checks if the new date is valid
+
     int year, month, day; // Store the year month and day
 
     try { // Try to parse the date
@@ -156,6 +172,7 @@ public class Main {
       month = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
       day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
 
+      // If the date is in the past, the date is not valid
       if(year < Values.getPreviousYear()) {
         System.out.println("Do not lie about the date.");
         return false;
@@ -164,7 +181,7 @@ public class Main {
         System.out.println("Do not lie about the date.");
         return false;
       }
-      if((day < Values.getPreviousDay()) && (month == Values.getPreviousMonth())) {
+      if((day < Values.getPreviousDay()) && (month == Values.getPreviousMonth()) && (year == Values.getPreviousYear())) {
         System.out.println("Do not lie about the date.");
         return false;
       }
@@ -201,6 +218,7 @@ public class Main {
     if((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
       currentAge--;
 
+    // A client of the bank must at least be 18 years old
     if(currentAge < 18) {
       System.out.println("You must be 18 years old to use this bank.");
       return false;
@@ -245,29 +263,30 @@ public class Main {
   public static void modifyBank(ClientList clients) throws IOException{
     // This method allows the user to modify the bank's information stored
     System.out.println("Select your option: ");
-    System.out.println("1 --> Change Password");
-    System.out.println("2 --> Change Checking Interest");
-    System.out.println("3 --> Change Savings Interest");
-    System.out.println("4 --> Go back");
+    // System.out.println("1 --> Change Password");
+    System.out.println("1 --> Change Checking Interest");
+    System.out.println("2 --> Change Savings Interest");
+    System.out.println("3 --> Go back");
     System.out.println("More coming soon!");
     Scanner in = new Scanner(System.in);
     int opt = in.nextInt();
 
+    // Redirects to each of the methods to modify the bank information
     switch(opt) {
-      case 1:
-        changePassword(clients);
-        break;
-      case 2: {
+//      case 1:
+//        changePassword(clients);
+//        break;
+      case 1: {
         System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
         double rate = in.nextDouble() / 100.0;
         Values.putCheckingInterestRate(rate);
       }
-      case 3: {
+      case 2: {
         System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
         double rate = in.nextDouble() / 100.0;
         Values.putSavingsInterestRate(rate);
       }
-      case 4:
+      case 3:
         mainMenu(clients);
         break;
 
@@ -277,33 +296,46 @@ public class Main {
     }
   }
 
-  // Kushal Prajapati & Sachkeerat Brar
+  /* Kushal Prajapati & Sachkeerat Brar
   public static void changePassword(ClientList clients) throws IOException {
     // This method allows the user to change the password of the bank
     Scanner in = new Scanner(System.in);
 
-    verifyPassword();
-
-    System.out.println("Enter your new password: ");
-    String newPassword = in.next();
-
+    // Have readers and writers to update the files
     PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
     PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
     BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
     BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
 
+
+    // Verify is the user knows their password to change the password
+    if(!verifyPassword()) {
+      exit(clients);
+      return;
+    }
+
+    // Get the user's new password
+    System.out.println("Enter your new password: ");
+    String newPassword = in.next();
+
+    // Get the data of each file
     String dataOld = brOld.readLine();
     String data = br.readLine();
-    data = data.substring(0, data.indexOf(".") + 1) + Values.convert(newPassword);
-    dataOld = dataOld.substring(0, data.indexOf(".") + 1) + Values.convert(newPassword);
 
-    pwOld.println(dataOld);
-    pw.println(data);
+    String newInfoOld = dataOld.substring(0, dataOld.indexOf(".") + 1) + Values.convert(newPassword);
+    String newInfo = data.substring(0, data.indexOf(".") + 1) + Values.convert(newPassword);
 
-    pwOld.flush();
+    // Take old data, and add the new password encrypted
+    pwOld.println(newInfoOld);
+    pw.println(newInfo);
+
+    // Write the data to the file for SuperInfo and SuperInfoOld
     pw.flush();
+    pwOld.flush();
+    pwOld.close();
+    pw.close();
   }
-
+  */
 
   // Kushal & Nimay Desai
   // deals with withdrawing and handling the clients such as withdraw and depositing money
@@ -316,7 +348,7 @@ public class Main {
     System.out.println("5 --> Withdraw or Deposit Money"); // withdraw or deposit money
     System.out.println("6 --> Transfer Money"); // transfer money from one user to another user
     System.out.println("7 --> View Balance"); // View a client's balance
-    System.out.println("8 --> Change Clients Information"); // Change info
+    System.out.println("8 --> View Clients"); // Change info
     System.out.println("9 --> Filter Clients"); // Filter by age
     System.out.println("10 --> Back"); // Go back
 
@@ -334,12 +366,13 @@ public class Main {
       case 5 -> withDepo(clients); // Withdraw and Deposit Money
       case 6 -> transfer(clients); // Transfer Money Between Two Users
       case 7 -> viewBal(clients); //  View Balance of the Client
-      case 8 -> changeInfo(clients); // Change name or account details
+      case 8 -> viewInfo(clients); // Change name or account details
       case 9 -> filterClients(clients); // View Clients By Age
       case 10 -> mainMenu(clients); // Go back to the main menu
     }
   }
 
+  // Kushal Prajapati
   // Deletes a client from the list
   // Takes in a ClientList clients
   // Does not return anything as all data is deleted from the lis
@@ -468,7 +501,7 @@ public class Main {
   // Kushal Prajapati
   // Filters Clients based on parameters
   // Takes in a ClientList clients which represents the list of clients
-  // Does not return anything as the clients are outputt to the console
+  // Does not return anything as the clients are output to the console
   public static void filterClients(ClientList clients) {
     Scanner in = new Scanner(System.in); // Create a scanner
     // filter by the age of the client
@@ -503,13 +536,13 @@ public class Main {
   }
 
   // Nimay Desai
-  // This function displays a menu to withdraw and deposit
-  // It takes in a ClientList clients which represents the list of clients passwed down to other functions
+  // This method displays a menu to withdraw and deposit
+  // It takes in a ClientList clients which represents the list of clients down to other methods
   public static void withDepo(ClientList clients) throws IOException {
     Scanner input = new Scanner(System.in); // Create a scanner
     int opt; // Create a variable representing the user option
-    do { // Unti correct opton is entered
-      System.out.println("Press 1 to withdraw"); // Prompt the user to withddraw or deposit
+    do { // Until correct option is entered
+      System.out.println("Press 1 to withdraw"); // Prompt the user to withdraw or deposit
       System.out.println("Press 2 to deposit");
       opt = input.nextInt();
     } while ((opt != 1) && (opt != 2));
@@ -519,8 +552,8 @@ public class Main {
     }
 
   }
-
-  // This function withdraws money from the account
+  // Kushal Prajapati & Nimay Desai
+  // This method withdraws money from the account
   // It takes in a client list clients which represents the list of clien
   public static void withdraw (ClientList clients) throws IOException{
     Scanner input = new Scanner(System.in); // Create a scanner
@@ -547,7 +580,7 @@ public class Main {
     }
 
     System.out.println("Enter how much money you would like to withdraw");
-    int val = input.nextInt();
+    double val = input.nextDouble();
     account.withdraw(val);
 
     clients.storeClientList();
@@ -580,7 +613,7 @@ public class Main {
     }
 
     System.out.println("Enter how much money you would like to deposit");
-    int val = input.nextInt();
+    double val = input.nextDouble();
     account.deposit(val);
 
     clients.storeClientList();
@@ -588,13 +621,12 @@ public class Main {
     mainMenu(clients);
   }
 
-  // Kushal Prajapat
+  // Kushal Prajapati
   // Transfers money between two accounts
   public static void transfer(ClientList clients) throws IOException {
     Scanner in = new Scanner(System.in);
     System.out.println("Enter the ID of the client: ");
-    int ID = in.nextInt();
-    Client client = clients.searchByID(ID);
+    Client client = clients.searchByID(in.nextInt());
 
     if(client == null) {
       System.out.println("Invalid client.");
@@ -614,8 +646,7 @@ public class Main {
     }
 
     System.out.println("Enter the ID of the client you would like to transfer to: ");
-    int ID2 = in.nextInt()-1;
-    Client client2 = clients.searchByID(ID2);
+    Client client2 = clients.searchByID(in.nextInt());
 
     if(client2 == null) {
       System.out.println("Invalid client.");
@@ -634,22 +665,24 @@ public class Main {
       return;
     }
 
-    int val;
+    double val;
     do {
-      System.out.println("Enter the amount of money you would l ike to transfer: ");
-      val = in.nextInt();
+      System.out.println("Enter the amount of money you would like to transfer: ");
+      val = in.nextDouble();
     } while(val <= 0);
-    account.withdraw(val);
-    account2.deposit(val);
 
+    if(val <= account.getBalance()) {
+      account.withdraw(val);
+      account2.deposit(val);
+    }
     clients.storeClientList();
 
     mainMenu(clients);
   }
 
-  // Kushal
+  // Kushal Prajapati
   // Views the balance of the chosen clients
-  // Takes in a ClientList clients which represnts the list of clients
+  // Takes in a ClientList clients which represents the list of clients
   // Does not return anything as the balance is shown to the terminal\
   public static void viewBal(ClientList clients) {
     Scanner in = new Scanner(System.in); // Create a scanner
@@ -667,11 +700,11 @@ public class Main {
       accountIdx = in.nextInt() - 1;
     } while((accountIdx < 0) || (accountIdx >= client.getAccounts().getNumAccounts()));
     Account account = client.getAccounts().getAccount(accountIdx);
-    System.out.println(account.getBalance());
+    System.out.println("$" + account.getBalance());
   }
 
   // Nimay Desai
-  public static void changeInfo(ClientList clients) {
+  public static void viewInfo(ClientList clients) {
     Scanner in = new Scanner(System.in);
     Client currentClient;
     System.out.println("How would you like to search the user?");
@@ -680,17 +713,26 @@ public class Main {
     int opt = in.nextInt();
     switch (opt) {
       case 1:
-        System.out.println("Enter the name of the customer");
+        System.out.println("Enter the name of the client: ");
         String name = in.next();
-        currentClient = (clients.findNodeByIndex(clients.searchByName(name))).client;
-        currentClient.display();
+        currentClient = clients.searchByName(name);
+
+        if(currentClient != null)
+          currentClient.display();
+        else
+          System.out.println("None.");
         break;
 
       case 2:
         System.out.println("Enter the ID of the client (above 0): ");
         int id = in.nextInt();
         currentClient = clients.searchByID(id);
-        currentClient.display();
+
+        if (currentClient != null)
+          currentClient.display();
+        else
+          System.out.println("None.");
+
         break;
 
       default:
@@ -724,7 +766,7 @@ public class Main {
         modifyAccounts(currentClient, clients);
         break;
       case 3:
-        changeInfo(clients);
+        viewInfo(clients);
         break;
     }
   }
@@ -764,7 +806,7 @@ public class Main {
     currentAccount.putN(n);
   }
 
-  // Nimay Desai & Sachkeerat Brar
+  // The main program starts by printing the title, gets the information, and than logs in or registers dependingly
   public static void main(String[] args) throws IOException {
     Scanner in = new Scanner(System.in);
     

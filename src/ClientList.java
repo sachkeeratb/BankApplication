@@ -146,17 +146,17 @@ public class ClientList {
   }
 
   // Nimay Desai
-  public int searchByName(String name) {
-    int top = length() - 1; // The top of the subarray
-    int bottom = 0; // The bottom of the subarray
+  public Client searchByName(String name) {
+    int top = length(); // The top of the subarray
+    int bottom = 1; // The bottom of the subarray
 
 
     while (bottom <= top) {
       int mid = (bottom + top) / 2; // Calculate the middle value
 
       // If the client is found, return
-      if (((findNodeByIndex(mid).client).getName()).equals(name))
-        return mid;
+      if (((findNodeByIndex(mid-1).client).getName()).equals(name))
+        return findNodeByIndex(mid - 1).client;
       // Move the subarray up
       else if (bottom < mid)
         bottom++;
@@ -166,7 +166,7 @@ public class ClientList {
     }
 
     // Return -1 if the name is not used by any user
-    return -1;
+    return null;
   }
 
   // Sachkeerat Brar
@@ -236,8 +236,8 @@ public class ClientList {
 
       pw.println(Values.convert(this.toString()));
 
-      // Flush the writer
-      pw.flush();
+      // Close the writer
+      pw.close();
   }
 
   // Sachkeerat Brar

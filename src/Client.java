@@ -26,8 +26,10 @@ public class Client {
     age = calculateAge(dob);
     accounts = new AccountList();
   }
+
   public Client(Client lastClient) {
     // This constructor makes a default client with the last client's ID incremented
+    // This ensures that the no other client doesn have te same ID
     ID = lastClient.ID + 1;
     name = "John Doe";
     dob = "2006/01/01";
@@ -76,12 +78,13 @@ public class Client {
 
     pw.println(data);
 
-    fw.flush();
-    pw.flush();
+    fw.close();
+    pw.close();
   }
 
   // Sachkeerat Brar & Kushal Prajapati
   public static Client fromString(String data) {
+    // Loads current state
     // This method creates a client out of a string
     int clientID = Integer.parseInt(data.substring(0, data.indexOf(",")));
     String clientName = data.substring(data.indexOf(",") + 1, data.indexOf(",", data.indexOf(",") + 1));

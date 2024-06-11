@@ -57,7 +57,7 @@ public class TransactionHistory {
     // This method takes in a string and converts it into a list
 
     TransactionHistory newHistory = new TransactionHistory();
-
+    System.out.println(data);
     if (data.equals("> <"))
       return newHistory;
     if (!data.contains(",")) {
@@ -68,8 +68,7 @@ public class TransactionHistory {
     newHistory.newTransaction(Double.parseDouble(data.substring(2, data.indexOf(","))));
 
     for (int i = data.indexOf(",") + 2; i < data.lastIndexOf(","); i = data.indexOf(",", i + 1) + 2) {
-      System.out.println(i);
-      newHistory.newTransaction(Double.parseDouble(data.substring(i, data.indexOf(",", i) - 1)));
+      newHistory.newTransaction(Double.parseDouble(data.substring(i, data.indexOf(",", i))));
     }
     newHistory.newTransaction(Double.parseDouble(data.substring(data.lastIndexOf(",") + 2, data.indexOf("<") - 1)));
     return newHistory;
