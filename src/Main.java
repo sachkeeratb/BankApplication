@@ -195,99 +195,108 @@ public class Main {
   }
 
   // Sachkeerat Brar
+  // This function checks if the age of the user is valid
+  // It takes in a String date which represents the date entered by the user
+  // If the year is above 120, then say invalid date or if the year is below 18
   public static boolean validAge(String date) {
-    int year, month, day;
+    int year, month, day; // Create variables which represents the year month and day
 
-    year = Integer.parseInt(date.substring(0, 4));
-    month = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
-    day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
+    year = Integer.parseInt(date.substring(0, 4)); // Get the year
+    month = Integer.parseInt(date.substring(5, date.indexOf("/", 5))); // Get the month
+    day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1)); // Get the day
 
-    if(year <= 1904) {
-      System.out.println("Do not lie about your age.");
+    if(year <= 1904) { // Older than 120 (No one is above 120 currently)
+      System.out.println("Do not lie about your age."); // Exit the program
       System.exit(0);
     }
 
-    int currentAge = Values.getCurrentYear() - year;
+    int currentAge = Values.getCurrentYear() - year; // Create a vvariable which represents the users age
 
     // See if they are a year younger
     if((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
       currentAge--;
 
     // A client of the bank must at least be 18 years old
-    if(currentAge < 18) {
+    if(currentAge < 18) { // Too young (Less than 18)
       System.out.println("You must be 18 years old to use this bank.");
-      return false;
+      return false; // Return false (Invalid)
     }
 
-    return true;
+    return true; // Else return true (Valid age)
   }
 
   // Sachkeerat Brar
   public static void updateInterest(ClientList clients) {
     // This method goes through the clients and their accounts in order to add interest to the accounts
-    for(ClientList.Node temp = clients.getHead(); temp != null; temp = temp.link)
-      for(int i = 0; i < temp.client.getAccounts().getNumAccounts(); i++)
-        if(temp.client.getAccounts().getAccount(i) != null)
-          temp.client.getAccounts().getAccount(i).addInterest();
+    // This function takes in a ClientList clients which represents the list of clients
+    // This function does not return anything as everything is modified
+    for(ClientList.Node temp = clients.getHead(); temp != null; temp = temp.link) // Goes through clients
+      for(int i = 0; i < temp.client.getAccounts().getNumAccounts(); i++) // Goes through accounts
+        if(temp.client.getAccounts().getAccount(i) != null) // Valid account
+          temp.client.getAccounts().getAccount(i).addInterest(); // Add interest
   }
 
-  // Kushal Prajapati
+  // Nimay Desai and Kushal Prajapati
   // This is the main menu of the program that lets you pick between the 4 options
   public static void mainMenu(ClientList clients) throws IOException {
-    System.out.println("Welcome to the Bank!");
+    System.out.println("Welcome to the Bank!"); // Prompt the use for the option
     System.out.println("What would you like to do?");
 
     System.out.println("1 --> Handle Clients");
     System.out.println("2 --> Modify Bank");
     System.out.println("3 --> Exit program");
 
-    Scanner in = new Scanner(System.in);
-    int opt;
+    Scanner in = new Scanner(System.in); // Create a scanner
+    int opt; // Create the option which represents the option
     do {
       System.out.println("Enter your option between 1 to 3: ");
       opt = in.nextInt();
-    } while((opt < 1) || (opt > 3));
+    } while((opt < 1) || (opt > 3)); // Until valid option is entered
     switch(opt) {
-      case 1 -> handleClients(clients);
-      case 2 -> modifyBank(clients);
-      case 3 -> exit(clients);
+      case 1 -> handleClients(clients); // Handle Clients
+      case 2 -> modifyBank(clients); // Modify Bank
+      case 3 -> exit(clients); // Exit the program
     }
   }
 
   // Kushal Prajapati & Sachkeerat Brar
   public static void modifyBank(ClientList clients) throws IOException{
     // This method allows the user to modify the bank's information stored
+    // This function takes in a ClientList clients which represents the list of clients
+    // This function does not return anything as everything is modified
     System.out.println("Select your option: ");
     System.out.println("1 --> Change Password");
     System.out.println("2 --> Change Checking Interest");
     System.out.println("3 --> Change Savings Interest");
     System.out.println("4 --> Go back");
     System.out.println("More coming soon!");
-    Scanner in = new Scanner(System.in);
-    int opt = in.nextInt();
+    Scanner in = new Scanner(System.in); // Create a scanner
+    int opt = in.nextInt(); // Take in user input
 
     // Redirects to each of the methods to modify the bank information
     switch(opt) {
       case 1:
-        changePassword(clients);
+        changePassword(clients); // User wants to change password
         break;
       case 2: {
-        System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
+        System.out.println("Enter a new interest rate for checking accounts as a percentage: "); // User wants to change the checking interest rate
+        // Convert percent to decimal
         double rate = in.nextDouble() / 100.0;
+        // Modify the interest rate
         Values.putCheckingInterestRate(rate);
         break;
       }
       case 3: {
-        System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
-        double rate = in.nextDouble() / 100.0;
-        Values.putSavingsInterestRate(rate);
+        System.out.println("Enter a new interest rate for savings accounts as a percentage: "); // User wants to cahnge saving interest rate
+        double rate = in.nextDouble() / 100.0; // Convert percent to decimal
+        Values.putSavingsInterestRate(rate); // Modify the interest rate
         break;
       }
       case 4:
-        mainMenu(clients);
+        mainMenu(clients); // Go back (mainMenu)
         break;
 
-      default:
+      default: // Invalid option
         System.out.println("Invalid option.");
         break;
     }
@@ -315,18 +324,19 @@ public class Main {
     String data = Values.getSuperInfo();
     String dataOld = Values.getSuperInfoOld();
 
+    // Gets the info from the data (password is only after the period)
     String newInfoOld = dataOld.substring(0, dataOld.indexOf(".") + 1) + Values.convert(newPassword);
     String newInfo = data.substring(0, data.indexOf(".") + 1) + Values.convert(newPassword);
-    System.out.println(newInfo);
-    System.out.println(newInfoOld);
 
-    // Take old data, and add the new password encrypted
+    // Change the date in the file (SuperInfo and SuperInfoOld)
     Values.writeToSuperInfo(newInfo);
     Values.writeToSuperInfoOld(newInfoOld);
   }
 
   // Kushal & Nimay Desai
   // deals with withdrawing and handling the clients such as withdraw and depositing money
+  // This function takes in list of clients which represents the list of clients
+  // This function does not return anything as everything is modified
   public static void handleClients(ClientList clients) throws IOException {
     Scanner in = new Scanner(System.in);
     System.out.println("1 --> Create Client"); // Create clients for the list
@@ -341,10 +351,10 @@ public class Main {
     System.out.println("10 --> Back"); // Go back
 
     int opt;
-    do {
+    do { // Prompt user for option
       System.out.println("Enter your option: ");
       opt = in.nextInt();
-    } while((opt < 1) || (opt > 10));
+    } while((opt < 1) || (opt > 10)); // Until user enters valid option
 
     switch(opt) {
       case 1 -> createClient(clients); // Create a client
@@ -360,7 +370,7 @@ public class Main {
     }
   }
 
-  // Kushal Prajapati
+  // Kushal Prajapati and Nimay Desai
   // Deletes a client from the list
   // Takes in a ClientList clients
   // Does not return anything as all data is deleted from the lis
@@ -377,6 +387,7 @@ public class Main {
     // Delete the client from the list
     clients.delete(client);
 
+    // Stores the client list
     clients.storeClientList();
   }
 
