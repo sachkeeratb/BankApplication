@@ -63,7 +63,7 @@ public class ClientList {
     // Takes in an item which represents the new client added
     // All elements are copied from item instead of ID which is retrieved
 
-    if (head == null) {
+    if (head == null) { // IF h
       head = new Node(item, null);
       head.client.putID(1);
       return;
@@ -120,7 +120,7 @@ public class ClientList {
     // Binary search
 
     int top = this.length(); // Store the highest index of the sublist
-    int bottom = 0; // Store the lowest index of the sublist
+    int bottom = 1; // Store the lowest index of the sublist
 
     // Return null if the ID given is invalid
     if ((ID < 1) || (ID > top))
@@ -131,14 +131,14 @@ public class ClientList {
       int mid = (bottom + top) / 2; // Store the middle index
 
       // If we have found the client, return its index
-      if (((findNodeByIndex(mid).client.getID())) == ID)
-        return findNodeByIndex(mid).client;
+      if (((findNodeByIndex(mid - 1).client.getID())) == ID)
+        return findNodeByIndex(mid - 1).client;
       // Move the subarray up
-      else if (bottom <= mid)
+      else if (bottom < ID)
         bottom++;
       // Move the subarray down
       else
-        top++;
+        top--;
     }
 
     // Return null if the client was not found
@@ -155,17 +155,14 @@ public class ClientList {
       int mid = (bottom + top) / 2; // Calculate the middle value
 
       // If the client is found, return
-      if (((findNodeByIndex(mid).client).getName()).equals(name)) {
+      if (((findNodeByIndex(mid).client).getName()).equals(name))
         return mid;
-      }
       // Move the subarray up
-      else if (bottom <= mid) {
+      else if (bottom < mid)
         bottom++;
-      }
       // Otherwise, move the subarray down
-      else {
-        top++;
-      }
+      else
+        top--;
     }
 
     // Return -1 if the name is not used by any user
@@ -182,14 +179,15 @@ public class ClientList {
       return null;
     }
 
-    Node node = head; // Store the Node
+    Node temp; // Store the Node
+    int c = 0;
 
     // Go through the list until the index is found
-    for (int c = 0; node.link != null && c <= i; c++)
-      node = node.link; // Go to the next Node
+    for (temp = head; temp.link != null && c < i; c++)
+      temp = temp.link; // Go to the next Node
 
     // Return the Node
-    return node;
+    return temp;
   }
 
 
@@ -216,10 +214,10 @@ public class ClientList {
   // Kushal Prajapati
   // Load the Clientlist from the location and if there is no client list return null
   public static ClientList loadClientList() throws IOException {
-    FileReader fr = new FileReader(Values.getClientInfoLocation());
-    BufferedReader br = new BufferedReader(fr);
+    FileReader fr = new FileReader(Values.getClientInfoLocation()); // Create a filereader for ClientINfo
+    BufferedReader br = new BufferedReader(fr); // Create a bufferereader
 
-    String data = Values.convert(br.readLine());
+    String data = Values.convert(br.readLine()); //
 
     if (data == null) {
       System.out.println("No data. Please make sure you have added a client list");

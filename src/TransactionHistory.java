@@ -36,12 +36,17 @@ public class TransactionHistory {
     head = newNode;
   }
 
-  public double calculateBalance() {
+  public static double calculateBalance(TransactionHistory history) {
     // This method calculates the balance of the history
     double sum = 0; // Store the sum
 
+    if(history == null) {
+      history = new TransactionHistory();
+      return 0;
+    }
+
     // Go through the list, collecting the transactions
-    for (Node temp = head; temp != null; temp = temp.link)
+    for (Node temp = history.head; temp != null; temp = temp.link)
       sum += temp.transaction;
 
     // Return the balance
@@ -51,29 +56,22 @@ public class TransactionHistory {
   public static TransactionHistory fromString(String data) {
     // This method takes in a string and converts it into a list
 
+    TransactionHistory newHistory = new TransactionHistory();
+
     if (data.equals("> <"))
-      return null;
+      return newHistory;
     if (!data.contains(",")) {
-      TransactionHistory newHistory = new TransactionHistory();
-      newHistory.newTransaction(Double.parseDouble(data.substring(2, data.indexOf("<") -1)));
+      newHistory.newTransaction(Double.parseDouble(data.substring(2, data.indexOf("<") - 1)));
       return newHistory;
     }
 
-    TransactionHistory newHistory = new TransactionHistory();
     newHistory.newTransaction(Double.parseDouble(data.substring(2, data.indexOf(","))));
 
-    int count = 1;
-
-    for (int i = 0; i < data.length(); i++)
-      if (data.charAt(i) == ',')
-        count++;
-
-    for (int i = data.indexOf(",") + 2; i < count - 1; i++) {
-      newHistory.newTransaction(Double.parseDouble(data.substring(i, data.indexOf(",", i))));
-      i = data.indexOf(",", i) + 1;
+    for (int i = data.indexOf(",") + 2; i < data.lastIndexOf(","); i = data.indexOf(",", i + 1) + 2) {
+      System.out.println(i);
+      newHistory.newTransaction(Double.parseDouble(data.substring(i, data.indexOf(",", i) - 1)));
     }
-    newHistory.newTransaction(Double.parseDouble(data.substring(data.lastIndexOf(",") + 1, data.indexOf("<") - 1)));
-
+    newHistory.newTransaction(Double.parseDouble(data.substring(data.lastIndexOf(",") + 2, data.indexOf("<") - 1)));
     return newHistory;
   }
 
@@ -132,6 +130,8 @@ public class TransactionHistory {
         System.out.println("$" + temp.transaction);
       else if(temp.transaction < 0)
         System.out.println("-$" + Math.abs(temp.transaction));
+
+      count++;
     }
   }
 

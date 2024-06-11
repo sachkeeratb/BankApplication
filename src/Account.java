@@ -5,7 +5,7 @@ public class Account {
   // Fields
   private byte n; // This represents the compounding period in A = P(1 + r/n)^(nt)
   private char type; // This represents if the account is a savings account or checking account
-  private TransactionHistory history; // This stores the transaction history of the account
+  private TransactionHistory history = new TransactionHistory(); // This stores the transaction history of the account
   private double balance; // This stores the client's balance in their account
 
   // Constructors
@@ -74,7 +74,7 @@ public class Account {
         break;
     }
     history = transactions; // Set the history to the given transactions
-    balance = history.calculateBalance(); // Recalibrate the balance
+    balance = TransactionHistory.calculateBalance(history); // Recalibrate the balance
     switch (compounding) {
       // If it compounds either annually, semi-annually, quarterly, or monthly
       case 1, 2, 4, 12:
@@ -103,7 +103,7 @@ public class Account {
     }
     history = new TransactionHistory(); // Make a new transaction history list
     history.arrayToList(transactions); // Put the array of transactions into the linked list
-    balance = history.calculateBalance(); // Recalibrate the balance
+    balance = TransactionHistory.calculateBalance(history); // Recalibrate the balance
     switch (compounding) {
       // If it compounds either annually, semi-annually, quarterly, or monthly
       case 1, 2, 4, 12:
@@ -314,7 +314,7 @@ public class Account {
   // Sachkeerat Brar
   public void display() {
     // This method outputs the account's info in a readable way
-    System.out.println("Account Type: " + type + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: ");
+    System.out.println("Account Type: " + (type == 's' ? "savings" : "checking") + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: ");
     history.display();
   }
 

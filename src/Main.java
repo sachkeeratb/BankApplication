@@ -120,7 +120,9 @@ public class Main {
     // Changes the date to the new date
     Values.putCurrentDate(date);
     // Updates the interest for the clients
+    Values.updateInterestRate();
     updateInterest(clients);
+    clients.storeClientList();
 
     // Sucessful Login
     System.out.println("You have successfully logged in!");
@@ -147,9 +149,9 @@ public class Main {
 
   // Sachkeerat Brar
   public static boolean validDate(String date) {
-    int year, month, day;
+    int year, month, day; // Store the year month and day
 
-    try {
+    try { // Try to parse the date
       year = Integer.parseInt(date.substring(0, 4));
       month = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
       day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
@@ -167,12 +169,12 @@ public class Main {
         return false;
       }
 
-      if((year > Values.getCurrentYear()) || (month < 1) || (month > 12) || (day < 1) || (day > 31)) {
-        System.out.println("Please in a valid date.");
+      if((year < Values.getCurrentYear()) || (month < 1) || (month > 12) || (day < 1) || (day > 31)) {
+        System.out.println("Please input a valid date.");
         return false;
       }
     }
-    catch(Exception _) {
+    catch(Exception e) {
       System.out.println("Invalid date format. Please in a date as yyyy/mm/dd.");
       return false;
     }
@@ -256,13 +258,13 @@ public class Main {
         changePassword(clients);
         break;
       case 2: {
-        System.out.println("Enter a new interest rate for checking accounts: ");
-        double rate = in.nextDouble();
+        System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
+        double rate = in.nextDouble() / 100.0;
         Values.putCheckingInterestRate(rate);
       }
       case 3: {
-        System.out.println("Enter a new interest rate for checking accounts: ");
-        double rate = in.nextDouble();
+        System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
+        double rate = in.nextDouble() / 100.0;
         Values.putSavingsInterestRate(rate);
       }
       case 4:
@@ -309,28 +311,76 @@ public class Main {
     Scanner in = new Scanner(System.in);
     System.out.println("1 --> Create Client"); // Create clients for the list
     System.out.println("2 --> Create Account"); // Create accounts for the list
-    System.out.println("3 --> Withdraw or Deposit Money"); // withdraw or deposit money
-    System.out.println("4 --> Transfer Money"); // transfer money from one user to another user
-    System.out.println("5 --> View Balance"); // View a client's balance
-    System.out.println("6 --> Change Clients Information"); // Change info
-    System.out.println("7 --> Filter Clients"); // Filter by age
-    System.out.println("8 --> Back"); // Go back
+    System.out.println("3 --> Delete Client"); // Delete clients from the list
+    System.out.println("4 --> Delete Account"); // Delete accounts from the list
+    System.out.println("5 --> Withdraw or Deposit Money"); // withdraw or deposit money
+    System.out.println("6 --> Transfer Money"); // transfer money from one user to another user
+    System.out.println("7 --> View Balance"); // View a client's balance
+    System.out.println("8 --> Change Clients Information"); // Change info
+    System.out.println("9 --> Filter Clients"); // Filter by age
+    System.out.println("10 --> Back"); // Go back
 
     int opt;
     do {
       System.out.println("Enter your option: ");
       opt = in.nextInt();
-    } while((opt < 1) || (opt > 8));
+    } while((opt < 1) || (opt > 10));
 
     switch(opt) {
       case 1 -> createClient(clients); // Create a client
       case 2 -> createAccount(clients); // Create an account for the client
-      case 3 -> withDepo(clients); // Withdraw and Deposit Money
-      case 4 -> transfer(clients); // Transfer Money Between Two Users
-      case 5 -> viewBal(clients); //  View Balance of the Client
-      case 6 -> changeInfo(clients); // Change name or account details
-      case 7 -> filterClients(clients); // View Clients By Age
-      case 8 -> mainMenu(clients); // Go back to the main menu
+      case 3 -> deleteClient(clients); // Create an account for the client
+      case 4 -> deleteAccount(clients); // Create an account for the client
+      case 5 -> withDepo(clients); // Withdraw and Deposit Money
+      case 6 -> transfer(clients); // Transfer Money Between Two Users
+      case 7 -> viewBal(clients); //  View Balance of the Client
+      case 8 -> changeInfo(clients); // Change name or account details
+      case 9 -> filterClients(clients); // View Clients By Age
+      case 10 -> mainMenu(clients); // Go back to the main menu
+    }
+  }
+
+  // Deletes a client from the list
+  // Takes in a ClientList clients
+  // Does not return anything as all data is deleted from the lis
+  public static void deleteClient(ClientList clients) throws IOException {
+    System.out.println("Enter the ID of the client you would like to delete:");
+    // Prompts the use for the ID
+    Scanner in = new Scanner(System.in); // Create a Scanner
+    int ID = in.nextInt(); // Prompt the user for an ID
+    Client client = clients.searchByID(ID); // Search for the client by its ID
+    if(client == null) { // Invalid ID
+      System.out.println("Invalid ID.");
+      return;
+    }
+    // Delete the client from the list
+    clients.delete(client);
+
+    clients.storeClientList();
+  }
+
+  // Sachkeerat Brar
+  public static void deleteAccount(ClientList clients) throws IOException {
+    System.out.println("Enter the ID of the client whose account would like to delete:");
+    Scanner in = new Scanner(System.in);
+    int ID = in.nextInt();
+    Client client = clients.searchByID(ID);
+    if(client == null) {
+      System.out.println("Invalid ID.");
+      return;
+    }
+
+    int accountIdx;
+    do {
+      System.out.println("Enter the number of the account you would like to remove (1 - 5): ");
+      accountIdx = in.nextInt() - 1;
+    } while((accountIdx < 0) || (accountIdx > 4));
+
+    if(client.getAccounts().getAccount(accountIdx) == null)
+      System.out.println("Invalid account.");
+    else {
+      client.getAccounts().removeAccount(accountIdx);
+      clients.storeClientList();
     }
   }
 
@@ -416,13 +466,15 @@ public class Main {
   }
 
   // Kushal Prajapati
-  // filter students
+  // Filters Clients based on parameters
+  // Takes in a ClientList clients which represents the list of clients
+  // Does not return anything as the clients are outputt to the console
   public static void filterClients(ClientList clients) {
-    Scanner in = new Scanner(System.in);
+    Scanner in = new Scanner(System.in); // Create a scanner
     // filter by the age of the client
-    byte age;
+    byte age; // Create the age
     // Prompt the user for their age
-    do {
+    do { // Run until a valid age is entered
       System.out.println("Enter the age of the clients you would like to view (18 - 120): ");
       age = in.nextByte();
     } while ((age < 18) || (age > 120));
@@ -433,54 +485,66 @@ public class Main {
       System.out.println("1. Greater");
       System.out.println("2. Equal");
       System.out.println("3. Less");
-      filterChoice = in.nextInt();
+      filterChoice = in.nextInt(); // Until correct option is entered
     } while ((filterChoice < 1) || (filterChoice > 3));
 
-    switch (filterChoice) {
-      case 1: {
-        ClientList temp = clients.ageGreaterThan(age);
-        temp.display();
-        break;
-      }
-      case 2: {
-        ClientList temp = clients.ageEqualTo(age);
-        temp.display();
-        break;
-      }
-      case 3: {
-        ClientList temp = clients.ageLessThan(age);
-        temp.display();
-        break;
-      }
+    ClientList temp = null; // Create client lsit
+
+    switch (filterChoice) { // Make temp the filtered list
+      case 1 -> temp = clients.ageGreaterThan(age);
+      case 2 -> temp = clients.ageEqualTo(age);
+      case 3 -> temp = clients.ageLessThan(age);
     }
+
+    if(temp != null) // If temp
+      temp.display(); // Display it
+    else // Else display nothing
+      System.out.println("None.");
   }
 
   // Nimay Desai
+  // This function displays a menu to withdraw and deposit
+  // It takes in a ClientList clients which represents the list of clients passwed down to other functions
   public static void withDepo(ClientList clients) throws IOException {
-    Scanner input = new Scanner(System.in);
-    int opt;
-    do {
-      System.out.println("Press 1 to withdraw");
+    Scanner input = new Scanner(System.in); // Create a scanner
+    int opt; // Create a variable representing the user option
+    do { // Unti correct opton is entered
+      System.out.println("Press 1 to withdraw"); // Prompt the user to withddraw or deposit
       System.out.println("Press 2 to deposit");
       opt = input.nextInt();
     } while ((opt != 1) && (opt != 2));
     switch (opt) {
-      case 1 -> withdraw(clients);
-      case 2 -> deposit(clients);
+      case 1 -> withdraw(clients); // Withdraw
+      case 2 -> deposit(clients); // Deposit
     }
 
   }
 
-  public static void withdraw (ClientList clients) throws IOException {
-    Scanner input = new Scanner(System.in);
-    System.out.println("Enter the ID of the client");
-    int ID = input.nextInt();
+  // This function withdraws money from the account
+  // It takes in a client list clients which represents the list of clien
+  public static void withdraw (ClientList clients) throws IOException{
+    Scanner input = new Scanner(System.in); // Create a scanner
+    System.out.println("Enter the ID of the client"); // Prompt the user for the ID
+    int ID = input.nextInt(); // Get the ID
 
-    Client client= clients.searchByID(ID);
+    Client client = clients.searchByID(ID); // Get a client based on the enetered id
 
-    System.out.println("Enter the index of the account you would like to withdraw");
-    int accountIdx = input.nextInt();
-    Account account = client.getAccounts().getAccount(accountIdx);
+    if(client == null) { // Make sure client is valid
+      System.out.println("Invalid client.");
+      return;
+    }
+
+    int accountIdx;
+    do { // Until valid account is entered
+      System.out.println("Enter the number of the account you would like to withdraw from (1 - 5): ");
+      accountIdx = input.nextInt() - 1;
+    } while((accountIdx < 0) || (accountIdx > 4));
+    Account account = client.getAccounts().getAccount(accountIdx); // Gets the account based on the index
+
+    if(account == null) {
+      System.out.println("Invalid account.");
+      return;
+    }
 
     System.out.println("Enter how much money you would like to withdraw");
     int val = input.nextInt();
@@ -498,9 +562,22 @@ public class Main {
 
     Client client = clients.searchByID(ID);
 
-    System.out.println("Enter the number of the account you would like to deposit");
-    int accountIdx = input.nextInt()-1;
+    if(client == null) {
+      System.out.println("Invalid client.");
+      return;
+    }
+
+    int accountIdx;
+    do {
+      System.out.println("Enter the number of the account you would like to deposit to (1 - 5): ");
+      accountIdx = input.nextInt() - 1;
+    } while((accountIdx < 0) || (accountIdx > 4));
     Account account = client.getAccounts().getAccount(accountIdx);
+
+    if(account == null) {
+      System.out.println("Invalid account. ");
+      return;
+    }
 
     System.out.println("Enter how much money you would like to deposit");
     int val = input.nextInt();
@@ -511,48 +588,82 @@ public class Main {
     mainMenu(clients);
   }
 
-  // Kushal Prajapati
+  // Kushal Prajapat
   // Transfers money between two accounts
   public static void transfer(ClientList clients) throws IOException {
-
     Scanner in = new Scanner(System.in);
     System.out.println("Enter the ID of the client: ");
     int ID = in.nextInt();
     Client client = clients.searchByID(ID);
 
-    System.out.println("Enter the number of the account you would like to transfer: ");
-    int accountIdx = in.nextInt()-1;
+    if(client == null) {
+      System.out.println("Invalid client.");
+      return;
+    }
+
+    int accountIdx;
+    do {
+      System.out.println("Enter the number of the account you would like to withdraw from (1 - 5): ");
+      accountIdx = in.nextInt() - 1;
+    } while((accountIdx < 0) || (accountIdx > 4));
     Account account = client.getAccounts().getAccount(accountIdx);
 
-    System.out.println("Enter how much money you would like to transfer: ");
-    int val = in.nextInt();
-    account.withdraw(val);
+    if(account == null) {
+      System.out.println("Invalid account.");
+      return;
+    }
 
     System.out.println("Enter the ID of the client you would like to transfer to: ");
-    int ID2=in.nextInt()-1;
-    Client client2= clients.searchByID(ID2);
+    int ID2 = in.nextInt()-1;
+    Client client2 = clients.searchByID(ID2);
 
-    System.out.println("Enter the number of the account of the second client: ");
-    int accountIdx2= in.nextInt()-1;
+    if(client2 == null) {
+      System.out.println("Invalid client.");
+      return;
+    }
+
+    int accountIdx2;
+    do {
+      System.out.println("Enter the number of the account you would like to deposit to (1 - 5): ");
+      accountIdx2 = in.nextInt() - 1;
+    } while((accountIdx2 < 0) || (accountIdx2 > 4));
     Account account2 = client2.getAccounts().getAccount(accountIdx2);
-    account2.deposit(val);
-    mainMenu(clients);
 
+    if(account2 == null) {
+      System.out.println("Invalid account.");
+      return;
+    }
+
+    int val;
+    do {
+      System.out.println("Enter the amount of money you would l ike to transfer: ");
+      val = in.nextInt();
+    } while(val <= 0);
+    account.withdraw(val);
+    account2.deposit(val);
+
+    clients.storeClientList();
+
+    mainMenu(clients);
   }
 
   // Kushal
   // Views the balance of the chosen clients
   // Takes in a ClientList clients which represnts the list of clients
-  // Does not return anything as the balance is shown to the terminal
+  // Does not return anything as the balance is shown to the terminal\
   public static void viewBal(ClientList clients) {
-    Scanner in= new Scanner(System.in);
-    System.out.println("Enter the ID of the client you would like to see: ");
+    Scanner in = new Scanner(System.in); // Create a scanner
+    System.out.println("Enter the ID of the client you would like to see: "); // Prompts the user for the ID
     int ID = in.nextInt();
-    Client client= clients.searchByID(ID);
+    Client client = clients.searchByID(ID);
+    if(client == null) {
+      System.out.println("Invalid client.");
+      return;
+    }
 
     int accountIdx;
     do {
-      System.out.println("Enter the number of the account you would like to transfer: ");
+      System.out.println("Enter the number of the account you would like to see: ");
       accountIdx = in.nextInt() - 1;
     } while((accountIdx < 0) || (accountIdx >= client.getAccounts().getNumAccounts()));
     Account account = client.getAccounts().getAccount(accountIdx);
@@ -563,15 +674,15 @@ public class Main {
   public static void changeInfo(ClientList clients) {
     Scanner in = new Scanner(System.in);
     Client currentClient;
-    System.out.println("How would you like to search the user");
-    System.out.println("Enter 1 for name and Enter 2 for ID");
+    System.out.println("How would you like to search the user?");
+    System.out.println("Enter 1 for name and Enter 2 for ID: ");
 
     int opt = in.nextInt();
     switch (opt) {
       case 1:
         System.out.println("Enter the name of the customer");
         String name = in.next();
-        currentClient = clients.findNodeByIndex(clients.searchByName(name)).client;
+        currentClient = (clients.findNodeByIndex(clients.searchByName(name))).client;
         currentClient.display();
         break;
 
@@ -652,7 +763,6 @@ public class Main {
     byte n = input.nextByte();
     currentAccount.putN(n);
   }
-
 
   // Nimay Desai & Sachkeerat Brar
   public static void main(String[] args) throws IOException {

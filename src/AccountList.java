@@ -142,18 +142,17 @@ public class AccountList {
     // This method makes the account list into a string
 
     // If there are no accounts, return a string which represents emptiness
-    if (numAccounts == 0) {
+    if (numAccounts == 0)
       return "[ ]";
-    }
+
     // If there is only one account, return its string value surrounded by square brackets
-    if (numAccounts == 1) {
+    if (numAccounts == 1)
       return "[ " + accounts[0].toString() + " ]";
-    }
 
     // Otherwise, make a string which resembles an array and return it (Example: [ [ 1, 2, 3 ], [ 2, 3, 4 ] ])
     String currentStr = "[ ";
     for (int i = 0; i < numAccounts - 1; i++) {
-      currentStr += "[ " + accounts[i].toString() + ", ";
+      currentStr += accounts[i].toString() + ", ";
     }
     currentStr += accounts[numAccounts - 1] + " ]";
 

@@ -1,9 +1,5 @@
 // Imported objects used
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Scanner;
 
 /* Sachkeerat Brar
@@ -39,6 +35,9 @@ public class Values {
   public static String getSuperInfoOldLocation() {
     return DIR + "SuperInfoOld";
   }
+  public static String getInterestLocation() {
+    return DIR + "interest";
+  }
 
   // Getting dates
   public static int getCurrentYear() {
@@ -68,6 +67,10 @@ public class Values {
     return savingsInterestRate;
   }
   public static void putCheckingInterestRate(double rate) throws IOException {
+    PrintWriter pw = new PrintWriter(new PrintWriter(getInterestLocation()));
+    BufferedReader br = new BufferedReader(new FileReader(getInterestLocation()));
+
+
     if (rate <= 0) {
       System.out.println("Invalid rate: Must be positive.");
       return;
@@ -95,8 +98,15 @@ public class Values {
     }
 
     checkingInterestRate = rate;
+    String data = br.readLine();
+    pw.println(convert(String.valueOf(checkingInterestRate)) + data.substring(data.indexOf(",")));
+
+    pw.flush();
   }
   public static void putSavingsInterestRate(double rate) throws IOException {
+    PrintWriter pw = new PrintWriter(new PrintWriter(getInterestLocation()));
+    BufferedReader br = new BufferedReader(new FileReader(getInterestLocation()));
+
     if (rate <= 0) {
       System.out.println("Invalid rate: Must be positive.");
       return;
@@ -124,6 +134,22 @@ public class Values {
     }
 
     savingsInterestRate = rate;
+    String data = br.readLine();
+    pw.println(data.substring(0, data.indexOf(",") + 1) + convert(String.valueOf(savingsInterestRate)));
+    pw.flush();
+  }
+  public static void updateInterestRate() throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(getInterestLocation()));
+
+    String data = br.readLine();
+
+    if(data == null) {
+      checkingInterestRate = 0.04;
+      savingsInterestRate = 0.065;
+    } else {
+      checkingInterestRate = Double.parseDouble(data.substring(0, data.indexOf(",")));
+      savingsInterestRate = Double.parseDouble(data.substring(data.indexOf(",") + 1));
+    }
   }
 
   // Update the date
