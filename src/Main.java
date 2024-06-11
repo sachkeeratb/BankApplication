@@ -123,11 +123,9 @@ public class Main {
     // Gets the date from the database
     String date = getDate();
     // Changes the date to the new date and puts it into memory
-    System.out.println(date);
 
     Values.loadDates();
     Values.putCurrentDate(date);
-    Values.loadDates();
 
     // Updates the interest for the clients
     Values.updateInterestRate();
@@ -171,7 +169,7 @@ public class Main {
 
       // If the date is in the past, the date is not valid
       if(year < Values.getPreviousYear()) {
-        System.out.println("Do not about the date.");
+        System.out.println("Do not lie about the date.");
         return false;
       }
       if((month < Values.getPreviousMonth()) && (year == Values.getPreviousYear())) {
@@ -277,11 +275,13 @@ public class Main {
         System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
         double rate = in.nextDouble() / 100.0;
         Values.putCheckingInterestRate(rate);
+        break;
       }
       case 3: {
         System.out.println("Enter a new interest rate for checking accounts as a percentage: ");
         double rate = in.nextDouble() / 100.0;
         Values.putSavingsInterestRate(rate);
+        break;
       }
       case 4:
         mainMenu(clients);

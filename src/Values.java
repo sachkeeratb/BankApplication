@@ -66,6 +66,8 @@ public class Values {
   public static double getSavingsInterestRate() {
     return savingsInterestRate;
   }
+
+  // Putting a constant rate for all savings accounts
   public static void putCheckingInterestRate(double rate) throws IOException {
    // If the rate is invalid if it is positive warn the users
     if (rate <= 0) {
@@ -100,8 +102,6 @@ public class Values {
     String dataToPrint = convert(String.valueOf(checkingInterestRate)) + data.substring(data.indexOf(","));
     writeToInterest(dataToPrint);
   }
-
-  // Putting a constant rate for all savings accounts
   public static void putSavingsInterestRate(double rate) throws IOException {
     // If the rate is invalid, warn the user
     if (rate <= 0) {
@@ -142,6 +142,7 @@ public class Values {
     if(data == null) {
       checkingInterestRate = 0.04;
       savingsInterestRate = 0.065;
+      writeToInterest(convert(checkingInterestRate + "," + savingsInterestRate));
     } else {
       checkingInterestRate = Double.parseDouble(data.substring(0, data.indexOf(",")));
       savingsInterestRate = Double.parseDouble(data.substring(data.indexOf(",") + 1));
@@ -158,7 +159,7 @@ public class Values {
   }
   // Update the year from the input
   public static void putCurrentYear(int year) throws IOException {
-    if (year > currentYear) {
+    if (year >= currentYear) {
       previousYear = currentYear;
       currentYear = year;
       updateDateValues();
@@ -177,9 +178,7 @@ public class Values {
     switch (currentMonth) {
       case 1, 3, 5, 7, 8, 10, 12:
         if ((day >= 1) && (day <= 31)) {
-          if (currentDay != 0)
-            previousDay = currentDay;
-          else
+          previousDay = currentDay;
           currentDay = day;
           updateDateValues();
         }
@@ -188,7 +187,6 @@ public class Values {
       case 4, 6, 9, 11:
         if ((day >= 1) && (day <= 30)) {
           previousDay = currentDay;
-          System.out.println(previousDay);
           currentDay = day;
           updateDateValues();
         }
@@ -218,8 +216,8 @@ public class Values {
 
   // Update all the date values in the memory
   public static void loadDates() throws IOException {
-    String newData = getSuperInfo().substring(0, getSuperInfo().indexOf("."));
-    String oldData = getSuperInfoOld().substring(0, getSuperInfoOld().indexOf("."));
+    String newData = convert(getSuperInfo().substring(0, getSuperInfo().indexOf(".")));
+    String oldData = convert(getSuperInfoOld().substring(0, getSuperInfoOld().indexOf(".")));
 
     currentYear = Integer.parseInt(newData.substring(0, newData.indexOf("/")));
     currentMonth = Integer.parseInt(newData.substring(newData.indexOf("/") + 1, newData.lastIndexOf("/")));
@@ -278,7 +276,6 @@ public class Values {
     // This method compares the inputted password with the stored password
     return password.equals(convert(getPassword()));
   }
-
 
   public static boolean checkIfEmpty(String location) throws IOException {
     // This method checks if the file is empty
