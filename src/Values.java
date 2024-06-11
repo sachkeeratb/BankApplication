@@ -55,9 +55,6 @@ public class Values {
     return previousDay;
   }
 
-
-
-
   // Getting and updating the interest rates
   public static double getCheckingInterestRate() {
     return checkingInterestRate;
@@ -125,6 +122,12 @@ public class Values {
   }
 
   // Update the date
+  public static void putCurrentDate(String date) throws IOException {
+    putCurrentYear(Integer.parseInt(date.substring(0, 4)));
+    putCurrentMonth(Integer.parseInt(date.substring(5, date.indexOf("/", 5))));
+    putCurrentDay(Integer.parseInt(date.substring(date.indexOf("/", 5) + 1)));
+    updateDateValues();
+  }
   public static void putCurrentYear(int year) throws IOException {
     if (year > currentYear) {
       previousDay = currentYear;
@@ -182,22 +185,26 @@ public class Values {
     BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
     BufferedReader brNew = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
 
-    if ((brOld.readLine()).substring(0, 9).equals((brNew.readLine()).substring(0, 9)))
+    String oldData = brOld.readLine();
+    String newData = brNew.readLine();
+
+    if (oldData.substring(0, oldData.indexOf(".")).equals(newData.substring(0, newData.indexOf("."))))
       updateDateNew();
     else
       updateDateBoth();
   }
-  public static void updateDateNew() throws IOException {
+  private static void updateDateNew() throws IOException {
     PrintWriter pw = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
     BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
 
-    String data = (br.readLine()).substring(10);
+    String oldData = br.readLine();
+    String data = oldData.substring(10);
     String date = currentYear + "/" + currentMonth + "/" + currentDay;
     pw.println(convert(date) + "." + data);
 
     pw.flush();
   }
-  public static void updateDateBoth() throws IOException {
+  private static void updateDateBoth() throws IOException {
     PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
     PrintWriter pwNew = new PrintWriter(new FileWriter(Values.getSuperInfoLocation()));
     BufferedReader brOld = new BufferedReader(new FileReader(Values.getSuperInfoOldLocation()));
@@ -209,10 +216,10 @@ public class Values {
     String newDate = currentYear + "/" + currentMonth + "/" + currentDay;
     String oldDate = previousYear + "/" + previousMonth + "/" + previousDay;
 
-    String updatedOldData = convert(oldDate) + olderData.substring(olderData.substring(8).indexOf('.'));
+    String updatedOldData = convert(oldDate) + olderData.substring(olderData.indexOf("."));
     pwOld.println(updatedOldData);
 
-    String newData = convert(newDate) + oldData.substring(olderData.substring(8).indexOf('.'));
+    String newData = convert(newDate) + oldData.substring(oldData.indexOf('.'));
     pwNew.println(newData);
 
     pwOld.flush();
@@ -230,7 +237,7 @@ public class Values {
 
     String data = br.readLine(); // Store the data
 
-    String password = data.substring(data.substring(8).indexOf('>')); // The encrypted password is after the . after the date
+    String password = data.substring(data.indexOf('.') + 1); // The encrypted password is after the . after the date
 
     return password;
   }

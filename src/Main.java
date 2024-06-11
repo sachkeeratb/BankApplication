@@ -4,7 +4,8 @@ import java.util.Scanner;
 public class Main {
 
   // Sachkeerat Brar
-  public static void title() throws IOException {
+  // title screen  of the program
+  public static void title() {
     // This method outputs the title of the application and the creators of it
     System.out.println("""
         ___            _       _             _ _         _   _
@@ -15,31 +16,21 @@ public class Main {
 
       By: Sachkeerat Brar, Nimay Desai, and Kushal Prajapati
       """);
-
-
   }
 
-  // Nimay Desai
-  public static void instructions() throws IOException {
-    Scanner in = new Scanner(System.in);
-    System.out.println("Welcome to the Bank!");
-    System.out.println("What would you like to do?");
-    System.out.println("1 --> Login");
-    System.out.println("2 --> Register");
-    System.out.println("3 --> Exit");
-    int opt = in.nextInt();
-    switch (opt) {
-      case 1 -> login();
-      case 2 -> register();
-      case 3 -> System.exit(0);
-    }
+  // Sachkeerat Brar
+  public static void exit(ClientList clients) throws IOException {
+    clients.storeClientList();
+    System.out.println("Thank you for using this program.");
+    System.exit(0);
   }
 
   // Nimay Desai
   public static void register() throws IOException {
     Scanner in = new Scanner(System.in);
-    FileWriter fw = new FileWriter(Values.getClientInfoLocation());
+    FileWriter fw = new FileWriter(Values.getSuperInfoLocation());
     PrintWriter pw = new PrintWriter(fw);
+    PrintWriter pwOld = new PrintWriter(new FileWriter(Values.getSuperInfoOldLocation()));
     System.out.println("The program has detected that this is the first time you have opened this application.\nAccount creation will begin.");
 
     String date;
@@ -48,24 +39,35 @@ public class Main {
       date = in.next();
     } while(!validDate(date));
 
-    String password = null;
-    while(password == null) {
-      System.out.println("Please enter a password for security: ");
-      password = in.next();
-    }
-    System.out.println("You have successfully registered. Please open the program again to login with the new password");
+    System.out.println("Please enter a password for security: ");
+    String password = in.next();
+
+    System.out.println("You have successfully registered.");
     pw.println(Values.convert(date + "." + password));
+    pwOld.println(Values.convert(date + "." + password));
+
     pw.flush();
+    pwOld.flush();
     fw.flush();
   }
 
   // Nimay Desai
-  public static boolean login() throws IOException {
+  public static boolean login(ClientList clients) throws IOException {
     Scanner in = new Scanner(System.in);
 
-    System.out.println("Please enter a password for security: ");
+    System.out.println("Please enter your password to login: ");
     String password = in.next();
     int t = 1;
+
+    String date = getDate();
+    Values.putCurrentDate(date);
+
+    for (ClientList.Node temp = clients.getHead(); temp != null; temp = temp.link) {
+      for(int i = 0; i < 5; i++) {
+        if(temp.client.getAccounts().getAccount(i) != null)
+          temp.client.getAccounts().getAccount(i).addInterest();
+      }
+    }
 
     while(!Values.comparePassword(password)) {
       if(t >= 5) {
@@ -89,7 +91,7 @@ public class Main {
     do {
       System.out.println("Enter the current date as yyyy/mm/dd: ");
       date = in.next();
-    } while(!validDate(date) || !validAge(date));
+    } while(!validDate(date));
 
     return date;
   }
@@ -102,7 +104,6 @@ public class Main {
       year = Integer.parseInt(date.substring(0, 4));
       month = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
       day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
-      System.out.println(year + "/" + month + "/" + day);
 
       if(year < Values.getPreviousYear()) {
         System.out.println("Do not lie about the date.");
@@ -167,8 +168,9 @@ public class Main {
 
   }
 
-
-  public static void MainMenu() throws IOException {
+// Kushal Prajapati
+  // This is the main menu of the program that lets you pick between the 4 options
+  public static void MainMenu(ClientList clients) throws IOException {
     System.out.println("Welcome to the Bank!");
     System.out.println("What would you like to do?");
 
@@ -181,20 +183,56 @@ public class Main {
     System.out.println("Enter your option: ");
     int opt = in.nextInt();
     switch(opt) {
-      case 1 -> HandleClients();
+      case 1 -> HandleClients(clients);
       case 2 -> ModifyBank();
-      case 3 -> login();
+      case 3 -> login(clients);
+      case 4 -> exit(clients);
     }
 
   }
 
-  public static void ModifyBank() {
+  // Kushal Prajapati
+  public static void ModifyBank() throws IOException{
     System.out.println("Select your option ");
     System.out.println("1 -->  Change Password");
-    System.out.println("2 -->  Change Password");
+    System.out.println("2 -->  Go back");
+    System.out.println("More coming soon!");
+    Scanner sc=new Scanner(System.in);
+    int opt=sc.nextInt();
+    switch(opt){
+      case 1 -> ChangePassword();
+    }
   }
 
-  public static void HandleClients() throws IOException {
+  // Kushal Prajapati
+
+  public static void ChangePassword() throws IOException {
+
+    Scanner in = new Scanner(System.in);
+
+    System.out.println("Enter your current password: ");
+    String oldpassword = in.next();
+    System.out.println("Enter your new password: ");
+    String password = in.next();
+
+    FileWriter fw = new FileWriter(Values.getSuperInfoLocation());
+    PrintWriter pw = new PrintWriter(fw);
+    BufferedReader br = new BufferedReader(new FileReader(Values.getSuperInfoLocation()));
+
+
+    while (br.readLine() != null) {
+      if (br.readLine().contains(oldpassword)) {
+        String data = br.readLine();
+        data = data.replace(oldpassword, Values.convert(password));
+        pw.println(data);
+      }
+    }
+  }
+
+
+
+  // Nimay Desai
+  public static void HandleClients(ClientList clients) throws IOException {
     Scanner in = new Scanner(System.in);
     System.out.println("Enter your option: ");
     int opt;
@@ -213,7 +251,7 @@ public class Main {
       case 2 -> Transfer();
       case 3 -> ViewBal();
       case 4 -> ChangeInfo();
-      case 5 -> MainMenu();
+      case 5 -> MainMenu(clients);
     }
   }
 
@@ -301,17 +339,70 @@ public class Main {
     }
   }
 
+  // Nimay Desai
   public static void ChangeInfo() {
+    Scanner input = new Scanner(System.in);
     ClientList clients = ClientList.fromString("temp");
-    System.out.println("What Information Would You Like To Change:");
+    ClientList.Node currentClient;
+    System.out.println("How would you like to search the user");
+    System.out.println("Enter 1 for name and Enter 2 for ID");
+    int opt = input.nextInt();
+    switch (opt) {
+      case 1:
+        System.out.println("Enter the name of the customer");
+        String name = input.next();
+        currentClient = clients.findNodeByIndex(clients.searchByName(name));
+        break;
+      case 2:
+        System.out.println("Enter the ID of the customer (above 0)");
+        int id = input.nextInt();
+        currentClient = clients.findNodeByIndex(clients.searchByID(id));
+        break;
+    }
 
   }
+
+  public static void ChangeData(Client currentClient) {
+    Scanner input = new Scanner(System.in);
+    System.out.println("What would you like to change");
+    System.out.println("Enter 1 to change the Name");
+    System.out.println("Enter 2 to Modify Accounts");
+    System.out.println("Enter 3 To go back");
+    int opt = input.nextInt();
+    switch (opt) {
+      case 1:
+        System.out.println("Please enter the new name");
+        String name = input.next();
+        currentClient.putName(name);
+        break;
+      case 2:
+        ModifyAccounts(currentClient);
+        break;
+      case 3:
+        ChangeInfo();
+        break;
+    }
+  }
+  
+  public static void ModifyAccounts (Client currentClient) {
+
+  }
+
 
   public static void main(String[] args) throws IOException {
     title();
     if(Values.checkIfEmpty(Values.getSuperInfoLocation()))
       register();
-    login();
+
+    ClientList clients = new ClientList();
+    if(!Values.checkIfEmpty(Values.getClientInfoLocation()))
+      clients = ClientList.loadClientList();
+
+    boolean loggedIn;
+    do {
+      loggedIn = login(clients);
+    } while(!loggedIn);
+
+
   }
 }
-

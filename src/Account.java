@@ -3,7 +3,7 @@
 // This object was made to shape a client's account
 public class Account {
   // Fields
-  byte n; // This represents the compounding period in A = P(1 + r/n)^(nt)
+  private byte n; // This represents the compounding period in A = P(1 + r/n)^(nt)
   private char type; // This represents if the account is a savings account or checking account
   private TransactionHistory history; // This stores the transaction history of the account
   private double balance; // This stores the client's balance in their account
@@ -130,6 +130,27 @@ public class Account {
   }
 
   // Mutators
+  public void setN (byte compounding) {
+    // If the new n value compounds annually, semi-annually, quarterly, or monthly, you can change it
+    switch(compounding) {
+      case 1, 2, 4, 12:
+        n = compounding;
+        break;
+
+      // Otherwise, inform the user
+      default:
+        System.out.println("Invalid compounding periods.");
+        break;
+    }
+  }
+  public void changeType () {
+    // If the type is a checking account, flip it
+    if(type == 'c')
+      type = 's';
+    // If the type is savings, flip it
+    else
+      type = 'c';
+  }
   public void withdraw(double amount) {
     // This method withdraws money from the account
     // It updates the balance and transaction history as well
@@ -271,7 +292,8 @@ public class Account {
       }
     }
   }
-  
+
+  // Sachkeerat
   private String compoundedByN() {
     // This method returns a string for the account info method for how the account compounds
     return switch (n) {
@@ -304,7 +326,7 @@ public class Account {
     history.copy(other.history);
     balance = other.balance;
   }
-
+// Kushal Prajapati
   public static Account fromString(String data) {
     // This method creates an account from a string of data
     char accType = data.charAt(2);

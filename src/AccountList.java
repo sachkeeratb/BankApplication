@@ -78,7 +78,9 @@ public class AccountList {
     }
   }
 
-  // Sachkeerat Brar w/ Nimay Desai
+  // Sachkeerat Brar w/ Nimay Desai & Kushal
+
+  // a method that takes data in string format into an account list
   public static AccountList fromString(String data) {
     if (data.equals("[ ]"))
       return null;
@@ -131,7 +133,7 @@ public class AccountList {
     return accList;
   }
 
-  // Nimay Desai & Sachkeerat Brar
+  // converts a account list into a string
   public String toString() {
     // This method makes the account list into a string
 

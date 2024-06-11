@@ -1,6 +1,8 @@
 import java.io.*;
 
 // Kushal Prajapati
+
+// utilizes  overloading for different ways to construct a client
 // This is the client object for the clients associated with the bank
 public class Client {
   // Fields
@@ -90,8 +92,7 @@ public class Client {
   }
 
 
-
-
+  // Kushal Prajapati
   // Accessors
   public int getID() {
     return ID;
@@ -120,7 +121,6 @@ public class Client {
     dob = newDOB;
   }
 
-  // Sachkeerat Brar
   public void printInfo() {
     // Output regular client info
     System.out.println("ID: " + ID + "\nName: " + name + "\nDate of Birth: " + dob + "\nAge: " + age + "\nAccounts: ");
@@ -132,7 +132,6 @@ public class Client {
     }
   }
 
-  // Sachkeerat Brar
   public String toString() {
     // This method turns the object into a string when used to print to the console
     return "( " + ID + ", " + name + ", " + dob + ", " + accounts.toString() + " )";
