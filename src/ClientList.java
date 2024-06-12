@@ -76,7 +76,7 @@ public class ClientList {
   // Nimay Desai
   public void delete(Client item) {
     // This method removes a client from the list and shifts the IDs of the clients after it
-
+    // Takes in a client called item which represents the client the user wants to delete
     Node current = head; // Sets the current node equal to the head
     Node previous = null; // Sets the previous value equal to null at the start
     boolean found = false; // Represents if the item is found
@@ -115,6 +115,7 @@ public class ClientList {
   // Sachkeerat Brar
   public Client searchByID(int ID) {
     // This method searches the client list to find the client who matches the given ID
+    // Takes in an integer caleld ID which represents the ID the user wants to search
     // Binary search
 
     int top = this.length(); // Store the highest index of the sublist
@@ -144,6 +145,10 @@ public class ClientList {
   }
   // Nimay Desai
   public Client searchByName(String name) {
+    // This function searches the client list by the naem
+    // It takes in a String name which represents the name the user wants to search for
+    // This function returns a Client which is the client the user's name == the given name
+    // If no client return null
     int top = length(); // The top of the subarray
     int bottom = 1; // The bottom of the subarray
 
@@ -161,12 +166,14 @@ public class ClientList {
         top--;
     }
 
-    // Return -1 if the name is not used by any user
+    // Return null if the name is not used by any user
     return null;
   }
   // Sachkeerat Brar
   public Node findNodeByIndex(int i) {
     // This method finds the node which corresponds to the index given
+    // This function takes an integer i which represents the index the user wants
+    // This function returns a Node which represents the Node found
 
     // If the index is invalid, a null Node is returned
     if ((i < 0) || (i >= this.length())) {
@@ -192,10 +199,14 @@ public class ClientList {
   public void storeClientList() throws IOException {
     // This method writes the client list to the file
     // This method is called when the program is closed
+    // This function does not take anything as everything is retrieved form this
+    // This function does not return anything as everything is written to the fil
     Values.writeToClients(Values.convert(this.toString()));
   }
   // Sachkeerat Brar
   public int length() {
+    // This function returns an integer length which represents the length of the string
+    // It does not take in anything as it retrieved from the function the method is called on
     // This method counts the amount of clients and returns it
 
     // Store the length
@@ -224,23 +235,28 @@ public class ClientList {
   // Nimay Desai
   public ClientList ageGreaterThan(int age) {
     // This method returns a client list which stores people with ages greater than the given age
+    // This function takes in an integer age which represents the age of the user
+    // THis functoin returns all the clients greater than that age
     Node temp = head;
     ClientList clients = null;
 
+    // Until the last element
     while (temp != null) {
-      if (temp.client.getAge() > age) {
-        if (clients == null)
-          clients = new ClientList(temp.client);
+      if (temp.client.getAge() > age) { // Age is greater than the age provided
+        if (clients == null) // If no client list
+          clients = new ClientList(temp.client); // Create a new clientlist
         else
-          clients.addToList(temp.client);
+          clients.addToList(temp.client); // Else add it to the list
       }
       temp = temp.link;
     }
-    return clients;
+    return clients; // Return the ist
   }
   // Nimay Desai
   public ClientList ageLessThan(int age) {
     // This method returns a client list which stores people with ages less than the given age
+    // This function returns all the clients less than the age 
+    // THis function takes in an integer age which represents the age the user wants
     Node temp = head;
     ClientList clients = null;
 
@@ -260,22 +276,24 @@ public class ClientList {
   // Nimay Desai
   public ClientList ageEqualTo(int age) {
     // This method returns a client list which stores people with ages less than the given age
+    // This function returns all the clients which the age equal to the give age
+    // This function takes in an integer age which represents the age the user wants
 
-    Node temp = head;
-    ClientList clients = null;
+    Node temp = head; // Create temp at first element
+    ClientList clients = null; // Create list of filtered clients
 
 
-    while (temp != null) {
-      if (temp.client.getAge() == age) {
-        if (clients == null) {
-          clients = new ClientList(temp.client);
+    while (temp != null) { // Go through until the end of the list
+      if (temp.client.getAge() == age) { // If the clients age is equal to the age
+        if (clients == null) { // If no client
+          clients = new ClientList(temp.client); // Create a new client list
         } else {
           clients.addToList(temp.client);
         }
       }
       temp = temp.link;
     }
-    return clients;
+    return clients; // Return the l;ist of clients
   }
   // Nimay Desai
   public void display() {
@@ -310,6 +328,9 @@ public class ClientList {
 
   // Nimay Desai
   public static ClientList fromString(String data) {
+    // This function converts a client list from a string into a client list
+    // This function takes in a string data which represents the original string
+    // This functoin returns a ClientList which represents the converted clientlist
     int prevIdx = 0; // Start from the beginning of the string
     int nextIdx = data.indexOf('(', prevIdx); // Find the index of the first '('
     String str;
