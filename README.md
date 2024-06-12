@@ -10,4 +10,4 @@ This application serves as an application where the user is the bank and this ap
 
 
 # HOW TO LAUNCH
-Go to src/main.java and run it with your preferred java
+Go to src/main.java and run it with your preferred java runner.
