@@ -348,6 +348,8 @@ public class Values {
     /* This method acts as the main encryption/decryption of the entire program
      * This method will return a string where the original string's data is altered
      * A is flipped to Z, 0 is flipped to 9, and vice-versa
+     // This function takes in a String data which represents the data the user wnats
+     // This function returns a String which represents the converted string
      * Example: password123 --> kzhhdliw876
      * Example: kzhhdliw876 --> password123
      */
