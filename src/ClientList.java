@@ -52,7 +52,6 @@ public class ClientList {
 
 
   // Mutator methods
-
   // Nimay Desai
   public void addToList(Client item) {
     // Adds a new item to the list
@@ -64,14 +63,16 @@ public class ClientList {
       head.client.putID(1);
       return;
     }
+
     Node temp = head;
+
     while (temp.link != null) {
       temp = temp.link;
     }
+
     temp.link = new Node(item, null);
     temp.link.client.putID(temp.client.getID() + 1);
   }
-
   // Nimay Desai
   public void delete(Client item) {
     // This method removes a client from the list and shifts the IDs of the clients after it
@@ -110,7 +111,7 @@ public class ClientList {
 
 
   // Searches
-
+  
   // Sachkeerat Brar
   public Client searchByID(int ID) {
     // This method searches the client list to find the client who matches the given ID
@@ -130,10 +131,10 @@ public class ClientList {
       // If we have found the client, return its index
       if (((findNodeByIndex(mid - 1).client.getID())) == ID)
         return findNodeByIndex(mid - 1).client;
-      // Move the subarray up
+        // Move the subarray up
       else if (bottom < ID)
         bottom++;
-      // Move the subarray down
+        // Move the subarray down
       else
         top--;
     }
@@ -141,7 +142,6 @@ public class ClientList {
     // Return null if the client was not found
     return null;
   }
-
   // Nimay Desai
   public Client searchByName(String name) {
     int top = length(); // The top of the subarray
@@ -153,10 +153,10 @@ public class ClientList {
       // If the client is found, return
       if (((findNodeByIndex(mid - 1).client).getName()).equals(name))
         return findNodeByIndex(mid - 1).client;
-      // Move the subarray up
+        // Move the subarray up
       else if (bottom < mid)
         bottom++;
-      // Otherwise, move the subarray down
+        // Otherwise, move the subarray down
       else
         top--;
     }
@@ -164,7 +164,6 @@ public class ClientList {
     // Return -1 if the name is not used by any user
     return null;
   }
-
   // Sachkeerat Brar
   public Node findNodeByIndex(int i) {
     // This method finds the node which corresponds to the index given
@@ -187,48 +186,14 @@ public class ClientList {
   }
 
 
-  // Nimay Desai
-  public static ClientList fromString(String data) {
-    int prevIdx = 0; // Start from the beginning of the string
-    int nextIdx = data.indexOf('(', prevIdx); // Find the index of the first '('
-    String str;
-    ClientList clients = new ClientList();
-    while (nextIdx != -1) {
-      prevIdx = nextIdx + 2; // Move to the first character after '('
-      nextIdx = data.indexOf(')', prevIdx); // Find the index of the next ')'
-      str = data.substring(prevIdx, nextIdx); // Extract the substring between '(' and ')'
-      clients.addToList(Client.fromString(str));
-      prevIdx = nextIdx + 1; // Move to the next character after ')'
-      nextIdx = data.indexOf('(', prevIdx); // Find the index of the next '('
-    }
-    return clients;
-  }
-
-
   // Instance methods
 
-  // Kushal Prajapati
-  // Load the Clientlist from the location and if there is no client list return null
-  public static ClientList loadClientList() throws IOException {
-
-    String data = Values.getClientInfo();
-
-    if (data == null) {
-      System.out.println("No data. Please make sure you have added a client list");
-      return null;
-    }
-
-    data = Values.convert(data);
-    return ClientList.fromString(data);
-  }
-
-  /// Store the client lis by converting the client information to a string
+  /// Sachkeerat Brar
   public void storeClientList() throws IOException {
-      // This method writes the client list to the file
-      // This method is called when the program is closed
-      Values.writeToClients(Values.convert(this.toString()));
+    // This method writes the client list to the file
+    // This method is called when the program is closed
+    Values.writeToClients(Values.convert(this.toString()));
   }
-
   // Sachkeerat Brar
   public int length() {
     // This method counts the amount of clients and returns it
@@ -243,21 +208,19 @@ public class ClientList {
     // Return the length
     return len;
   }
-
   // Sachkeerat Brar
   public Node lastNode() {
     // This method returns the last node in the list
     Node temp;
 
     // Go through the list until the last node is found
-    for(temp = head; temp != null; temp = temp.link)
-      if(temp.link == null)
+    for (temp = head; temp != null; temp = temp.link)
+      if (temp.link == null)
         return temp;
 
     // Otherwise return null
     return null;
   }
-
   // Nimay Desai
   public ClientList ageGreaterThan(int age) {
     // This method returns a client list which stores people with ages greater than the given age
@@ -275,7 +238,6 @@ public class ClientList {
     }
     return clients;
   }
-
   // Nimay Desai
   public ClientList ageLessThan(int age) {
     // This method returns a client list which stores people with ages less than the given age
@@ -295,7 +257,6 @@ public class ClientList {
     }
     return clients;
   }
-
   // Nimay Desai
   public ClientList ageEqualTo(int age) {
     // This method returns a client list which stores people with ages less than the given age
@@ -316,7 +277,6 @@ public class ClientList {
     }
     return clients;
   }
-
   // Nimay Desai
   public void display() {
     // This method goes through the list and outputs each client
@@ -328,7 +288,6 @@ public class ClientList {
       temp = temp.link;
     }
   }
-
   // Nimay Desai
   public String toString() {
     String currentStr = "{ ";
@@ -344,5 +303,38 @@ public class ClientList {
     }
     currentStr += " }";
     return currentStr;
+  }
+
+
+  // Static methods
+
+  // Nimay Desai
+  public static ClientList fromString(String data) {
+    int prevIdx = 0; // Start from the beginning of the string
+    int nextIdx = data.indexOf('(', prevIdx); // Find the index of the first '('
+    String str;
+    ClientList clients = new ClientList();
+    while (nextIdx != -1) {
+      prevIdx = nextIdx + 2; // Move to the first character after '('
+      nextIdx = data.indexOf(')', prevIdx); // Find the index of the next ')'
+      str = data.substring(prevIdx, nextIdx); // Extract the substring between '(' and ')'
+      clients.addToList(Client.fromString(str));
+      prevIdx = nextIdx + 1; // Move to the next character after ')'
+      nextIdx = data.indexOf('(', prevIdx); // Find the index of the next '('
+    }
+    return clients;
+  }
+  // Kushal Prajapati
+  public static ClientList loadClientList() throws IOException {
+    // Load the Clientlist from the location and if there is no client list return null
+    String data = Values.getClientInfo();
+
+    if (data == null) {
+      System.out.println("No data. Please make sure you have added a client list");
+      return null;
+    }
+
+    data = Values.convert(data);
+    return ClientList.fromString(data);
   }
 }

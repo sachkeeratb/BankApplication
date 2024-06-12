@@ -8,6 +8,7 @@ public class Account {
   private TransactionHistory history = new TransactionHistory(); // This stores the transaction history of the account
   private double balance; // This stores the client's balance in their account
 
+
   // Constructors
   public Account() {
     type = 'c'; // Set the type to checking
@@ -28,6 +29,7 @@ public class Account {
         type = 'c';
         break;
     }
+
     history = new TransactionHistory(); // Make a new transaction history list
     balance = 0; // Set the balance to 0
     n = 1; // Make it compound yearly
@@ -45,15 +47,17 @@ public class Account {
         type = 'c';
         break;
     }
+
     history = new TransactionHistory(); // Make a new transaction history list
     balance = 0; // Store the balance as 0
+
     switch (compounding) {
       // If it compounds either annually, semi-annually, quarterly, or monthly
       case 1, 2, 4, 12:
         n = compounding;
         break;
 
-        // If it doesn't, inform the user and compound annually
+      // If it doesn't, inform the user and compound annually
       default:
         System.out.println("Invalid compounding rate. Setting to compound yearly.");
         n = 1;
@@ -73,8 +77,10 @@ public class Account {
         type = 'c';
         break;
     }
+
     history = transactions; // Set the history to the given transactions
     balance = TransactionHistory.calculateBalance(history); // Recalibrate the balance
+
     switch (compounding) {
       // If it compounds either annually, semi-annually, quarterly, or monthly
       case 1, 2, 4, 12:
@@ -101,9 +107,11 @@ public class Account {
         type = 'c';
         break;
     }
+
     history = new TransactionHistory(); // Make a new transaction history list
     history.arrayToList(transactions); // Put the array of transactions into the linked list
     balance = TransactionHistory.calculateBalance(history); // Recalibrate the balance
+
     switch (compounding) {
       // If it compounds either annually, semi-annually, quarterly, or monthly
       case 1, 2, 4, 12:
@@ -118,6 +126,7 @@ public class Account {
     }
   }
 
+
   // Accessors
   public char getAccountType() {
     return type;
@@ -129,10 +138,11 @@ public class Account {
     return history;
   }
 
+
   // Mutators
-  public void putN (byte compounding) {
+  public void putN(byte compounding) {
     // If the new n value compounds annually, semi-annually, quarterly, or monthly, you can change it
-    switch(compounding) {
+    switch (compounding) {
       case 1, 2, 4, 12:
         n = compounding;
         break;
@@ -143,11 +153,11 @@ public class Account {
         break;
     }
   }
-  public void changeType () {
+  public void changeType() {
     // If the type is a checking account, flip it
-    if(type == 'c')
+    if (type == 'c')
       type = 's';
-    // If the type is savings, flip it
+      // If the type is savings, flip it
     else
       type = 'c';
   }
@@ -159,11 +169,11 @@ public class Account {
     if (amount > balance)
       System.out.println("Invalid withdrawal: Inadequate Funds!");
 
-    // If the amount to withdraw is negative
+      // If the amount to withdraw is negative
     else if (amount <= 0)
       System.out.println("Invalid withdrawal: Cannot withdraw negative values!");
 
-    // Otherwise, withdraw
+      // Otherwise, withdraw
     else {
       history.newTransaction(-1 * amount);
       balance -= amount;
@@ -177,13 +187,12 @@ public class Account {
     if (amount <= 0)
       System.out.println("Invalid deposit: Cannot deposit negative values!");
 
-    // Otherwise, deposit
+      // Otherwise, deposit
     else {
       history.newTransaction(amount);
       balance += amount;
     }
   }
-
   public void addInterest() {
     // This method calculates the interest earnt based on compounding periods
 
@@ -274,7 +283,10 @@ public class Account {
     }
   }
 
-  // Sachkeerat
+
+  // Instance methods
+
+  // Sachkeerat Brar
   private String compoundedByN() {
     // This method returns a string for the account info method for how the account compounds
     return switch (n) {
@@ -285,20 +297,17 @@ public class Account {
       default -> "";
     };
   }
-
   // Nimay Desai and Sachkeerat Brar
   private double compoundInterest(double P, double r, double t) {
     // This method calculated compound interest to add interest to the account
     return Math.pow(P * (1 + r / (double) n), (double) n * t);
   }
-
   // Sachkeerat Brar
   public void display() {
     // This method outputs the account's info in a readable way
     System.out.println("Account Type: " + (type == 's' ? "savings" : "checking") + "\nBalance: $" + balance + "\nCompounded: " + compoundedByN() + "\nTransaction History: ");
     history.display();
   }
-
   // Sachkeerat Brar
   public void copy(Account other) {
     // This method returns an account which has a copy of another account's values
@@ -308,23 +317,47 @@ public class Account {
     history.copy(other.history);
     balance = other.balance;
   }
+  // Nimay Desai
+  public String toString() {
+    // This method turns the account into a string
+    return "@ " + type + ", " + n + ", " + history.toString() + " #";
+  }
 
-  // Kushal Prajapati
+  
+  // Static methods
+
+  // Sachkeerat Brar & Kushal Prajapati
   public static Account fromString(String data) {
     // This method creates an account from a string of data
     char accType = data.charAt(4);
     byte accCompounding = Byte.parseByte(data.substring(7, data.indexOf(",", 7)));
     String accHistory = data.substring(data.indexOf(">"), data.indexOf("<") + 1);
     TransactionHistory newHistory = TransactionHistory.fromString(accHistory);
-
+  
     Account account = new Account(accType, accCompounding, newHistory);
-
+  
     return account;
   }
+  // Sachkeerat Brar
+  private static int calculateAge(String date) {
+    // This method calculates an age from a date formatted as "yyyy/mm/dd"
 
-  // Nimay Desai
-  public String toString() {
-    // This method turns the account into a string
-    return "@ " + type + ", " + n + ", " + history.toString() + " #";
+    // Store the birth values as integers
+    int birthYear = Integer.parseInt(date.substring(0, 4));
+    int birthMonth = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
+    int birthDay = Integer.parseInt(date.substring(date.lastIndexOf("/") + 1));
+    System.out.println(birthYear + "/" + birthMonth + "/" + birthDay);
+
+    // Store the age
+    int currentAge = Values.getCurrentYear() - birthYear;
+    System.out.println(Values.getCurrentYear());
+    System.out.println(currentAge);
+
+    // See if they are a year younger
+    if ((Values.getCurrentMonth() < birthMonth) || ((Values.getCurrentMonth() == birthMonth) && (Values.getCurrentDay() < birthDay)))
+      currentAge--;
+
+    // Return the age
+    return currentAge;
   }
 }

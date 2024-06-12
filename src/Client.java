@@ -2,13 +2,13 @@
 
 // Utilizes  overloading for different ways to construct a client
 // This is the client object for the clients associated with the bank
-public class Client {
-  // Fields
+public class Client {  // Fields
   private int ID; // Client ID (starts at 1)
   private String name; // Full name
   private String dob; // Date
   private int age; // Age (calculated from date of birth)
   private AccountList accounts; // Accounts the user holds
+
 
   // Constructors
   public Client() {
@@ -38,11 +38,12 @@ public class Client {
   }
   public Client(String n, String date, AccountList accs) {
     // Create a client with the name, date, and the last client's ID incremented
-    ID = 1;
+    ID = 1; // Set 
     name = n;
     dob = date;
     age = calculateAge(dob);
-    if(accs == null)
+
+    if (accs == null)
       accounts = new AccountList();
     else
       accounts = accs;
@@ -56,21 +57,6 @@ public class Client {
     accounts = new AccountList();
   }
 
-  // Sachkeerat Brar & Kushal Prajapati
-  public static Client fromString(String data) {
-    // Loads current state
-    // This method creates a client out of a string
-    int clientID = Integer.parseInt(data.substring(0, data.indexOf(",")));
-    String clientName = data.substring(data.indexOf(",") + 2, data.indexOf(",", data.indexOf(",") + 1));
-    String clientDOB = data.substring(data.indexOf(",", data.indexOf(",") + 1) + 2, data.indexOf(",", data.indexOf(",", data.indexOf(",") + 1) + 1));    String clientAccounts = data.substring(data.indexOf("[", 1));
-    String clientAccs = data.substring(data.indexOf("[", 1) , data.indexOf("]") + 1);
-    AccountList accounts = AccountList.fromString(clientAccs);
-
-    Client client = new Client(clientName, clientDOB, accounts);
-    client.putID(clientID);
-
-    return client;
-  }
 
   // Kushal Prajapati and Nimay Desai
   // Accessors
@@ -90,6 +76,7 @@ public class Client {
     return accounts;
   }
 
+
   // Mutators
   public void putID(int newID) {
     ID = newID;
@@ -98,22 +85,42 @@ public class Client {
     name = newName;
   }
 
-  // This function outputs client info
-  // This function does not ake in anything as all data is retrieved from the class itself
-  // This function does not return anytbing as it outputted
+
+  // Instance methods
+
   public void display() {
-    // Output regular client info
+    // This function outputs client info
+    // This function does not ake in anything as all data is retrieved from the class itself
+    // This function does not return anytbing as it outputted
+
     System.out.println("ID: " + ID + "\nName: " + name + "\nDate of Birth: " + dob + "\nAge: " + age + "\n\nAccounts: ");
     accounts.display(); // Display accounts
   }
-
-  // converts each account to the string
   public String toString() {
     // This method turns the object into a string when used to print to the console
     return "( " + ID + ", " + name + ", " + dob + ", " + accounts.toString() + " )";
   }
 
-  // Calculate the age of the user from the date
+
+  // Static methods
+    
+  // Sachkeerat Brar & Kushal Prajapati
+  public static Client fromString(String data) {
+    // Loads current state
+    // This method creates a client out of a string
+
+    int clientID = Integer.parseInt(data.substring(0, data.indexOf(",")));
+    String clientName = data.substring(data.indexOf(",") + 2, data.indexOf(",", data.indexOf(",") + 1));
+    String clientDOB = data.substring(data.indexOf(",", data.indexOf(",") + 1) + 2, data.indexOf(",", data.indexOf(",", data.indexOf(",") + 1) + 1));
+    String clientAccs = data.substring(data.indexOf("[", 1), data.indexOf("]") + 1);
+    AccountList accounts = AccountList.fromString(clientAccs);
+
+    Client client = new Client(clientName, clientDOB, accounts);
+    client.putID(clientID);
+
+    return client;
+  }
+  // Sachkeerat Brar
   private static int calculateAge(String date) {
     // This method calculates an age from a date formatted as "yyyy/mm/dd"
 

@@ -1,4 +1,5 @@
 // Imported objects used
+
 import java.io.*;
 import java.util.Scanner;
 
@@ -7,6 +8,8 @@ import java.util.Scanner;
  * This is so we can have cleaner code and a better development experience
  */
 public class Values {
+  // Fields
+
   // Dates
   private static int currentYear;
   private static int currentMonth;
@@ -24,6 +27,7 @@ public class Values {
   // Nimay Desai
   // Directory
   private static final String DIR = "src/";
+
 
   // Getting file locations
   public static String getClientInfoLocation() {
@@ -67,9 +71,10 @@ public class Values {
     return savingsInterestRate;
   }
 
+  
   // Putting a constant rate for all savings accounts
   public static void putCheckingInterestRate(double rate) throws IOException {
-   // If the rate is invalid if it is positive warn the users
+    // If the rate is invalid if it is positive warn the users
     if (rate <= 0) {
       System.out.println("Invalid rate: Must be positive.");
       return;
@@ -139,7 +144,7 @@ public class Values {
   public static void updateInterestRate() throws IOException {
     String data = getInterestInfo();
 
-    if(data == null) {
+    if (data == null) {
       checkingInterestRate = 0.04;
       savingsInterestRate = 0.065;
       writeToInterest(convert(checkingInterestRate + "," + savingsInterestRate));
@@ -149,33 +154,35 @@ public class Values {
     }
   }
 
-  // Update the date provided by user input in format YYYY/MM/DD
+  // Put the dates
   public static void putCurrentDate(String date) throws IOException {
+    // Update the date provided by user input in format YYYY/MM/DD
     // each of the substrings of the date string will update the date in separate methods
     putCurrentYear(Integer.parseInt(date.substring(0, 4)));
     putCurrentMonth(Integer.parseInt(date.substring(5, date.indexOf("/", 5))));
     putCurrentDay(Integer.parseInt(date.substring(date.indexOf("/", 5) + 1)));
     updateDateValues();
   }
-  // Update the year from the input
   public static void putCurrentYear(int year) throws IOException {
+    // Update the year from the input
     if (year >= currentYear) {
       previousYear = currentYear;
       currentYear = year;
       updateDateValues();
     }
   }
-  // Update the month from the input
   public static void putCurrentMonth(int month) throws IOException {
+    // Update the month from the input
     if ((month >= 1) && (month <= 12)) {
       previousMonth = currentMonth;
       currentMonth = month;
       updateDateValues();
     }
   }
-  // Update the current day from the input
   public static void putCurrentDay(int day) throws IOException {
+    // Update the current day from the input
     switch (currentMonth) {
+      // If the month has 31 dates
       case 1, 3, 5, 7, 8, 10, 12:
         if ((day >= 1) && (day <= 31)) {
           previousDay = currentDay;
@@ -184,6 +191,7 @@ public class Values {
         }
         break;
 
+      // If the month has 30 days  
       case 4, 6, 9, 11:
         if ((day >= 1) && (day <= 30)) {
           previousDay = currentDay;
@@ -192,6 +200,7 @@ public class Values {
         }
         break;
 
+      // If the month is very special  
       case 2:
         if (isLeapYear(currentYear) && (day >= 1)) {
           if (day <= 29) {
@@ -212,6 +221,10 @@ public class Values {
         System.out.println("Invalid day.");
         break;
     }
+  }
+  private static boolean isLeapYear(int year) {
+    // Check if the year is a leap year (day validation for february)
+    return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
   }
 
   // Update all the date values in the memory
@@ -236,7 +249,7 @@ public class Values {
     // If old date matches the new date, update the new date as the same data
     if (oldData.substring(0, oldData.indexOf(".")).equals(newData.substring(0, newData.indexOf("."))))
       updateDateNew(oldData);
-    // If the old date does not match the new date, go to update both old and new data
+      // If the old date does not match the new date, go to update both old and new data
     else
       updateDateBoth(newData, oldData);
   }
@@ -248,24 +261,21 @@ public class Values {
     data = date + data;
     writeToSuperInfo(data);
   }
-  // Puts superinfo into superinfo old and put the new data into superinfo
   private static void updateDateBoth(String oldData, String olderData) throws IOException {
+    // Puts superinfo into superinfo old and put the new data into superinfo
     String newDate = currentYear + "/" + currentMonth + "/" + currentDay;
     String oldDate = previousYear + "/" + previousMonth + "/" + previousDay;
 
     // Take the old date, combine it with the older data substring, and write to the superinfold file
     String updatedOldData = convert(oldDate) + olderData.substring(olderData.indexOf("."));
     writeToSuperInfoOld(updatedOldData);
-    
+
     // Take the new date, combine it with the old data and write to superinfo file
     String newData = convert(newDate) + oldData.substring(oldData.indexOf('.'));
     writeToSuperInfo(newData);
   }
-  private static boolean isLeapYear(int year) {
-    // Check if the year is a leap year (day validation for february)
-    return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
-  }
 
+  // Passwords
   private static String getPassword() throws IOException {
     // This method gives the encrypted password stored in the file
     String data = getSuperInfo(); // Store the data
@@ -276,7 +286,6 @@ public class Values {
     // This method compares the inputted password with the stored password
     return password.equals(convert(getPassword()));
   }
-
   public static boolean checkIfEmpty(String location) throws IOException {
     // This method checks if the file is empty
     BufferedReader br = new BufferedReader(new FileReader(location));
@@ -285,8 +294,8 @@ public class Values {
     return data == null;
   }
 
+  // Methods to read and write files in order to have no resource leaks & cleaner code
   public static void writeToSuperInfo(String data) throws IOException {
-    // Nimay Desai
     PrintWriter pw = new PrintWriter(new FileWriter(getSuperInfoLocation()));
     pw.println(data);
     pw.close();
@@ -306,7 +315,6 @@ public class Values {
     pw.println(data);
     pw.close();
   }
-
   public static String getSuperInfo() throws IOException {
     BufferedReader br = new BufferedReader(new FileReader(getSuperInfoLocation()));
     String data = br.readLine();
@@ -334,9 +342,9 @@ public class Values {
     return data;
   }
 
+
   // Nimay Desai
   public static String convert(String data) {
-
     /* This method acts as the main encryption/decryption of the entire program
      * This method will return a string where the original string's data is altered
      * A is flipped to Z, 0 is flipped to 9, and vice-versa
