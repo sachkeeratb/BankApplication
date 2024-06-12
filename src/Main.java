@@ -415,6 +415,9 @@ public class Main {
 
   // Nimay Desai & Sachkeerat Brar
   public static void createClient(ClientList clients) throws IOException {
+    // This function creates a client and adds it to the client list
+    // This function takes in a ClinetList clients which represents the list of clients
+    // This function does not return anything as everything is modified
     Scanner input = new Scanner(System.in); // Create client
     String name; // Stores the name
     String dob; // Stores the date of birth
@@ -428,14 +431,14 @@ public class Main {
 
     // Creates a client with the name and date of birth supplied w/ ID
     Client client;
-    if (clients.getHead() == null)
+    if (clients.getHead() == null) // Empty list
       client = new Client(name, dob);
-    else
+    else // Non empty
       client = new Client(clients.lastNode().client, name, dob);
 
-    clients.addToList(client);
+    clients.addToList(client); // Add the client to the list
 
-    clients.storeClientList();
+    clients.storeClientList(); // Modify the list
 
     mainMenu(clients);
   }
@@ -547,9 +550,10 @@ public class Main {
     }
   }
 
-  // Kushal Prajapati & Nimay Desai
+  // Nimay Desai
   public static void withdraw(ClientList clients) throws IOException {
 
+    // This function does not return anything as everything is modified
     // This method withdraws money from the account
     // It takes in a client list clients which represents the list of clients
 
@@ -584,33 +588,37 @@ public class Main {
 
     mainMenu(clients);
   }
+  // Nimay Desai
   public static void deposit(ClientList clients) throws IOException {
-    Scanner input = new Scanner(System.in);
-    System.out.println("Enter the ID of the client");
-    int ID = input.nextInt();
+    // This function deposits moeny into the acconunt using user input
+    // This functoin takes in a lLientList clients which represents the list of clients
+    // This function does not return anything as everything is modified
+    Scanner input = new Scanner(System.in); // Create a scanner
+    System.out.println("Enter the ID of the client"); // Prompt for ID
+    int ID = input.nextInt(); // Take in ID
 
-    Client client = clients.searchByID(ID);
+    Client client = clients.searchByID(ID); // Search by ID
 
-    if (client == null) {
+    if (client == null) { // No client with that ID
       System.out.println("Invalid client.");
       return;
     }
 
-    int accountIdx;
+    int accountIdx; // Create account index
     do {
-      System.out.println("Enter the number of the account you would like to deposit to (1 - 5): ");
+      System.out.println("Enter the number of the account you would like to deposit to (1 - 5): "); // Prompt user for account
       accountIdx = input.nextInt() - 1;
-    } while ((accountIdx < 0) || (accountIdx > 4));
-    Account account = client.getAccounts().getAccount(accountIdx);
+    } while ((accountIdx < 0) || (accountIdx > 4)); // Until valid option is entered
+    Account account = client.getAccounts().getAccount(accountIdx); // Get account
 
-    if (account == null) {
+    if (account == null) { // Invalid account
       System.out.println("Invalid account. ");
       return;
     }
 
-    System.out.println("Enter how much money you would like to deposit");
-    double val = input.nextDouble();
-    account.deposit(val);
+    System.out.println("Enter how much money you would like to deposit"); // Prompt user for money to deposit
+    double val = input.nextDouble(); // Get the value
+    account.deposit(val); // Deposit
 
     clients.storeClientList();
 
@@ -742,7 +750,10 @@ public class Main {
   // Nimay Desai
   public static void changeData(Client currentClient, ClientList clients) {
     Scanner in = new Scanner(System.in);
-
+    // This function takes in a Client currentClient which represents the currentCLinet
+    // and a ClientList clients which is passed down to inner funciton
+    // This function changes clients data
+    // This function does not return anything as everything is modified
     // Get the user's choice
     int opt;
     do {
@@ -808,7 +819,6 @@ public class Main {
   // The main program starts by printing the title, gets the information, and then logs in or registers respectively
   public static void main(String[] args) throws IOException {
     Scanner in = new Scanner(System.in);
-
     title();
 
     if (Values.checkIfEmpty(Values.getSuperInfoLocation()))
