@@ -146,6 +146,8 @@ public class TransactionHistory {
   }
   // Nimay Desai
   public static TransactionHistory fromString(String data) {
+    // This functoin takes in a String data which represents the String it is converted from
+    // This function returns a TransactionHistory which represents the new transaction history
     // This method takes in a string and converts it into a list
 
     TransactionHistory newHistory = new TransactionHistory();
