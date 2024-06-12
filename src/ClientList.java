@@ -80,15 +80,16 @@ public class ClientList {
     Node previous = null; // Sets the previous value equal to null at the start
     boolean found = false; // Represents if the item is found
 
-    while (current != null) { // Are we not at the end of list
-      if (item == current.client) { // If the item is equal to the current value
+    while (current != null && !found) { // Are we not at the end of list
+      if (item == current.client) // If the item is equal to the current value
         found = true; // We have found the object
-        break; // Exit the loop
-      } else {
-        previous = current; // Else shift previous and current by one
+
+      else { // Else shift previous and current by one
+        previous = current;
         current = current.link;
       }
     }
+
     // If the item is found
     if (found) {
       // If the current is the first element
@@ -146,12 +147,11 @@ public class ClientList {
     int top = length(); // The top of the subarray
     int bottom = 1; // The bottom of the subarray
 
-
     while (bottom <= top) {
       int mid = (bottom + top) / 2; // Calculate the middle value
 
       // If the client is found, return
-      if (((findNodeByIndex(mid-1).client).getName()).equals(name))
+      if (((findNodeByIndex(mid - 1).client).getName()).equals(name))
         return findNodeByIndex(mid - 1).client;
       // Move the subarray up
       else if (bottom < mid)
@@ -211,12 +211,14 @@ public class ClientList {
   // Load the Clientlist from the location and if there is no client list return null
   public static ClientList loadClientList() throws IOException {
 
-    String data = Values.convert(Values.getClientInfo());
+    String data = Values.getClientInfo();
 
     if (data == null) {
       System.out.println("No data. Please make sure you have added a client list");
       return null;
     }
+
+    data = Values.convert(data);
     return ClientList.fromString(data);
   }
 
@@ -322,6 +324,7 @@ public class ClientList {
 
     while (temp != null) {
       temp.client.display();
+      System.out.println();
       temp = temp.link;
     }
   }

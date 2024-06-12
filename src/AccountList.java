@@ -162,8 +162,9 @@ public class AccountList {
   // This method displays the accounts in the list in a formatted manner
   public void display() {
     for(int i = 0; i < numAccounts; i++){
-      System.out.println("\nAccount " + (i + 1) + ": ");
+      System.out.println("Account " + (i + 1) + ": ");
       accounts[i].display();
+      System.out.println();
     }
   }
 }

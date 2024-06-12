@@ -19,7 +19,6 @@ public class Client {
     age = calculateAge(dob);
     accounts = new AccountList();
   }
-
   public Client(Client lastClient) {
     // This constructor makes a default client with the last client's ID incremented
     // This ensures that the no other client doesn have te same ID
@@ -34,15 +33,7 @@ public class Client {
     ID = 1;
     name = n;
     dob = date;
-    age = calculateAge(date);
-    accounts = new AccountList();
-  }
-  public Client(String n, String date, Client lastClient) {
-    // Create a client with the name, date, and the last client's ID incremented
-    ID = lastClient.ID + 1;
-    name = n;
-    dob = date;
-    age = calculateAge(date);
+    age = calculateAge(dob);
     accounts = new AccountList();
   }
   public Client(String n, String date, AccountList accs) {
@@ -50,11 +41,19 @@ public class Client {
     ID = 1;
     name = n;
     dob = date;
-    age = calculateAge(date);
+    age = calculateAge(dob);
     if(accs == null)
       accounts = new AccountList();
     else
       accounts = accs;
+  }
+  public Client(Client lastClient, String n, String date) {
+    // Create a client with the name, date, and the last client's ID incremented
+    ID = lastClient.ID + 1;
+    name = n;
+    dob = date;
+    age = calculateAge(dob);
+    accounts = new AccountList();
   }
 
   // Sachkeerat Brar & Kushal Prajapati
@@ -72,7 +71,6 @@ public class Client {
 
     return client;
   }
-
 
   // Kushal Prajapati and Nimay Desai
   // Accessors
@@ -99,16 +97,13 @@ public class Client {
   public void putName(String newName) {
     name = newName;
   }
-  public void putDOB(String newDOB) {
-    dob = newDOB;
-  }
 
   // This function outputs client info
   // This function does not ake in anything as all data is retrieved from the class itself
   // This function does not return anytbing as it outputted
   public void display() {
     // Output regular client info
-    System.out.println("ID: " + ID + "\nName: " + name + "\nDate of Birth: " + dob + "\nAge: " + age + "\nAccounts: ");
+    System.out.println("ID: " + ID + "\nName: " + name + "\nDate of Birth: " + dob + "\nAge: " + age + "\n\nAccounts: ");
     accounts.display(); // Display accounts
   }
 
@@ -125,10 +120,13 @@ public class Client {
     // Store the birth values as integers
     int birthYear = Integer.parseInt(date.substring(0, 4));
     int birthMonth = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
-    int birthDay = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
+    int birthDay = Integer.parseInt(date.substring(date.lastIndexOf("/") + 1));
+    System.out.println(birthYear + "/" + birthMonth + "/" + birthDay);
 
     // Store the age
     int currentAge = Values.getCurrentYear() - birthYear;
+    System.out.println(Values.getCurrentYear());
+    System.out.println(currentAge);
 
     // See if they are a year younger
     if ((Values.getCurrentMonth() < birthMonth) || ((Values.getCurrentMonth() == birthMonth) && (Values.getCurrentDay() < birthDay)))

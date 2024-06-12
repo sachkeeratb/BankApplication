@@ -108,17 +108,13 @@ public class Main {
   }
 
   // Nimay Desai
-  public static boolean login(ClientList clients) throws IOException {
+  public static void login(ClientList clients) throws IOException {
     // Logins into the application
     // Takes in a ClientList clients which represent the list of clients passed down into the exit
-    // This method returns a boolean on whether the login was valid or not
 
     // If password is invalid
-    if(!verifyPassword()) {
-      // Exit the program
+    if(!verifyPassword()) // Exit the program
       exit(clients);
-      return false;
-    }
 
     // Gets the date from the database
     String date = getDate();
@@ -130,11 +126,9 @@ public class Main {
     // Updates the interest for the clients
     Values.updateInterestRate();
     updateInterest(clients);
-    clients.storeClientList();
 
     // Sucessful Login
     System.out.println("You have successfully logged in!");
-    return true;
   }
 
   // Sachkeerat Brar
@@ -435,7 +429,7 @@ public class Main {
     if(clients.getHead() == null)
       client = new Client(name, dob);
     else
-      client = new Client(name, dob, clients.lastNode().client);
+      client = new Client(clients.lastNode().client, name, dob);
 
     clients.addToList(client);
 
@@ -805,7 +799,7 @@ public class Main {
     currentAccount.putN(n);
   }
 
-  // The main program starts by printing the title, gets the information, and than logs in or registers dependingly
+  // The main program starts by printing the title, gets the information, and then logs in or registers respectively
   public static void main(String[] args) throws IOException {
     Scanner in = new Scanner(System.in);
     
@@ -815,12 +809,10 @@ public class Main {
       register();
 
     ClientList clients = new ClientList();
+    login(clients);
+
     if(!Values.checkIfEmpty(Values.getClientInfoLocation()))
       clients = ClientList.loadClientList();
-    else
-      clients.storeClientList();
-
-    login(clients);
 
     boolean choice;
     do {
