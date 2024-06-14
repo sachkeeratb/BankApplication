@@ -511,10 +511,10 @@ public class Main {
     // Filter and print out the clients that are greater, equal, or less than the age
     int filterChoice;
     do {
-      System.out.println("Do you want to filter by people that are greater, equal, or less than your selected age:");
-      System.out.println("1. Greater");
-      System.out.println("2. Equal");
-      System.out.println("3. Less");
+      System.out.println("Do you want to filter by people that are greater, equal, or less than your selected age: ");
+      System.out.println("1 --> Greater");
+      System.out.println("2 --> Equal");
+      System.out.println("3 --> Less");
       filterChoice = in.nextInt(); // Until correct option is entered
     } while ((filterChoice < 1) || (filterChoice > 3));
 
@@ -540,8 +540,8 @@ public class Main {
     Scanner input = new Scanner(System.in); // Create a scanner
     int opt; // Create a variable representing the user option
     do { // Until correct option is entered
-      System.out.println("Press 1 to withdraw"); // Prompt the user to withdraw or deposit
-      System.out.println("Press 2 to deposit");
+      System.out.println("Press 1 to withdraw: "); // Prompt the user to withdraw or deposit
+      System.out.println("Press 2 to deposit: ");
       opt = input.nextInt();
     } while ((opt != 1) && (opt != 2));
     switch (opt) {
@@ -714,7 +714,7 @@ public class Main {
     Scanner in = new Scanner(System.in);
     Client currentClient;
     System.out.println("How would you like to search the user?");
-    System.out.println("Enter 1 for name and Enter 2 for ID: ");
+    System.out.println("Enter 1 for the name:\nEnter 2 for ID: ");
 
     int opt = in.nextInt();
     switch (opt) {
@@ -767,7 +767,7 @@ public class Main {
     // Go through their choices
     switch (opt) {
       case 1:
-        System.out.println("Please enter the new name");
+        System.out.println("Please enter the new name: ");
         String name = in.next();
         currentClient.putName(name);
         break;
@@ -809,7 +809,7 @@ public class Main {
 
     Scanner input = new Scanner(System.in); // Create Scanner
     System.out.println("Enter the compounding period value: "); // Prompt the user for the compounding period
-    System.out.println("1 --> Annually\n2 -> Semi-Annually\n 4 -> Quarterly\n or 12 -> Monthly)");
+    System.out.println("1 --> Annually\n2 --> Semi-Annually\n 4 --> Quarterly\n or 12 --> Monthly)");
 
     // Get the compounding period and set the account to it
     byte n = input.nextByte();
