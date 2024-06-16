@@ -120,6 +120,7 @@ public class Client {  // Fields
 
     return client;
   }
+
   // Sachkeerat Brar
   private static int calculateAge(String date) {
     // This method calculates an age from a date formatted as "yyyy/mm/dd"
@@ -128,12 +129,9 @@ public class Client {  // Fields
     int birthYear = Integer.parseInt(date.substring(0, 4));
     int birthMonth = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
     int birthDay = Integer.parseInt(date.substring(date.lastIndexOf("/") + 1));
-    System.out.println(birthYear + "/" + birthMonth + "/" + birthDay);
 
     // Store the age
     int currentAge = Values.getCurrentYear() - birthYear;
-    System.out.println(Values.getCurrentYear());
-    System.out.println(currentAge);
 
     // See if they are a year younger
     if ((Values.getCurrentMonth() < birthMonth) || ((Values.getCurrentMonth() == birthMonth) && (Values.getCurrentDay() < birthDay)))

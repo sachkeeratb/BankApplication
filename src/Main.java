@@ -56,7 +56,7 @@ public class Main {
       System.out.println("Enter the date as yyyy/mm/dd: ");
       // Takes in the data
       date = in.next();
-    } while (!validDate(date)); // Runs the loop until the data is valid
+    } while (!validSuperDate(date)); // Runs the loop until the data is valid
 
     // Prompts the user for a password
     System.out.println("Please enter a password for security: ");
@@ -83,7 +83,7 @@ public class Main {
       exit(clients);
 
     // Gets the date from the database
-    String date = getDate();
+    String date = getSuperDate();
     // Changes the date to the new date and puts it into memory
 
     Values.loadDates();
@@ -156,7 +156,7 @@ public class Main {
   }
 
   // Sachkeerat Brar
-  public static String getDate() {
+  public static String getSuperDate() {
     // Gets the current date
     // Does not take in any argument as the data is retrieved from the user
     // Returns a String representing the current date
@@ -169,13 +169,34 @@ public class Main {
       System.out.println("Enter the current date as yyyy/mm/dd: ");
       // Stores date in a variable
       date = in.next();
-    } while (!validDate(date)); // Until the date is valid
+    } while (!validSuperDate(date)); // Until the date is valid
+
+    return date; // Returns the date
+  }
+
+  // Sachkeerrat Brar
+  public static String getClientDate() {
+    // Gets the current date
+    // Does not take in any argument as the data is retrieved from the user
+    // Returns a String representing the current date
+
+    // Create a Scanner
+    Scanner in = new Scanner(System.in);
+
+    // Prompts user for the current date
+    System.out.println("Enter the date as yyyy/mm/dd: ");
+
+    // Stores date in a variable
+    String date = in.next();
+
+    if (!validClientDate(date))
+      return ""; // If the date is invalid, return an empty string
 
     return date; // Returns the date
   }
 
   // Sachkeerat Brar
-  public static boolean validDate(String date) {
+  public static boolean validSuperDate(String date) {
     // This method checks if the new date is valid
 
     int year, month, day; // Store the year month and day
@@ -184,6 +205,14 @@ public class Main {
       year = Integer.parseInt(date.substring(0, 4));
       month = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
       day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
+
+      boolean isValidDay;
+      switch (month) {
+        case 1, 3, 5, 7, 8, 10, 12 -> isValidDay = day <= 31;
+        case 4, 6, 9, 11 -> isValidDay = day <= 30;
+        case 2 -> isValidDay = day <= 28 && (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
+        default -> isValidDay = false;
+      }
 
       // If the date is in the past, the date is not valid
       if (year < Values.getPreviousYear()) {
@@ -199,7 +228,7 @@ public class Main {
         return false;
       }
 
-      if ((year < Values.getCurrentYear()) || (month < 1) || (month > 12) || (day < 1) || (day > 31)) {
+      if ((year < Values.getCurrentYear()) || (month < 1) || (month > 12) || (!isValidDay)) {
         System.out.println("Please input a valid date.");
         return false;
       }
@@ -212,35 +241,49 @@ public class Main {
   }
 
   // Sachkeerat Brar
-  public static boolean validAge(String date) {
-    // This function checks if the age of the user is valid
+  public static boolean validClientDate(String date) {
+    // This method checks if the new date is valid for the creation of a client
+    // This method checks if the age of the user is valid
     // It takes in a String date which represents the date entered by the user
     // If the year is above 120, then say invalid date or if the year is below 18
-    
-    int year, month, day; // Create variables which represents the year month and day
 
-    year = Integer.parseInt(date.substring(0, 4)); // Get the year
-    month = Integer.parseInt(date.substring(5, date.indexOf("/", 5))); // Get the month
-    day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1)); // Get the day
+    int year, month, day; // Store the year month and day
 
-    if (year <= 1904) { // Older than 120 (No one is above 120 currently)
-      System.out.println("Do not lie about your age."); // Exit the program
-      System.exit(0);
+    try { // Try to parse the date
+      year = Integer.parseInt(date.substring(0, 4));
+      month = Integer.parseInt(date.substring(5, date.indexOf("/", 5)));
+      day = Integer.parseInt(date.substring(date.indexOf("/", 5) + 1));
+
+      boolean isValidDay;
+      switch (month) {
+        case 1, 3, 5, 7, 8, 10, 12 -> isValidDay = day <= 31;
+        case 4, 6, 9, 11 -> isValidDay = day <= 30;
+        case 2 -> isValidDay = day <= 28 && (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
+        default -> isValidDay = false;
+      }
+
+      if ((year < 1904) || (month < 1) || (month > 12) || (!isValidDay)) {
+        System.out.println("Please input a valid date.");
+        return false;
+      }
+
+      int currentAge = Values.getCurrentYear() - year; // Create a variable which represents the users age
+
+      // See if they are a year younger
+      if ((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
+        currentAge--;
+
+      // A client of the bank must at least be 18 years old
+      if (currentAge < 18) { // Too young (Less than 18)
+        System.out.println("You must be 18 years old to use this bank.");
+        return false; // Return false (Invalid)
+      }
+    } catch (Exception e) {
+      System.out.println("Invalid date format. Please in a date as yyyy/mm/dd.");
+      return false;
     }
 
-    int currentAge = Values.getCurrentYear() - year; // Create a vvariable which represents the users age
-
-    // See if they are a year younger
-    if ((Values.getCurrentMonth() < month) || (Values.getCurrentMonth() == month && Values.getCurrentDay() < day))
-      currentAge--;
-
-    // A client of the bank must at least be 18 years old
-    if (currentAge < 18) { // Too young (Less than 18)
-      System.out.println("You must be 18 years old to use this bank.");
-      return false; // Return false (Invalid)
-    }
-
-    return true; // Else return true (Valid age)
+    return true;
   }
 
   // Sachkeerat Brar
@@ -416,24 +459,21 @@ public class Main {
   // Nimay Desai & Sachkeerat Brar
   public static void createClient(ClientList clients) throws IOException {
     // This function creates a client and adds it to the client list
-    // This function takes in a ClinetList clients which represents the list of clients
+    // This function takes in a ClientList clients which represents the list of clients
     // This function does not return anything as everything is modified
-    Scanner input = new Scanner(System.in); // Create client
-    String name; // Stores the name
-    String dob; // Stores the date of birth
-    do { // Runs until a valid date and age is entered
-      System.out.println("Enter the name of the client"); // Prompts user for the name
-      name = input.next(); // Stores the name of client
-      System.out.println("Enter the date of birth"); // Prompts user for date of birth
-      dob = input.next(); // Stores the date of birth
-    } while (!validAge(dob));
+    Scanner in = new Scanner(System.in); // Create client
+    System.out.println("Enter the name of the client"); // Prompts user for the name
+    String name = in.next(); // Stores the name of client
+    String dob = getClientDate(); // Get the date of birth with validation
 
+    if(dob.isEmpty()) // If the date is invalid
+      return; // Return (Do not create client)
 
     // Creates a client with the name and date of birth supplied w/ ID
     Client client;
     if (clients.getHead() == null) // Empty list
       client = new Client(name, dob);
-    else // Non empty
+    else // Not empty
       client = new Client(clients.lastNode().client, name, dob);
 
     clients.addToList(client); // Add the client to the list
