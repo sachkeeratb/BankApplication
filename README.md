@@ -10,3 +10,5 @@ This application serves as an application where the user is the bank and this ap
 
 ## How to run
 Go to src/main.java and run it with your preferred java runner.
+
+WE ARE DONE !!!!!!
