@@ -96,10 +96,15 @@ public class ClientList {
       // If the current is the first element
       if (current == head) {
         head = head.link; // Bypass the first element
+        Node temp = head;
+        while (temp != null) {
+          temp.client.putID(temp.client.getID() - 1);
+          temp = temp.link;
+        }
       } else {
         // Else bypass previous
         previous.link = current.link;
-        Node temp = current.link;
+        Node temp = previous.link;
         // Go through each value and make sure the ID is correct
         while (temp != null) {
           temp.client.putID(temp.client.getID() - 1);
