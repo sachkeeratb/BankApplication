@@ -81,12 +81,14 @@ public class Main {
     // If password is invalid
     if (!verifyPassword()) // Exit the program
       exit(clients);
+    
+    // Load the old dates
+    Values.loadDates();
 
     // Gets the date from the database
     String date = getSuperDate();
+    
     // Changes the date to the new date and puts it into memory
-
-    Values.loadDates();
     Values.putCurrentDate(date);
 
     // Updates the interest for the clients
@@ -219,11 +221,11 @@ public class Main {
         System.out.println("Do not lie about the date.");
         return false;
       }
-      if ((month < Values.getPreviousMonth()) && (year == Values.getPreviousYear())) {
+      if ((month < Values.getPreviousMonth()) && (year == Values.getCurrentYear())) {
         System.out.println("Do not lie about the date.");
         return false;
       }
-      if ((day < Values.getPreviousDay()) && (month == Values.getPreviousMonth()) && (year == Values.getPreviousYear())) {
+      if ((day < Values.getPreviousDay()) && (month == Values.getCurrentMonth()) && (year == Values.getCurrentYear())) {
         System.out.println("Do not lie about the date.");
         return false;
       }
@@ -619,6 +621,10 @@ public class Main {
       System.out.println("Invalid account.");
       return;
     }
+    if (account.getAccountType() == 's') {
+    	System.out.println("You cannot directly withdraw from a savings account.");
+        return;
+    }
 
     System.out.println("Enter how much money you would like to withdraw");
     double val = input.nextDouble();
@@ -715,11 +721,14 @@ public class Main {
       System.out.println("Enter the amount of money you would like to transfer: ");
       val = in.nextDouble();
     } while (val <= 0);
-
-    if (val <= account.getBalance()) {
-      account.withdraw(val);
-      account2.deposit(val);
+    
+    if((val < 1) || (val > account.getBalance())) {
+    	System.out.println("The value must be positive and it cannot be greater than your balance.");
+    	return;
     }
+
+    account.withdraw(val);
+    account2.deposit(val);
     clients.storeClientList();
 
     mainMenu(clients);
