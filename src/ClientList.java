@@ -333,9 +333,9 @@ public class ClientList {
 
   // Nimay Desai
   public static ClientList fromString(String data) {
-    // This function converts a client list from a string into a client list
-    // This function takes in a string data which represents the original string
-    // This functoin returns a ClientList which represents the converted clientlist
+    // This method converts a client list from a string into a client list
+    // This method takes in a string data which represents the original string
+    // This method returns a ClientList which represents the converted clientlist
     int prevIdx = 0; // Start from the beginning of the string
     int nextIdx = data.indexOf('(', prevIdx); // Find the index of the first '('
     String str;
